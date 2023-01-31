@@ -240,12 +240,12 @@ ItemType Dictionary<ItemType>::search(KeyType str) {
 
 // Recusrive search function
 template <typename ItemType>
-ItemType Dictionary<ItemType>::search(KeyType topicName, Node* topicNode) {
-	if (topicNode->item.getTopicName() == topicName) {
-		return topicNode->item;
+ItemType Dictionary<ItemType>::search(KeyType str, Node* nextNode) {
+	if (nextNode->item.getTopicName() == str) {
+		return nextNode->item;
 	}
 	else {
-		searchTopic(topicName, topicNode->next);
+		searchTopic(str, nextNode->next);
 	}
 }
 
