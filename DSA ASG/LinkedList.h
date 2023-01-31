@@ -42,6 +42,12 @@ class LinkedList
 
 		//display all the items in the list
 		void print();
+
+		ItemType search(string s);
+
+		ItemType search(string s, Node* nodePointer);
+
+		bool searchFound(ItemType i);
 };
 
 
@@ -182,3 +188,36 @@ void LinkedList<ItemType>::print()
 	}
 }
 
+template <typename ItemType>
+ItemType LinkedList<ItemType>::search(string str)
+{
+	Node* current = FirstNode;
+	return search(str, current);
+}
+
+template <typename ItemType>
+ItemType LinkedList<ItemType>::search(string str, Node* nodePointer)
+{
+	if (nodePointer->item.retreiveDetails() == str) {
+		return nodePointer->item;
+	}
+	else {
+		searchUser(str, nodePointer->next);
+	}
+}
+
+
+template <typename ItemType>
+bool LinkedList<ItemType>::searchFound(ItemType i) {
+	Node* tempPointer;
+	tempPointer = FirstNode;
+
+	while (tempPointer != NULL) {
+		if (tempPointer->item.equivalent(i)) {
+			return true;
+			break;
+		}
+		tempPointer = tempPointer->next;
+	}
+	return false;
+}

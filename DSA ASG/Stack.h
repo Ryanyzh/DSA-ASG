@@ -37,10 +37,10 @@ class Stack
 		bool isEmpty();
 
 		//Display replies in order
-		void displayInOrder();
+		void printInOrder();
 
 		//Display replies in order of insertion
-		void displayInOrderOfInsertion();
+		void printInOrderOfInsertion();
 
 };
 
@@ -100,7 +100,7 @@ ItemType Stack<ItemType>::getTop() {
 }
 
 template <typename ItemType>
-void Stack<ItemType>::displayInOrder() {
+void Stack<ItemType>::printInOrder() {
 	Node* currentNode = new Node;
 	currentNode = topNode;
 	do {
@@ -110,7 +110,7 @@ void Stack<ItemType>::displayInOrder() {
 }
 
 template <typename ItemType>
-void Stack<ItemType>::displayInOrderOfInsertion() {
+void Stack<ItemType>::printInOrderOfInsertion() {
 	Stack newStack;
 	Node* current = new Node;
 	current = topNode;
@@ -118,7 +118,7 @@ void Stack<ItemType>::displayInOrderOfInsertion() {
 		newStack.push(current->item);
 		current = current->next;
 	}
-	newStack.displayInOrder();
+	newStack.printInOrder();
 }
 
 
