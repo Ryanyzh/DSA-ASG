@@ -115,7 +115,10 @@ int Array<ItemType>::getLength() { return size; }
 template <typename ItemType>
 void Array<ItemType>::print()
 {
-
+	// ** TO BE EDITED BY RYAN **
+	//for (int i; i < MAX_SIZE; i++) {
+	//	cout << items[i] << endl;
+	//}
 }
 
 template <typename ItemType>

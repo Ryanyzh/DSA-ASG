@@ -26,7 +26,7 @@ class LinkedList
 		bool add(ItemType item);
 
 		//add an item at a specified position in the list
-		bool addwithPosition(int index, ItemType item);
+		bool add(int index, ItemType item);
 
 		//remove an item at a specified position of the list
 		void remove(int index);
@@ -43,10 +43,19 @@ class LinkedList
 		//display all the items in the list
 		void print();
 
+		//search and return an object
 		ItemType search(string s);
 
+		//recusive search function for the above
 		ItemType search(string s, Node* nodePointer);
 
+		//search and return a index of object
+		int searchIndex(string s);
+
+		//recursive search function for the above
+		int searchIndex(string s, Node* nodePointer, int index);
+
+		//boolean to check if item is found
 		bool searchFound(ItemType i);
 };
 
@@ -87,7 +96,7 @@ bool LinkedList<ItemType>::add(ItemType item)
 }
 
 template <typename ItemType>
-bool LinkedList<ItemType>::addwithPosition(int index, ItemType item)
+bool LinkedList<ItemType>::add(int index, ItemType item)
 {
 	if (index <= size) {
 		Node* newNode = new Node;
@@ -198,14 +207,30 @@ ItemType LinkedList<ItemType>::search(string str)
 template <typename ItemType>
 ItemType LinkedList<ItemType>::search(string str, Node* nodePointer)
 {
-	if (nodePointer->item.retreiveDetails() == str) {
+	if (nodePointer->item.retrieveString() == str) {
 		return nodePointer->item;
 	}
 	else {
-		searchUser(str, nodePointer->next);
+		search(str, nodePointer->next);
 	}
 }
 
+template <typename ItemType>
+int LinkedList<ItemType>::searchIndex(string str) {
+	Node* current = FirstNode;
+	int index = 0;
+	return searchIndex(str, current, index);
+}
+
+template <typename ItemType>
+int LinkedList<ItemType>::searchIndex(string str, Node* nodePointer, int index) {
+	if (nodePointer->item.retrieveString() == str) {
+		return index;
+	}
+	else {
+		searchIndex(str, nodePointer->next, index+1);
+	}
+}
 
 template <typename ItemType>
 bool LinkedList<ItemType>::searchFound(ItemType i) {

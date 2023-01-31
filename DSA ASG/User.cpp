@@ -37,3 +37,8 @@ string User::retreiveDetails() {
 bool User::equivalent(User anotherUser) {
 	return (this->getUsername() == anotherUser.getUsername()) && (this->getPassword() == anotherUser.getPassword());
 }
+
+void User::print() {
+	// ** TO BE EDITED BY RYAN **
+	cout << getUsername() << endl;
+}

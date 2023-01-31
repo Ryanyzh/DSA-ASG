@@ -19,6 +19,8 @@ class User
 		void setPassword(string);
 		string retreiveDetails();
 		bool equivalent(User u);
+
+		void print();
 		//void displayUserDetails();
 };
 

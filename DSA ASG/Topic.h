@@ -30,7 +30,15 @@ class Topic
 		//Remove post from topic
 		void removePost(int index);
 
+		//Search and return Post index
+		int searchPostIndex(string s);
+
+		//Search and return Post Object
+		Post searchPost(string s);
+
 		//Display topic details -> from the Dictionary class
 		void print(Topic t, int counter);
+
+
 };
 

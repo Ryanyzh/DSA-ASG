@@ -21,6 +21,8 @@ class Reaction
 		//Topic getter
 		int getEmoji(string e);
 
+		void addCount();
+
 		//Display topic details?
 		void print();
 };
