@@ -22,6 +22,10 @@ void Reaction::setEmoji(string emoji, int counter) {
 	reactionCount = counter;
 };
 
+void Reaction::addCount() {
+	reactionCount++;
+}
+
 void Reaction::print() {
 	// Insert code here
 }

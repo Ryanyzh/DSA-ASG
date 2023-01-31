@@ -25,6 +25,18 @@ Post::~Post() {
 	replyStack.~Stack<Reply>();
 };
 
+string Post::retrieveString() {
+	return getPTitle();
+}
+
+Array<Reaction> Post::getReactions() {
+	return reactions;
+}
+
+User Post::getPUser() {
+	return user;
+}
+
 string Post::getPTitle() {
 	return Ptitle;
 };
@@ -60,4 +72,22 @@ void Post::setPContent(string pc) {
 
 bool Post::addReply(Reply reply) {
 	return replyStack.push(reply);
+}
+
+void Post::updateReaction(int i) {
+	reactions[i - 1].addCount();
+}
+
+bool Post::equivalent(Post anotherPost) {
+	return (this->getPTitle() == anotherPost.getPContent());
+}
+
+void Post::print() {
+	// ** TO BE EDITED BY RYAN **
+	cout << getPTitle() << endl;
+	cout << getPContent() << endl;
+	cout << getPDateTime() << endl;
+	getRStack().printInOrder();
+	getReactions().print();
+	getPUser().print();
 }

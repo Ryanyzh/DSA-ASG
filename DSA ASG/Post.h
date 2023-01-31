@@ -37,9 +37,19 @@ class Post
 		string getPTitle();
 		string getPContent();
 		string getPDateTime();
+		User getPUser();
+		Array<Reaction> getReactions();
 		Stack<Reply> getRStack();
+
+		string retrieveString();
+
+		bool equivalent(Post p);
 
 		//Add reply to post
 		bool addReply(Reply reply);
+
+		void updateReaction(int index);
+
+		void print();
 };
 

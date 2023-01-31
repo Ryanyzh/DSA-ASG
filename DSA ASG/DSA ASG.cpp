@@ -137,31 +137,32 @@ int main()
                 else if (topicOption == 3) {
                     cout << "searching users" << endl;
                     topicOption = -1;
-
                     // Insert Codes Here
+                    string username;                                        //Username varaible
+                    User searchedUser;
 
-                    // SEARCH USER
-                    // string username = **USER INPUT FUNCTION  HERE**
-                    // User searchedUser = userList.searchUser(username); //This returns a user obj
-                    // searchedUser.displayUserDetails();                 //This function is in User.cpp
+                    cout << ">>  Enter username:  ";                        //Get username from User
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    getline(cin, username);
 
-                    //if (searchedUser != NULL) {
-                    //    searchedUser.displayUserDetails()  //This function is in User.cpp
-                    //}
+                    searchedUser = userList.search(username);               //Return Topic Obj
+                    searchedUser.print();                                   //Display topic
+
                 }
                 else if (topicOption == 4) {
                     cout << "searching topics" << endl;
                     topicOption = -1;
-                    // Insert Codes Here
 
-                    // SEARCH TOPIC
-                    // string topicName = **USER INPUT FUNCTION HERE**
-                    // Topic searchedTopic = topicDictionary.searchTopic(topicName); //This returns a topic obj
+                    string topicTitle;                                      //Topic title varaible
+                    Topic searchedTopic;
 
-                    //if (searchedTopic != NULL) {
-                    //    searchedTopic.displayTopicDetails()  //This function is in Topic.cpp
-                    //}
-
+                    cout << ">>  Enter Topic title:  ";                     //Get Topic title from User
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');    
+                    getline(cin, topicTitle);                               
+                    
+                    searchedTopic = topicDictionary.search(topicTitle);     //Return Topic Obj
+                    // what is the second parameter value?
+                    searchedTopic.print(searchedTopic, 0);                  //Display topic
                 }
                 else {
                     pageState = 2;
@@ -211,18 +212,71 @@ int main()
             }
             else if (postOption == 3) {
                 // Edit Post
+                // 1. Choose a topic
+                // 2. Choose a post
+                // 3. Prompt for post option (Validate post is by user)
+                // 4. Edit post
+                // 5. Set new post content
             }
             else if (postOption == 4) {
                 // Delete Post
+                // 1. Choose a topic
+                // 2. Choose a post in the topic to delete?
+
+                int topicSelected = -1;
+                bool topicSelectionSuccess = false;
+                while (topicSelectionSuccess == false) {
+                    cout << "\n\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.print();
+                    topicSelected = getOptionInput();
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                }
+                
+                Topic chosenTopic = topicDictionary.search(currentTopicName);
+                // ** TO BE EDITED BY RYAN **
+                // 1. Loop through and display all post in chosenTopic
+                // 2. Prompt user to choose post
+                // 3. Delete post Call chosenTopic.remove(searchPostIndex(postTitle))
+
             }
             else if (postOption == 5) {
                 // Add Reply
+
+                int topicSelected = -1;
+                bool topicSelectionSuccess = false;
+                while (topicSelectionSuccess == false) {
+                    cout << "\n\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.print();
+                    topicSelected = getOptionInput();
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                }
+
+                Topic chosenTopic = topicDictionary.search(currentTopicName);
+                // ** TO BE EDITED BY RYAN **
+                // 1. Loop through and display all post in chosenTopic
+                // 2. Prompt user to choose post
+                // 3. Prompt user for reply title
+                // 3. Prompt user for reply content
+                // 4. Add reply to post (Similar to add Post to Topic)
             }
             else if (postOption == 6) {
                 // Add Reactions
+                // 1. Choose a topic
+                // 2. Choose a post in the topic
+                // 3. Prompt user for reaction (emoji)?
+                // 4. Add reaction to post
             }
             else if (postOption == 7) {
                 // Search Post
+                // 1. Choose a topic
+                // 2. Prompt user for post title
+                // 2. Search post in selected topic
+                // 3. Display post
+
             }
             else {
                 pageState = 1;
