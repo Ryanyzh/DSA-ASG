@@ -1,4 +1,3 @@
-/*
 
 #include "Dictionary.h"
 
@@ -6,6 +5,15 @@
 
 using namespace std;
 
+template <typename KeyType, typename ItemType>
+Dictionary<KeyType, ItemType>::Dictionary() {
+	size = 0;
+	for (int i = 0; i < HT_MAX_SIZE; i++) {
+		items[i] = NULL;
+	}
+}
+
+/*
 TDictionary::TDictionary() {
 	size = 0;
 	for (int i = 0; i < HT_MAX_SIZE; i++) {

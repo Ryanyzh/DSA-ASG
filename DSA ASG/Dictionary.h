@@ -6,9 +6,7 @@ using namespace std;
 const int HT_MAX_SIZE = 31;
 const int PRIME_CONST = 31;
 
-typedef string KeyType;
-
-template <typename ItemType>
+template <typename KeyType, typename ItemType>
 
 class Dictionary
 {
@@ -61,13 +59,13 @@ class Dictionary
 		
 };
 
-template <typename ItemType>
-Dictionary<ItemType>::Dictionary() {
-	size = 0;
-	for (int i = 0; i < HT_MAX_SIZE; i++) {
-		items[i] = NULL;
-	}
-}
+//template <typename ItemType>
+//Dictionary<KeyItem, ItemType>::Dictionary() {
+//	size = 0;
+//	for (int i = 0; i < HT_MAX_SIZE; i++) {
+//		items[i] = NULL;
+//	}
+//}
 
 template <typename ItemType>
 Dictionary<ItemType>::~Dictionary() {
