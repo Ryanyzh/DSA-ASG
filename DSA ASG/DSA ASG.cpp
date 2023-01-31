@@ -207,7 +207,7 @@ int main()
                 }
 
                 Post newPost = getNewPost();
-                topicDictionary.searchTopic(currentTopicName).addPost(newPost);
+                topicDictionary.search(currentTopicName).addPost(newPost);
             }
             else if (postOption == 3) {
                 // Edit Post
