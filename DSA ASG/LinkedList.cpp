@@ -1,22 +1,24 @@
-/*
 #include "LinkedList.h"
-#include <string>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
-// constructor
-LinkedList::LinkedList() { size = 0; FirstNode = NULL; }
-
-// destructor
-LinkedList::~LinkedList()
+template <typename ItemType>
+LinkedList<ItemType>::LinkedList()
 {
+	size = 0;
+	FirstNode = NULL;
 }
 
+template <typename ItemType>
+LinkedList<ItemType>::~LinkedList()
+{
 
+}
 
-// add an item to the back of the list
-bool LinkedList::add(ItemType item)
+template <typename ItemType>
+bool LinkedList<ItemType>::add(ItemType item)
 {
 	Node* newNode = new Node;
 	newNode->item = item;
@@ -36,8 +38,8 @@ bool LinkedList::add(ItemType item)
 	return true;
 }
 
-// add an item at a specified position in the list
-bool LinkedList::add(int index, ItemType item)
+template <typename ItemType>
+bool LinkedList<ItemType>::add(int index, ItemType item)
 {
 	if (index <= size) {
 		Node* newNode = new Node;
@@ -64,8 +66,8 @@ bool LinkedList::add(int index, ItemType item)
 	}
 }
 
-// remove an item at a specified position in the list
-void LinkedList::remove(int index)
+template <typename ItemType>
+void LinkedList<ItemType>::remove(int index)
 {
 	if (index <= size) {
 
@@ -88,7 +90,7 @@ void LinkedList::remove(int index)
 			Node* tempNode = current->next;
 			current->next = current->next->next;
 
-			// Set next pointer to null 
+			// Set next pointer to null
 			tempNode->next = NULL;
 			// Deconstruct replies in the post obj
 			tempNode->item.~Post();
@@ -96,11 +98,10 @@ void LinkedList::remove(int index)
 			delete tempNode;
 		}
 	}
-
 }
 
-// get an item at a specified position of the list
-LinkedList::ItemType LinkedList::get(int index)
+template <typename ItemType>
+ItemType LinkedList<ItemType>::get(int index)
 {
 	Node* current = new Node;
 	if (index <= size) {
@@ -115,14 +116,20 @@ LinkedList::ItemType LinkedList::get(int index)
 
 }
 
-// check if the list is empty
-bool LinkedList::isEmpty() { return size == 0; }
+template <typename ItemType>
+bool LinkedList<ItemType>::isEmpty()
+{
+	return size == 0;
+}
 
-// check the size of the list
-int LinkedList::getLength() { return size; }
+template <typename ItemType>
+int LinkedList<ItemType>::getLength()
+{
+	return size;
+}
 
-// display the items in the list
-void LinkedList::print()
+template <typename ItemType>
+void LinkedList<ItemType>::print()
 {
 	Node* tempPointer;
 	tempPointer = FirstNode;
@@ -133,5 +140,52 @@ void LinkedList::print()
 	}
 }
 
-*/
+template <typename ItemType>
+ItemType LinkedList<ItemType>::search(string str)
+{
+	Node* current = FirstNode;
+	return search(str, current);
+}
 
+template <typename ItemType>
+ItemType LinkedList<ItemType>::search(string str, Node* nodePointer)
+{
+	if (nodePointer->item.retrieveString() == str) {
+		return nodePointer->item;
+	}
+	else {
+		search(str, nodePointer->next);
+	}
+}
+
+template <typename ItemType>
+int LinkedList<ItemType>::searchIndex(string str) {
+	Node* current = FirstNode;
+	int index = 0;
+	return searchIndex(str, current, index);
+}
+
+template <typename ItemType>
+int LinkedList<ItemType>::searchIndex(string str, Node* nodePointer, int index) {
+	if (nodePointer->item.retrieveString() == str) {
+		return index;
+	}
+	else {
+		searchIndex(str, nodePointer->next, index+1);
+	}
+}
+
+template <typename ItemType>
+bool LinkedList<ItemType>::searchFound(ItemType i) {
+	Node* tempPointer;
+	tempPointer = FirstNode;
+
+	while (tempPointer != NULL) {
+		if (tempPointer->item.equivalent(i)) {
+			return true;
+			break;
+		}
+		tempPointer = tempPointer->next;
+	}
+	return false;
+}

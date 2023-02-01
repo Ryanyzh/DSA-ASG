@@ -1,10 +1,19 @@
-/*
-#include "Array.h"
-// constructor
-ReactionList::ReactionList() { size = 0; }
 
-// add an item to the back of the list 
-bool ReactionList::add(ItemType item)
+#include "Array.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+template <typename ItemType>
+Array<ItemType>::Array() { size = 0; }
+
+template <typename ItemType>
+Array<ItemType>::~Array() {}
+
+template <typename ItemType>
+bool Array<ItemType>::add(ItemType item)
 {
 	bool success = size < MAX_SIZE;
 	if (success)
@@ -15,8 +24,8 @@ bool ReactionList::add(ItemType item)
 	return success;
 }
 
-// add an item at a specified position in the list 
-bool ReactionList::add(int index, ItemType item)
+template <typename ItemType>
+bool Array<ItemType>::add(int index, ItemType item)
 {
 	bool success = (index >= 0) && (index <= size) && (size < MAX_SIZE);
 	if (success)
@@ -32,8 +41,8 @@ bool ReactionList::add(int index, ItemType item)
 	return success;
 }
 
-// remove an item at a specified position in the list
-void ReactionList::remove(int index)
+template <typename ItemType>
+void Array<ItemType>::remove(int index)
 {
 	bool success = (index >= 0) && (index < size);
 	if (success)
@@ -47,8 +56,8 @@ void ReactionList::remove(int index)
 
 }
 
-// get an item at a specified position of the list (retrieve)
-ReactionList::ItemType ReactionList::get(int index)
+template <typename ItemType>
+ItemType Array<ItemType>::get(int index)
 {
 	bool success = (index >= 0) && (index < size);
 	if (success)
@@ -57,24 +66,26 @@ ReactionList::ItemType ReactionList::get(int index)
 		return -1;
 }
 
-// check if the list is empty
-bool ReactionList::isEmpty() { return size == 0; }
+template <typename ItemType>
+bool Array<ItemType>::isEmpty() { return size == 0; }
 
-// check the size of the list
-int ReactionList::getLength() { return size; }
+template <typename ItemType>
+int Array<ItemType>::getLength() { return size; }
 
-// display the items in the list
-void ReactionList::print()
+template <typename ItemType>
+void Array<ItemType>::print()
 {
-
+	// ** TO BE EDITED BY RYAN **
+	//for (int i; i < MAX_SIZE; i++) {
+	//	cout << items[i] << endl;
+	//}
 }
 
-// replace the  item in the specified index in the list
-void ReactionList::replace(int index, ItemType item)
+template <typename ItemType>
+void Array<ItemType>::replace(int index, ItemType item)
 {
 	bool success = (index >= 0) && (index < size);
 	if (success) {
 		items[index] = item;
 	}
 }
-*/

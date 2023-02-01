@@ -1,9 +1,9 @@
-
 #include "Dictionary.h"
-
+#include <iostream>
 #include <string>
 
 using namespace std;
+
 
 template <typename KeyType, typename ItemType>
 Dictionary<KeyType, ItemType>::Dictionary() {
@@ -13,108 +13,84 @@ Dictionary<KeyType, ItemType>::Dictionary() {
 	}
 }
 
-/*
-TDictionary::TDictionary() {
-	size = 0;
-	for (int i = 0; i < HT_MAX_SIZE; i++) {
-		items[i] = NULL;
-	}
-}
 
-TDictionary::~TDictionary() {
+template <typename KeyType, typename ItemType>
+Dictionary<KeyType, ItemType>::~Dictionary() {
 	for (int i = 0; i < size; i++) {
 		while (items[i] != NULL) {
-			remove(items[i]->tkey);
+			remove(items[i]->key);
 		}
 	}
 }
 
-int TDictionary::hash(KeyType key) { //use string or int
-	//https://dev.to/muiz6/string-hashing-in-c-1np3
+
+template <typename KeyType, typename ItemType>
+int Dictionary<KeyType, ItemType>::hash(KeyType key) { //use string or int
+	// https://dev.to/muiz6/string-hashing-in-c-1np3
 	size_t hashCode = 0;
-	for (int i = 0; i < key.length(); i++) {
+	for (int i = 0; i < (int)key.length(); i++) {
 		hashCode += (key[i] * (int)pow(31, i)) % HT_MAX_SIZE;
 	}
 	return hashCode % HT_MAX_SIZE;
 }
 
 
-void output(string name, int spacing, int counter) {
-	spacing = 64 - 5 - (int)name.length();
-	if (counter < 10) {
-		cout << "|   " << counter << "   |     " << name;
-		for (int spaces = 0; spaces < spacing; spaces++) {
-			cout << " ";
-		}
-		cout << "|" << endl;
-		cout << "+------------------------------------------------------------------------+" << endl;
-		counter++;
-	}
-	else {
-		cout << "|  " << counter << "   |     " << name;
-		for (int spaces = 0; spaces < spacing; spaces++) {
-			cout << " ";
-		}
-		cout << "|" << endl;
-		cout << "+------------------------------------------------------------------------+" << endl;
-		counter++;
-	}
-}
-
-
-bool TDictionary::add(KeyType newKey, ItemType newItem) {
+template <typename KeyType, typename ItemType>
+bool Dictionary<KeyType, ItemType>::add(KeyType newKey, ItemType newItem) {
 	int index = hash(newKey);
 	if (items[index] == NULL) {
-		TNode* newNode = new TNode;
-		newNode->tkey = newKey;
-		newNode->titem = newItem;
-		newNode->tnext = NULL;
+		Node* newNode = new Node;
+		newNode->key = newKey;
+		newNode->item = newItem;
+		newNode->next = NULL;
 		items[index] = newNode;
 	}
 	else {
-		TNode* current = items[index];
-		if (current->tkey == newKey) {
+		Node* current = items[index];
+		if (current->key == newKey) {
 			cout << newKey << " already exists." << endl;
 			return false;
 		}
-		while (current->tnext != NULL) {
-			current = current->tnext;
-			if (current->tkey == newKey) {
+		while (current->next != NULL) {
+			current = current->next;
+			if (current->key == newKey) {
 				cout << newKey << " already exists." << endl;
 				return false;
 			}
 		}
-		TNode* newNode2 = new TNode;
-		newNode2->tkey = newKey;
-		newNode2->titem = newItem;
-		newNode2->tnext = NULL;
-		current->tnext = newNode2;
+		Node* newNode2 = new Node;
+		newNode2->key = newKey;
+		newNode2->item = newItem;
+		newNode2->next = NULL;
+		current->next = newNode2;
 	}
 	size++;
 	return true;
 }
 
-void TDictionary::remove(KeyType key) {
+
+template <typename KeyType, typename ItemType>
+void Dictionary<KeyType, ItemType>::remove(KeyType key) {
 	int index = hash(key);
 	if (items[index] != NULL) {
-		TNode* removal = new TNode;
-		TNode* current = new TNode;
+		Node* removal = new Node;
+		Node* current = new Node;
 		current = items[index];
-		if (current->tkey == key) {
-			items[index] = current->tnext;
-			current->tnext = NULL;
+		if (current->key == key) {
+			items[index] = current->next;
+			current->next = NULL;
 			delete current;
 		}
 		else {
-			while (current->tnext != NULL) {
-				removal = current->tnext;
-				if (removal->tkey == key) {
-					current->tnext = removal->tnext;
-					removal->tnext = NULL;
+			while (current->next != NULL) {
+				removal = current->next;
+				if (removal->key == key) {
+					current->next = removal->next;
+					removal->next = NULL;
 					delete removal;
 				}
 				else {
-					current = current->tnext;
+					current = current->next;
 				}
 			}
 		}
@@ -123,141 +99,109 @@ void TDictionary::remove(KeyType key) {
 	size--;
 }
 
-TDictionary::ItemType TDictionary::get(KeyType key) {
+
+template <typename KeyType, typename ItemType>
+ItemType Dictionary<KeyType, ItemType>::get(KeyType key) {
 	int index = hash(key);
 	if (items[index] != NULL) {
-		TNode* current = new TNode;
+		Node* current = new Node;
 		current = items[index];
-		while (current->tnext != NULL) {
-			if (current->tkey == key) {
-				return current->titem;
+		while (current->next != NULL) {
+			if (current->key == key) {
+				return current->item;
 			}
-			current = current->tnext;
+			current = current->next;
 		}
 	}
 	//need to return here?
 	return ItemType();
 }
 
-bool TDictionary::isEmpty() { return size == 0; }
 
-int TDictionary::getLength() { return size; }
+template <typename KeyType, typename ItemType>
+bool Dictionary<KeyType, ItemType>::isEmpty()
+{
+	return size == 0;
+}
 
-void TDictionary::displayTopics() {
+
+template <typename KeyType, typename ItemType>
+int Dictionary<KeyType, ItemType>::getLength()
+{
+	return size;
+}
+
+
+template <typename KeyType, typename ItemType>
+void Dictionary<KeyType, ItemType>::print() {
 	int counter = 1;
-	int spacing = 0;
-	//cout << "\n\n" << endl;
-	cout << "+------------------------------------------------------------------------+" << endl;
-	cout << "| Topic |     Name                                                       |" << endl;
-	cout << "+------------------------------------------------------------------------+" << endl;
-	for (int i = 0; i < HT_MAX_SIZE; i++) {
-		TNode* current = new TNode;
-		current = items[i];
-		if (current != NULL) {
-			//output(current->titem.getTopicName(), spacing, counter);
+	if (!isEmpty()) {
+		for (int i = 0; i < HT_MAX_SIZE; i++) {
+			Node* current = new Node;
+			current = items[i];
+			if (current != NULL) {
+				current->item.print(current->item, counter++);
 
-			spacing = 64 - 5 - (int)current->titem.getTopicName().length();
-			if (counter < 10) {
-				cout << "|   " << counter << "   |     " << current->titem.getTopicName();
-				for (int spaces = 0; spaces < spacing; spaces++) {
-					cout << " ";
+				while (current->next != NULL) {
+					current->item.print(current->item, counter++);
+					current = current->next;
 				}
-				cout << "|" << endl;
-				cout << "+------------------------------------------------------------------------+" << endl;
-				counter++;
-			}
-			else {
-				cout << "|  " << counter << "   |     " << current->titem.getTopicName();
-				for (int spaces = 0; spaces < spacing; spaces++) {
-					cout << " ";
-				}
-				cout << "|" << endl;
-				cout << "+------------------------------------------------------------------------+" << endl;
-				counter++;
-			}
-
-
-			//cout << current->tkey << " : " << current->titem.getTopicName() << endl;
-			while (current->tnext != NULL) {
-				//output(current->titem.getTopicName(), spacing, counter);
-
-				spacing = 64 - 5 - (int)current->titem.getTopicName().length();
-				if (counter < 10) {
-					cout << "|   " << counter << "   |     " << current->titem.getTopicName();
-					for (int spaces = 0; spaces < spacing; spaces++) {
-						cout << " ";
-					}
-					cout << "|" << endl;
-					cout << "+------------------------------------------------------------------------+" << endl;
-					counter++;
-				}
-				else {
-					cout << "|  " << counter << "   |     " << current->titem.getTopicName();
-					for (int spaces = 0; spaces < spacing; spaces++) {
-						cout << " ";
-					}
-					cout << "|" << endl;
-					cout << "+------------------------------------------------------------------------+" << endl;
-					counter++;
-				}
-
-
-
-
-				//cout << current->tnext->tkey << " : " << current->tnext->titem.getTopicName() << endl;
-				current = current->tnext;
 			}
 		}
 	}
-	cout << "\n\n" << endl;
+	else {
+		cout << "There is nothing to display.";
+	}
+
+	cout << "\n" << endl;
 }
 
-string TDictionary::returnTopicName(int topicNum) {
+
+template <typename KeyType, typename ItemType>
+ItemType Dictionary<KeyType, ItemType>::returnSearchOption(int topicNum) {
 	int skip = topicNum - 1;
 	for (int i = 0; i < HT_MAX_SIZE; i++) {
-		TNode* current = new TNode;
+		Node* current = new Node;
 		current = items[i];
 		if (current != NULL) {
 			if (skip != 0) {
 				skip--;
 			}
 			else {
-				return current->titem.getTopicName();
+				return current->item;
 			}
-
-
-			//cout << current->tkey << " : " << current->titem.getTopicName() << endl;
-			while (current->tnext != NULL) {
+			//cout << current->key << " : " << current->item.getTopicName() << endl;
+			while (current->next != NULL) {
 				if (skip != 0) {
 					skip--;
 				}
 				else {
-					return current->titem.getTopicName();
+					return current->item;
 				}
-				current = current->tnext;
+				current = current->next;
 			}
 		}
 	}
 }
 
+
 // Function to serch topic by name
-Topic TDictionary::searchTopic(string topicName) {
-	TNode* current = items[hash(topicName)];
-	return searchTopic(topicName, current);
+template <typename KeyType, typename ItemType>
+ItemType Dictionary<KeyType, ItemType>::search(KeyType str) {
+	Node* current = items[hash(str)];
+	return search(str, current);
 }
+
 
 // Recusrive search function
-Topic TDictionary::searchTopic(string topicName, TNode* topicNode) {
-	if (topicNode->titem.getTopicName() == topicName) {
-		return topicNode->titem;
+template <typename KeyType, typename ItemType>
+ItemType Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
+	if (nextNode->item.getTopicName() == str) {
+		return nextNode->item;
 	}
 	else {
-		searchTopic(topicName, topicNode->tnext);
+		search(str, nextNode->next);
 	}
 }
 
 
-
-
-
-*/

@@ -32,7 +32,7 @@ using namespace std;
 // --- Instantiation of variables ---
 User currentUser;                                                   // User Obj for current user
 LinkedList<User> userList;                                          // List of users
-Dictionary<string, Topic> topicDictionary;                                  // Dictionary (Hash Table) of topics
+Dictionary<string, Topic> topicDictionary;                          // Dictionary (Hash Table) of topics
 vector<char> specialchar;                                           // Vector of special chars (!, @, #, $ etc..)
 vector<int> mainOptions;                                            // Vector of main options (Topic Level Options)
 vector<int> postOptions;                                            // Vector of post options (Post Level Options)  
@@ -665,4 +665,8 @@ Post getNewPost() {
     newPost.setPContent(description);
     newPost.getPDateTime();
     return newPost;
+}
+
+Post editCurrentPost() {
+    return Post();
 }

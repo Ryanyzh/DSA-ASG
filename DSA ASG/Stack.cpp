@@ -1,22 +1,25 @@
-/*
 #include "Stack.h"
-
 #include <iostream>
+#include <string>
 
 using namespace std;
 
-RStack::RStack() {
-	rTopNode = NULL;
+
+template <typename ItemType>
+Stack<ItemType>::Stack() {
+	topNode = NULL;
 };
 
-RStack::~RStack() {
+template <typename ItemType>
+Stack<ItemType>::~Stack() {
 	while (!isEmpty()) {
 		pop();
 	}
 }
 
-bool RStack::isEmpty() {
-	if (rTopNode == NULL) {
+template <typename ItemType>
+bool Stack<ItemType>::isEmpty() {
+	if (topNode == NULL) {
 		return true;
 	}
 	else {
@@ -24,53 +27,58 @@ bool RStack::isEmpty() {
 	}
 }
 
-bool RStack::push(ItemType item) {
-	RNode* newNode = new RNode;
-	newNode->ritem = item;
-	newNode->rnext = NULL;
+template <typename ItemType>
+bool Stack<ItemType>::push(ItemType item) {
+	Node* newNode = new Node;
+	newNode->item = item;
+	newNode->next = NULL;
 
-	newNode->rnext = rTopNode; //set new node's pointer to point to node pointed to by topNode
-	rTopNode = newNode; //set topNode(pointer) to point to new Node
+	newNode->next = topNode; //set new node's pointer to point to node pointed to by topNode
+	topNode = newNode; //set topNode(pointer) to point to new Node
 
 	return true;
 }
 
-bool RStack::pop() {
+template <typename ItemType>
+bool Stack<ItemType>::pop() {
 	if (!isEmpty()) {
-		RNode* tempNode = rTopNode;
-		rTopNode = rTopNode->rnext;
-		tempNode->rnext = NULL;
+		Node* tempNode = topNode;
+		topNode = topNode->next;
+		tempNode->next = NULL;
 		delete tempNode;
 		return true;
 	}
 	return false;
 }
 
-RStack::ItemType RStack::getTop() {
+template <typename ItemType>
+ItemType Stack<ItemType>::getTop() {
 	if (!isEmpty()) {
-		return rTopNode->ritem;
+		return topNode->item;
 	}
 	return ItemType();
 }
 
-void RStack::displayInOrder() {
-	RNode* currentNode = new RNode;
-	currentNode = rTopNode;
+template <typename ItemType>
+void Stack<ItemType>::printInOrder() {
+	Node* currentNode = new Node;
+	currentNode = topNode;
 	do {
-		cout << "Item is: " << currentNode->ritem.getRContent() << endl;
-		currentNode = currentNode->rnext;
+		cout << "Item is: " << currentNode->item.getRContent() << endl;
+		currentNode = currentNode->next;
 	} while (currentNode != NULL);
 }
 
-void RStack::displayInOrderOfInsertion() {
-	RStack newStack;
-	RNode* current = new RNode;
-	current = rTopNode;
+template <typename ItemType>
+void Stack<ItemType>::printInOrderOfInsertion() {
+	Stack newStack;
+	Node* current = new Node;
+	current = topNode;
 	while (current != NULL) {
-		newStack.push(current->ritem);
-		current = current->rnext;
+		newStack.push(current->item);
+		current = current->next;
 	}
-	newStack.displayInOrder();
+	newStack.printInOrder();
 }
-*/
+
 

@@ -75,7 +75,7 @@ bool Post::addReply(Reply reply) {
 }
 
 void Post::updateReaction(int i) {
-	reactions[i - 1].addCount();
+	reactions.get(i - 1).addCount();
 }
 
 bool Post::equivalent(Post anotherPost) {
