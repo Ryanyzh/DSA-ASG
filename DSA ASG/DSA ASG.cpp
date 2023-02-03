@@ -210,8 +210,12 @@ int main()
 
                 // Add Post
                 Post newPost = getNewPost();
-                bool success = topicDictionary.search(currentTopicName).addPost(newPost);
-                if (success) {
+                Topic searchedTopic = topicDictionary.search(currentTopicName);
+                bool addPostSuccess = searchedTopic.addPost(newPost);       
+                topicDictionary.remove(currentTopicName);
+                bool addTopicSuccess = topicDictionary.add(currentTopicName, searchedTopic);
+
+                if (addTopicSuccess) {
                     cout << "[SUCCESS] Post has been added." << endl;
                 }
                 else {
@@ -263,7 +267,7 @@ int main()
                     cout << "|  Choose a topic                                                        |" << endl;
                     topicDictionary.print();
                     topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicSelectionSuccess = validateTopicNumber(topicSelected); 
                 }
 
                 Topic chosenTopic = topicDictionary.search(currentTopicName);
@@ -643,9 +647,8 @@ Post getNewPost() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, title);
     cout << char(175) << char(175) << " Enter post description:  ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, description);
-    //cout << endl;
+    cout << "Post Desc: " << description << endl;
     newPost.setPTitle(title);
     newPost.setPContent(description);
     newPost.setPDateTime();

@@ -105,7 +105,7 @@ void Post::print() {
 	cout << this->getPTitle() << endl;
 	cout << this->getPContent() << endl;
 	cout << this->getPDateTime() << endl;
-	this->getRStack().printInOrder();
-	this->getReactions().print();
-	cout << this->getPUser().getUsername() << endl;
+	//this->getRStack().printInOrder();
+	//this->getReactions().print();
+	//cout << this->getPUser().getUsername() << endl;
 }
