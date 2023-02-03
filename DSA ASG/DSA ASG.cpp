@@ -267,7 +267,7 @@ int main()
                     cout << "|  Choose a topic                                                        |" << endl;
                     topicDictionary.print();
                     topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected); 
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
 
                 Topic chosenTopic = topicDictionary.search(currentTopicName);
