@@ -67,7 +67,6 @@ void Topic::print(Topic t, int counter) {
 
 
 void Topic::printChildren() {
-	cout << "Rizz 3" << endl;
-	postList.print();
+	postList.printAll();
 }
 

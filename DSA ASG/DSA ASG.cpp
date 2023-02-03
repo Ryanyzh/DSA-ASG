@@ -193,7 +193,6 @@ int main()
                 }
                 //cout << currentTopicName << endl;
                 topicDictionary.search(currentTopicName)->printChildren();
-                cout << "Rizz 1" << endl;
                 postOption = -1;
             }
             else if (postOption == 2) {
@@ -215,10 +214,10 @@ int main()
                 bool addPostSuccess = searchedTopic->addPost(newPost);
 
                 if (addPostSuccess) {
-                    cout << "[SUCCESS] Post has been added." << endl;
+                    cout << "\n[SUCCESS] Post has been added." << endl;
                 }
                 else {
-                    cout << "[FAILED] Post was not added." << endl;
+                    cout << "\n[FAILED] Post was not added." << endl;
                 }
 
                 postOption = -1;
@@ -230,6 +229,8 @@ int main()
                 // 3. Prompt for post option (Validate post is by user)
                 // 4. Edit post
                 // 5. Set new post content
+
+                // !!! IMPORTANT : NEED TO CHECK IF THE PERSON WHO POSTED IS THE CURRENT USER !!!
             }
             else if (postOption == 4) {
                 // Delete Post
@@ -648,7 +649,6 @@ Post getNewPost() {
     getline(cin, title);
     cout << char(175) << char(175) << " Enter post description:  ";
     getline(cin, description);
-    cout << "Post Desc: " << description << endl;
     newPost.setPTitle(title);
     newPost.setPContent(description);
     newPost.setPDateTime();

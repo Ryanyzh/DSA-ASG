@@ -58,6 +58,8 @@ class LinkedList
 
 		//boolean to check if item is found
 		bool searchFound(ItemType i);
+
+		void printAll();
 };
 
 
@@ -188,12 +190,24 @@ int LinkedList<ItemType>::getLength()
 template <typename ItemType>
 void LinkedList<ItemType>::print()
 {
-	cout << "Rizz 4" << endl;
 	Node* tempPointer;
 	tempPointer = FirstNode;
 
 	while (tempPointer != NULL) {
 		tempPointer->item.print();
+		tempPointer = tempPointer->next;
+	}
+}
+
+template <typename ItemType>
+void LinkedList<ItemType>::printAll ()
+{
+	int counter = 0;
+	Node* tempPointer;
+	tempPointer = FirstNode;
+
+	while (tempPointer != NULL) {
+		tempPointer->item.printChildren(counter++);
 		tempPointer = tempPointer->next;
 	}
 }

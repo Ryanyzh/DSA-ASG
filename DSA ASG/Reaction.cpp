@@ -1,6 +1,7 @@
 #include "Reaction.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -27,6 +28,12 @@ void Reaction::addCount() {
 }
 
 void Reaction::print() {
-	cout << reactionEmoji << "   :   " << reactionCount << endl;
+	if (reactionEmoji == ":0") {
+		cout << reactionEmoji << " - " << setw(3) << setfill('0') << reactionCount << "  ";
+	}
+	else {
+		cout << reactionEmoji << " - " << setw(3) << setfill('0') << reactionCount << "    ";
+	}
+	
 }
 
