@@ -1,3 +1,4 @@
+/*
 
 #include "Array.h"
 #include <iostream>
@@ -89,3 +90,5 @@ void Array<ItemType>::replace(int index, ItemType item)
 		items[index] = item;
 	}
 }
+
+*/

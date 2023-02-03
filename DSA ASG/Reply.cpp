@@ -34,6 +34,12 @@ string Reply::getRDateTime() {
 	return Rdatetime;
 }
 
+User Reply::getRUser() {
+	return user;
+}
+
+
+
 void Reply::setRDateTime() {
 	auto nowtime = chrono::system_clock::now();
 	time_t now_c = chrono::system_clock::to_time_t(nowtime);
@@ -50,3 +56,25 @@ void Reply::setRTitle(string rt) {
 void Reply::setRContent(string rc) {
 	Rcontent = rc;
 };
+
+void Reply::setRUser(User u) {
+	user = u;
+}
+
+void Reply::print() {
+	//XXXXXX?__________________________________________________________________?
+	//XXXXXX|                                                                  |
+	//XXXXXX|  # Reply 1                                                       |
+	//XXXXXX|                                                                  |
+	//XXXXXX|  Name: 	       John Cena                  ????-??-?? ??-??-??  |
+	//XXXXXX|                                                                  |
+	//XXXXXX|  Title:        Your ---                                          |
+	//XXXXXX|  Decription:   Your --- --- Your --- --- Your --- --- Your ---Y  |
+	//XXXXXX|                Your --- --- Your --- --- Your --- --- Your ---Y  |
+	//XXXXXX|                                                                  |
+	//XXXXXX?__________________________________________________________________?
+	cout << this->getRTitle() << endl;
+	cout << this->getRContent() << endl;
+	cout << this->getRDateTime() << endl;
+	cout << this->getRUser().getUsername() << endl;;
+}

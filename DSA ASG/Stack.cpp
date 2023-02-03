@@ -1,3 +1,5 @@
+
+/*
 #include "Stack.h"
 #include <iostream>
 #include <string>
@@ -80,5 +82,5 @@ void Stack<ItemType>::printInOrderOfInsertion() {
 	}
 	newStack.printInOrder();
 }
-
+*/
 

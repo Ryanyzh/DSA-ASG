@@ -17,7 +17,7 @@ class User
 		string getPassword();
 		void setUsername(string);
 		void setPassword(string);
-		string retreiveDetails();
+		string retrieveString();
 		bool equivalent(User u);
 
 		void print();

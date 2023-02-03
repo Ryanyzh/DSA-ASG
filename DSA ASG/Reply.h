@@ -21,9 +21,15 @@ class Reply
 		void setRDateTime();
 		void setRTitle(string);
 		void setRContent(string);
-
+		void setRUser(User);
+		
+		
 		string getRTitle();
 		string getRContent();
-		string getRDateTime(); 
+		string getRDateTime();
+		User getRUser();
+
+		void print();
+		
 };
 

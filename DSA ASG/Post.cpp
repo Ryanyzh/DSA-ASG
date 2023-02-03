@@ -58,7 +58,7 @@ void Post::setPDateTime() {
 	time_t now_c = chrono::system_clock::to_time_t(nowtime);
 	stringstream ss;
 	ss << put_time(localtime(&now_c), "%Y-%m-%d %H:%M:%S");
-	string current_time = ss.str(); //2023-01-30 18:40:00
+	string current_time = ss.str(); //2023-01-30 18:40:00 = 19 spaces
 	Pdatetime = current_time;
 };
 
@@ -69,6 +69,10 @@ void Post::setPTitle(string pt) {
 void Post::setPContent(string pc) {
 	Pcontent = pc;
 };
+
+void Post::setPUser(User u) {
+	user = u;
+}
 
 bool Post::addReply(Reply reply) {
 	return replyStack.push(reply);
@@ -83,11 +87,25 @@ bool Post::equivalent(Post anotherPost) {
 }
 
 void Post::print() {
+	cout << "Rizz 2" << endl;
+	//?________________________________________________________________________?
+	//|                                                                        |
+	//|  # Post 1                                                              |
+	//|                                                                        |
+	//|  Name: 	       John Cena                          ????-??-?? ??-??-??  |
+	//|                                                                        |
+	//|  Title:        Your ---                                                |
+	//|  Decription:   Your --- --- Your --- --- Your --- --- Your --- --- Yo  |
+	//|                Your --- --- Your --- --- Your --- --- Your --- --- Yo  |
+	//|                                                                        |
+	//|  Reactions:    1 - 999    2 - 999    33 - 999    44 - 999    55 - 999  |
+	//|                                                                        |
+	//?________________________________________________________________________?
 	// ** TO BE EDITED BY RYAN **
-	cout << getPTitle() << endl;
-	cout << getPContent() << endl;
-	cout << getPDateTime() << endl;
-	getRStack().printInOrder();
-	getReactions().print();
-	getPUser().print();
+	cout << this->getPTitle() << endl;
+	cout << this->getPContent() << endl;
+	cout << this->getPDateTime() << endl;
+	this->getRStack().printInOrder();
+	this->getReactions().print();
+	cout << this->getPUser().getUsername() << endl;
 }

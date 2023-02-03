@@ -1,3 +1,5 @@
+
+/*
 #include "Dictionary.h"
 #include <iostream>
 #include <string>
@@ -203,5 +205,6 @@ ItemType Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
 		search(str, nextNode->next);
 	}
 }
+*/
 
 

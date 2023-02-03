@@ -13,13 +13,13 @@ Reaction::~Reaction() {
 	//idk
 };
 
-int Reaction::getEmoji(string emoji) {
+int Reaction::getEmojiCount(string emoji) {
 	return reactionCount;
 };
 
-void Reaction::setEmoji(string emoji, int counter) {
+void Reaction::setEmoji(string emoji) {
 	reactionEmoji = emoji;
-	reactionCount = counter;
+	reactionCount = 0;
 };
 
 void Reaction::addCount() {
@@ -27,6 +27,6 @@ void Reaction::addCount() {
 }
 
 void Reaction::print() {
-	// Insert code here
+	cout << reactionEmoji << "   :   " << reactionCount << endl;
 }
 

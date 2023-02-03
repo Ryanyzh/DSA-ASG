@@ -16,14 +16,13 @@ class Reaction
 		~Reaction();
 
 		//Topic Setter 
-		void setEmoji(string e, int c);
+		void setEmoji(string e);
 
 		//Topic getter
-		int getEmoji(string e);
+		int getEmojiCount(string e);
 
 		void addCount();
 
-		//Display topic details?
 		void print();
 };
 

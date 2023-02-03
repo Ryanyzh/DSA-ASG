@@ -40,7 +40,6 @@ void Topic::removePost(int index) {
 void Topic::print(Topic t, int counter) {
 	int spacing = 0;
 	if (counter == 1) {
-		cout << endl;
 		cout << "+------------------------------------------------------------------------+" << endl;
 		cout << "| Topic |     Name                                                       |" << endl;
 		cout << "+------------------------------------------------------------------------+" << endl;
@@ -64,5 +63,11 @@ void Topic::print(Topic t, int counter) {
 		cout << "+------------------------------------------------------------------------+" << endl;
 		//counter++;
 	}
+}
+
+
+void Topic::printChildren() {
+	cout << "Rizz 3" << endl;
+	postList.print();
 }
 

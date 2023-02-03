@@ -39,6 +39,8 @@ class Topic
 		//Display topic details -> from the Dictionary class
 		void print(Topic t, int counter);
 
+		void printChildren();
+
 
 };
 

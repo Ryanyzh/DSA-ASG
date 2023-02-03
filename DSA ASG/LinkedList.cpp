@@ -1,3 +1,5 @@
+/*
+
 #include "LinkedList.h"
 #include <iostream>
 #include <string>
@@ -189,3 +191,7 @@ bool LinkedList<ItemType>::searchFound(ItemType i) {
 	}
 	return false;
 }
+
+
+
+*/

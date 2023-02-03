@@ -32,6 +32,7 @@ class Post
 		void setPDateTime();
 		void setPTitle(string);
 		void setPContent(string);
+		void setPUser(User);
 
 		//Post getters
 		string getPTitle();

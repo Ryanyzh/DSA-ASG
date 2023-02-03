@@ -112,7 +112,7 @@ int main()
             }
             if (count(mainOptions.begin(), mainOptions.end(), topicOption)) {
                 if (topicOption == 1) {
-                    cout << "\n\n" << endl;
+                    cout << endl;
                     topicDictionary.print();
                     topicOption = -1;
                 }
@@ -123,8 +123,7 @@ int main()
 
                     // Validate topic name
                     while (topicNameValid == false) {
-                        cout << endl;
-                        cout << ">>  Enter new Topic name:  ";
+                        cout << char(175) << char(175) << " Enter new Topic name:  ";
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         getline(cin, topicName);
                         cout << endl;
@@ -141,12 +140,14 @@ int main()
                     string username;                                        //Username varaible
                     User searchedUser;
 
-                    cout << ">>  Enter username:  ";                        //Get username from User
+                    cout << char(175) << char(175) << " Enter username:  ";                        //Get username from User
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     getline(cin, username);
 
                     searchedUser = userList.search(username);               //Return Topic Obj
-                    searchedUser.print();                                   //Display topic
+                    cout << searchedUser.getUsername() << endl;                                   //Display topic
+
+                    // !!! IMPORTANT : WHAT IF THERE IS NO USERS FOUND !!! 
 
                 }
                 else if (topicOption == 4) {
@@ -156,7 +157,7 @@ int main()
                     string topicTitle;                                      //Topic title varaible
                     Topic searchedTopic;
 
-                    cout << ">>  Enter Topic title:  ";                     //Get Topic title from User
+                    cout << char(175) << char(175) << " Enter Topic title:  ";                     //Get Topic title from User
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');    
                     getline(cin, topicTitle);                               
                     
@@ -182,7 +183,7 @@ int main()
                 int topicSelected = -1;
                 bool topicSelectionSuccess = false;
                 while (topicSelectionSuccess == false) {
-                    cout << "\n\n" << endl;
+                    cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
                     topicDictionary.print();
@@ -190,14 +191,16 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 //cout << currentTopicName << endl;
-
+                topicDictionary.search(currentTopicName).printChildren();
+                cout << "Rizz 1" << endl;
+                postOption = -1;
             }
             else if (postOption == 2) {
                 // Display the table for the user to choose
                 int topicSelected = -1;
                 bool topicSelectionSuccess = false;
                 while (topicSelectionSuccess == false) {
-                    cout << "\n\n" << endl;
+                    cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
                     topicDictionary.print();
@@ -207,7 +210,15 @@ int main()
 
                 // Add Post
                 Post newPost = getNewPost();
-                topicDictionary.search(currentTopicName).addPost(newPost);
+                bool success = topicDictionary.search(currentTopicName).addPost(newPost);
+                if (success) {
+                    cout << "[SUCCESS] Post has been added." << endl;
+                }
+                else {
+                    cout << "[FAILED] Post was not added." << endl;
+                }
+
+                postOption = -1;
             }
             else if (postOption == 3) {
                 // Edit Post
@@ -238,6 +249,7 @@ int main()
                 // 1. Loop through and display all post in chosenTopic
                 // 2. Prompt user to choose post
                 // 3. Delete post Call chosenTopic.remove(searchPostIndex(postTitle))
+                postOption = -1;
 
             }
             else if (postOption == 5) {
@@ -261,6 +273,7 @@ int main()
                 // 3. Prompt user for reply title
                 // 3. Prompt user for reply content
                 // 4. Add reply to post (Similar to add Post to Topic)
+                postOption = -1;
             }
             else if (postOption == 6) {
                 // Add Reactions
@@ -268,6 +281,7 @@ int main()
                 // 2. Choose a post in the topic
                 // 3. Prompt user for reaction (emoji)?
                 // 4. Add reaction to post
+                postOption = -1;
             }
             else if (postOption == 7) {
                 // Search Post
@@ -275,7 +289,7 @@ int main()
                 // 2. Prompt user for post title
                 // 2. Search post in selected topic
                 // 3. Display post
-
+                postOption = -1;
             }
             else {
                 pageState = 1;
@@ -329,7 +343,7 @@ void init() {
 
 // --- ENTER DESCRIPTION HERE ---
 void displayTopicMenu() {
-    cout << "\n\n" << endl;
+    cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
     cout << "|  Options                                                               |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
@@ -343,7 +357,7 @@ void displayTopicMenu() {
 
 // --- ENTER DESCRIPTION HERE ---
 void displayPostMenu() {
-    cout << "\n\n" << endl;
+    cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
     cout << "|  Options                                                               |" << endl;
     cout << "+-----+-----------------------------------------+-----+------------------+" << endl;
@@ -359,13 +373,13 @@ void displayPostMenu() {
 
 // --- ENTER DESCRIPTION HERE ---
 void displayReactionsMenu() {
-    cout << "\n\n" << endl;
+    cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
     cout << "|  Options                                                               |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
     cout << "|  1  | \x18 [Upvote]      |  2  | \x19 [Downvote]    |  3  | :) [Happy]       |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
-    cout << "|  4  | :( [Sad]        |  5  | :0 [Shock]      |  6  |  :'( [Cry]       |" << endl;
+    cout << "|  4  | :( [Sad]        |  5  | :0 [Shock]                               |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
 }
 
@@ -378,10 +392,11 @@ void displayMainMenu() {
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
 };
 
+
 // --- ENTER DESCRIPTION HERE ---
 void displayBanner()
 {
-    cout << "\n\n" << endl;
+    cout << "\n" << endl;
     int nameCounter = 0;
     for (char c : currentUser.getUsername()) {
         nameCounter++;
@@ -394,12 +409,12 @@ void displayBanner()
     cout << char(191) << endl;
     cout << "|                                                                        |" << endl;
     cout << "|";
-    int spaces = (72 - 12 - nameCounter) / 2;
+    int spaces = (72 - 14 - nameCounter) / 2;
     if (nameCounter % 2 == 0) { //even characters
         for (int space = 0; space < spaces; space++) {
             cout << " ";
         }
-        cout << "Welcome " << currentUser.getUsername() << " to";
+        cout << "Welcome [" << currentUser.getUsername() << "] to";
         for (int space = 0; space < spaces + 1; space++) {
             cout << " ";
         }
@@ -424,6 +439,7 @@ void displayBanner()
         cout << abc;
     }
     cout << char(217) << endl;
+    cout << endl;
 };
 
 // --- ENTER DESCRIPTION HERE ---
@@ -431,31 +447,15 @@ bool displaySignInScreen() {
     string username;
     string password;
     cout << endl;
-
-    cout << char(218);
-    for (int i = 0; i < 72; i++) {
-        char abc = 196;
-        cout << abc;
+    cout << "                       Please Sign In Below To Begin                      " << endl;
+    for (int i = 0; i < 74; i++) {
+        cout << char(196);
     }
-    cout << char(191) << endl;
-
-    cout << "|                                                                        |" << endl;
-    cout << "|                      Please Sign In Below To Begin                     |" << endl;
-    cout << "|                                                                        |" << endl;
-
-    cout << char(192);
-    for (int i = 0; i < 72; i++) {
-        char abc = 196;
-        cout << abc;
-    }
-    cout << char(217) << "\n" << endl;
-
-    cout << ">>  Username:  ";
+    cout << "\n" << endl;
+    cout << char(175) << char(175) << " Username:  ";
     cin >> username;
-    cout << endl;
-    cout << ">>  Password:  ";
+    cout << char(175) << char(175) << " Password:  ";
     cin >> password;
-
     string correctname;
     string correctpassword;
     correctname = "abcdef";
@@ -481,33 +481,20 @@ bool displaySignUpScreen() {
     bool usernameClear = false;
     bool passwordClear = false;
     cout << endl;
-    cout << char(218);
-    for (int i = 0; i < 72; i++) {
-        char abc = 196;
-        cout << abc;
+    cout << "                  Please Sign Up Below For A New Account                  " << endl;
+    for (int i = 0; i < 74; i++) {
+        cout << char(196);
     }
-    cout << char(191) << endl;
-
-    cout << "|                                                                        |" << endl;
-    cout << "|                 Please Sign Up Below For A New Account                 |" << endl;
-    cout << "|                                                                        |" << endl;
-
-    cout << char(192);
-    for (int i = 0; i < 72; i++) {
-        char abc = 196;
-        cout << abc;
-    }
-    cout << char(217) << "\n" << endl;
-
+    cout << "\n" << endl;
     while (usernameClear == false) {
-        cout << ">>  New Username:  ";
+        cout << char(175) << char(175) << " New Username:  ";
         cin >> username;
         cout << endl;
         usernameClear = validateUsernameInput(username);
     }
 
     while (passwordClear == false) {
-        cout << ">>  New Password:  ";
+        cout << char(175) << char(175) << " New Password:  ";
         cin >> password;
         cout << endl;
         passwordClear = validatePasswordInput(password);
@@ -524,7 +511,7 @@ int getOptionInput() {
     string input;
     while (!isInteger) {
         cout << endl;
-        cout << ">>  Select an option to continue:  ";
+        cout << char(175) << char(175) << " Select an option to continue:  ";
         cin >> input;
         cout << endl;
         isInteger = checkInteger(input);
@@ -652,18 +639,17 @@ Post getNewPost() {
     string title;
     string description;
     Post newPost = Post();
-    cout << endl;
-    cout << ">>  Enter post title:  ";
+    cout << char(175) << char(175) << " Enter post title:  ";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, title);
-    cout << "\n" << endl;
-    cout << ">>  Enter post description:  ";
+    cout << char(175) << char(175) << " Enter post description:  ";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, description);
-    cout << "\n" << endl;
+    //cout << endl;
     newPost.setPTitle(title);
     newPost.setPContent(description);
-    newPost.getPDateTime();
+    newPost.setPDateTime();
+    newPost.setPUser(currentUser);
     return newPost;
 }
 
