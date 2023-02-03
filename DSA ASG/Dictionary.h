@@ -54,11 +54,11 @@ class Dictionary
 
 		// ** TO BE CHANGED (parameter name)
 		// ===================================================
-		ItemType search(KeyType topicName);
+		ItemType* search(KeyType topicName);
 
 		ItemType returnSearchOption(int topicNum);
 
-		ItemType search(KeyType topicName, Node* topicNode);
+		ItemType* search(KeyType topicName, Node* topicNode);
 		// ===================================================
 };
 
@@ -245,7 +245,7 @@ ItemType Dictionary<KeyType, ItemType>::returnSearchOption(int topicNum) {
 
 // Function to serch topic by name
 template <typename KeyType, typename ItemType>
-ItemType Dictionary<KeyType, ItemType>::search(KeyType str) {
+ItemType* Dictionary<KeyType, ItemType>::search(KeyType str) {
 	Node* current = items[hash(str)];
 	return search(str, current);
 }
@@ -253,12 +253,13 @@ ItemType Dictionary<KeyType, ItemType>::search(KeyType str) {
 
 // Recusrive search function
 template <typename KeyType, typename ItemType>
-ItemType Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
+ItemType* Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
 	if (nextNode->item.getTopicName() == str) {
-		return nextNode->item;
+		return &nextNode->item;
 	}
 	else {
 		search(str, nextNode->next);
+		return nullptr;
 	}
 }
 

@@ -155,15 +155,16 @@ int main()
                     topicOption = -1;
 
                     string topicTitle;                                      //Topic title varaible
-                    Topic searchedTopic;
+                    Topic* searchedTopic;
 
                     cout << char(175) << char(175) << " Enter Topic title:  ";                     //Get Topic title from User
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');    
                     getline(cin, topicTitle);                               
                     
                     searchedTopic = topicDictionary.search(topicTitle);     //Return Topic Obj
+                    Topic topicObj = *searchedTopic;
                     // what is the second parameter value?
-                    searchedTopic.print(searchedTopic, 0);                  //Display topic
+                    searchedTopic->print(topicObj, 0);                  //Display topic
                 }
                 else {
                     pageState = 2;
@@ -191,7 +192,7 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 //cout << currentTopicName << endl;
-                topicDictionary.search(currentTopicName).printChildren();
+                topicDictionary.search(currentTopicName)->printChildren();
                 cout << "Rizz 1" << endl;
                 postOption = -1;
             }
@@ -210,12 +211,10 @@ int main()
 
                 // Add Post
                 Post newPost = getNewPost();
-                Topic searchedTopic = topicDictionary.search(currentTopicName);
-                bool addPostSuccess = searchedTopic.addPost(newPost);       
-                topicDictionary.remove(currentTopicName);
-                bool addTopicSuccess = topicDictionary.add(currentTopicName, searchedTopic);
+                Topic* searchedTopic = topicDictionary.search(currentTopicName);
+                bool addPostSuccess = searchedTopic->addPost(newPost);
 
-                if (addTopicSuccess) {
+                if (addPostSuccess) {
                     cout << "[SUCCESS] Post has been added." << endl;
                 }
                 else {
@@ -248,7 +247,7 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 
-                Topic chosenTopic = topicDictionary.search(currentTopicName);
+                Topic chosenTopic = *topicDictionary.search(currentTopicName);
                 // ** TO BE EDITED BY RYAN **
                 // 1. Loop through and display all post in chosenTopic
                 // 2. Prompt user to choose post
@@ -270,7 +269,8 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
 
-                Topic chosenTopic = topicDictionary.search(currentTopicName);
+                Topic chosenTopicPtr = *topicDictionary.search(currentTopicName);
+                //Topic chosenTopic = *chosenTopicPtr;
                 // ** TO BE EDITED BY RYAN **
                 // 1. Loop through and display all post in chosenTopic
                 // 2. Prompt user to choose post
