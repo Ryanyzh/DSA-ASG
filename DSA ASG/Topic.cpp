@@ -71,6 +71,12 @@ void Topic::print(Topic t, int counter) {
 
 
 void Topic::printChildren() {
-	postList.printWithCounter();
+	if (postList.isEmpty()) {
+		cout << "There is no post to display" << endl;
+	}
+	else {
+		postList.printWithCounter();
+	}
+	
 }
 

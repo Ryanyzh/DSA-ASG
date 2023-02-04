@@ -45,6 +45,7 @@ class Stack
 
 		void printWithCounter();
 
+		int getSize();
 };
 
 
@@ -118,11 +119,11 @@ void Stack<ItemType>::print() {
 //printInOrder but with Counter
 template <typename ItemType>
 void Stack<ItemType>::printWithCounter() {
-	int counter = 1;
-	Node* currentNode = topNode;
-	//currentNode = topNode;
+	int counter = getSize();
+	Node* currentNode = new Node;
+	currentNode = topNode;
 	do {
-		currentNode->item.print(counter++);
+		currentNode->item.print(counter--);
 		currentNode = currentNode->next;
 	} while (currentNode != NULL);
 }
@@ -141,6 +142,19 @@ void Stack<ItemType>::printBackwards() {
 	newStack.printInOrder();
 }
 
+
+//get the size of the stack
+template <typename ItemType>
+int Stack<ItemType>::getSize() {
+	int sizeCount = 0;
+	Node* current = topNode;
+	while (current != NULL) {
+		sizeCount++;
+		current = current->next;
+		 
+	}
+	return sizeCount;
+}
 
 
 

@@ -49,7 +49,7 @@ class Post
 		//Add reply to post
 		bool addReply(Reply reply);
 
-		void updateReaction(int index);
+		void addReaction(int index);
 
 		void print(int counter);
 

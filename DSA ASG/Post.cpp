@@ -94,8 +94,10 @@ bool Post::addReply(Reply reply) {
 	return replyStack.push(reply);
 }
 
-void Post::updateReaction(int i) {
-	reactions.get(i - 1).addCount();
+void Post::addReaction(int i) {
+	reactions.get(i - 1).print();
+	this->reactions.get(i - 1).addCount();
+	reactions.get(i - 1).print();
 }
 
 bool Post::equivalent(Post anotherPost) {

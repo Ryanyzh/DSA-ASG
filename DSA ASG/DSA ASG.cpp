@@ -15,6 +15,11 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <direct.h>
+#include <stdlib.h>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #include "LinkedList.h"
 #include "Stack.h"
@@ -29,13 +34,16 @@
 
 using namespace std;
 
+
+
 // --- Instantiation of variables ---
 User currentUser;                                                   // User Obj for current user
 LinkedList<User> userList;                                          // List of 
 Dictionary<string, Topic> topicDictionary;                          // Dictionary (Hash Table) of topics
 vector<char> specialchar;                                           // Vector of special chars (!, @, #, $ etc..)
 vector<int> mainOptions;                                            // Vector of main options (Topic Level Options)
-vector<int> postOptions;                                            // Vector of post options (Post Level Options)  
+vector<int> postOptions;                                            // Vector of post options (Post Level Options) 
+vector<int> reactionOptions;
 int pageState;                                                      // int to store page state
 string currentTopicName;                                            // string to store current topic name
 
@@ -59,6 +67,7 @@ bool checkSpecialCharacters(string p);                              // Function 
 bool checkInteger(string input);                                    // Function to check if the input is an integer -> for the function get Option Input
 bool validateTopicName(string nameOfTopic);                         // Function to validate the user NAME input when they enter the new topic name
 bool validateTopicNumber(int topicNum);                             // Function to validate the user OPTION input with the current topic dictionary when they select the topic name
+bool validatePostNumber(int postNum, LinkedList<Post> postListing);
 
 
 Post getNewPost();
@@ -66,11 +75,14 @@ Post editCurrentPost();
 Reply getNewReply();
 
 
-void saveTopicAddition();
-void savePostAddition();
-void savePostDeletion();
-void saveReplyAddition();
-void savePostRevision(); //for add reaction and edit post
+void saveTopicAddition(Topic t);
+void savePostAddition(Post p);
+void savePostDeletion(Post p);
+void saveReplyAddition(Reply r);
+void savePostRevision(Post p); //for add reaction and edit post
+void saveUsers(User u);
+
+void loadFiles();
 
 
 // --- Main function for execution ---
@@ -89,6 +101,9 @@ int main()
             while (signInOption != 1 && signInOption != 2) {
                 displayMainMenu();
                 signInOption = getOptionInput();
+                if (signInOption == 1 && userList.isEmpty() == true) {
+                    signInOption = -1;
+                }
             }
             if (signInOption == 1) {
                 while (!signInStatus) {
@@ -139,6 +154,10 @@ int main()
                     }
                     newTopic.setTopicName(topicName);           // Set topic name to Topic Obj
                     topicDictionary.add(topicName, newTopic);   // Add topic Obj to Dictionary (Topic Hash Table)
+
+                    //Saving the topic into a file
+                    saveTopicAddition(newTopic);
+
                     topicOption = -1;
                 }
                 else if (topicOption == 3) {
@@ -186,7 +205,7 @@ int main()
 
         // Post related functions
         while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 2) {
-            topicDictionary.isEmpty();
+            //topicDictionary.isEmpty();
             postOption = -999;
             while (!count(postOptions.begin(), postOptions.end(), postOption)) {
                 displayPostMenu();
@@ -295,7 +314,7 @@ int main()
                 // Get topic ptr
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
                 // Print all post
-                //chosenTopic->printChildren();
+                chosenTopic->printChildren();
                 // Get user input
                 int postIndex = -1;
                 cout << char(175) << char(175) << " Select a post to continue:  ";
@@ -333,10 +352,59 @@ int main()
             }
             else if (postOption == 6) {
                 // Add Reactions
-                // 1. Choose a topic
-                // 2. Choose a post in the topic
-                // 3. Prompt user for reaction (emoji)?
-                // 4. Add reaction to post
+                
+                // Display the table for the user to choose
+                int topicSelected = -1;
+                bool topicSelectionSuccess = false;
+                while (topicSelectionSuccess == false) {
+                    cout << "\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.printWithCounter();
+                    topicSelected = getOptionInput();
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                }
+                
+                // Get topic ptr
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                LinkedList<Post> postList = chosenTopic->getPostList();
+                //If post exists
+                if (!postList.isEmpty()) {
+                    // Print all post
+                    chosenTopic->printChildren();
+                    // Get user input
+                    int postIndex = -1;
+                    bool postSelectionSuccess = false;
+
+                    while (!postSelectionSuccess) {
+                        //Can try adding in validation for post number
+                        cout << char(175) << char(175) << " Select a post to continue:  ";
+                        cin >> postIndex;
+                        postSelectionSuccess = validatePostNumber(postIndex, postList);
+                    }
+                    
+                    Post chosenPost = postList.get(postIndex - 1);
+
+                    // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+
+                    string chosenPostTitle = chosenPost.getPTitle();
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+
+                    cout << endl;
+
+                    // Prompt user for reaction (emoji)
+                    int reactionOption = -999;
+                    while (!count(reactionOptions.begin(), reactionOptions.end(), reactionOption)) {
+                        displayReactionsMenu();
+                        reactionOption = getOptionInput();
+                    }
+
+                    //Add reaction to post
+                    postObjPtr->addReaction(reactionOption);
+                }
+                
+              
+                //return back to post menu
                 postOption = -1;
             }
             else if (postOption == 7) {
@@ -388,6 +456,12 @@ void init() {
     postOptions.push_back(7);
     postOptions.push_back(8);
 
+    reactionOptions.push_back(1);
+    reactionOptions.push_back(2);
+    reactionOptions.push_back(3);
+    reactionOptions.push_back(4);
+    reactionOptions.push_back(5);
+
 
     currentUser = User();
     currentUser.setUsername("");
@@ -395,7 +469,53 @@ void init() {
 
     currentTopicName = "";
     pageState = 0;
+
+    //creating directories --> must upgrade to C++ 17 first 
+    //link: https://stackoverflow.com/questions/41308933/how-to-enable-c17-compiling-in-visual-studio
+    fs::create_directories("./Assets/Content");
+    fs::create_directories("./Assets/Users");
+
+    //getting the topic names and storing into the topic dictionary
+    std::string path = "Assets/Content";
+    for (const auto& entry : fs::directory_iterator(path)) {
+        string nameOfFile = entry.path().string();
+        string delimiter1 = "Content\\";
+        string delimiter2 = ".txt";
+        size_t start_pos = nameOfFile.find(delimiter1) + delimiter1.length();
+        size_t end_pos = nameOfFile.find(delimiter2);
+        string topicResult = nameOfFile.substr(start_pos, end_pos - start_pos);
+        //cout << topicResult << endl;
+        Topic newSavedTopic = Topic();
+        newSavedTopic.setTopicName(topicResult);
+        topicDictionary.add(topicResult, newSavedTopic);
+    }
+
+    //getting the users and storing into a user list
+    ifstream userfile;
+    userfile.open("Assets/Users/userlist.txt");
+    string line;
+    while (getline(userfile, line)) {
+        string userString =  line;
+        string delimiter = ",";
+        size_t pos = userString.find(delimiter);
+        string usernameString = userString.substr(0, pos);
+        string passwordString = userString.substr(pos + delimiter.length());
+        User newSavedUser = User();
+        newSavedUser.setUsername(usernameString);
+        newSavedUser.setPassword(passwordString);
+        bool addedSavedUserSuccess = userList.add(newSavedUser);
+    }
+    userfile.close();
+
 }
+
+
+void loadFiles() {
+
+}
+
+
+
 
 // --- ENTER DESCRIPTION HERE ---
 void displayTopicMenu() {
@@ -484,7 +604,7 @@ void displayBanner()
         for (int space = 0; space < spaces; space++) {
             cout << " ";
         }
-        cout << "Welcome " << currentUser.getUsername() << " to";
+        cout << "Welcome [" << currentUser.getUsername() << "] to";
         for (int space = 0; space < spaces + 2; space++) {
             cout << " ";
         }
@@ -516,11 +636,11 @@ bool displaySignInScreen() {
     cin >> username;
     cout << char(175) << char(175) << " Password:  ";
     cin >> password;
-    string correctname;
-    string correctpassword;
-    correctname = "abcdef";
-    correctpassword = "123456";
-    if (username == correctname && password == correctpassword) {
+    //string correctname;
+    //string correctpassword;
+    //correctname = "abcdef";
+    //correctpassword = "123456";
+    if (validateUser(username, password)) {
         currentUser.setUsername(username);
         currentUser.setPassword(password);
         return true;
@@ -530,7 +650,6 @@ bool displaySignInScreen() {
         //cout << "__________________________________________________________________________" << endl;
         return false;
     }
-    //return validateUser(username, password);
 }
 
 
@@ -561,6 +680,9 @@ bool displaySignUpScreen() {
     }
     currentUser.setUsername(username);
     currentUser.setPassword(password);
+
+    //saving user to the text files
+    saveUsers(currentUser);
 
     return true;
 }
@@ -730,3 +852,68 @@ Reply getNewReply() {
 Post editCurrentPost() {
     return Post();
 }
+
+
+// --- ENTER DESCRIPTION HERE ---
+bool validatePostNumber(int postNum, LinkedList<Post> postListing) {
+    if (postNum <= 0) {
+        cout << "[ERROR] Invalid number inputted. Pls try again." << endl;
+        return false;
+    }
+    else if (postNum > postListing.getLength()) {
+        cout << "[ERROR] Invalid number inputted. Pls try again." << endl;
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
+
+// --- ENTER DESCRIPTION HERE ---
+void saveTopicAddition(Topic t) {
+
+    //creating file for writing
+    string filename = "Assets/Content/" + t.getTopicName() + ".txt";
+    ofstream file;
+    file.open(filename.c_str());
+    file.close();
+};
+
+// --- ENTER DESCRIPTION HERE ---
+void savePostAddition(Post p) {
+
+};
+
+// --- ENTER DESCRIPTION HERE ---
+void savePostDeletion(Post p) {
+
+};
+
+// --- ENTER DESCRIPTION HERE ---
+void saveReplyAddition(Reply r) {
+
+};
+
+// --- ENTER DESCRIPTION HERE ---
+void savePostRevision(Post r) {
+
+};
+
+
+// --- ENTER DESCRIPTION HERE ---
+void saveUsers(User u) {
+    string filename = "Assets/Users/userlist.txt";
+    ofstream file;
+    file.open(filename.c_str(), ios::app);
+
+
+    if (file.is_open()) {
+        string inputUser = u.getUsername() + "," + u.getPassword();
+        file << inputUser << endl;
+        file.close();
+    }
+    else {
+        std::cout << "Error in opening file." << std::endl;
+    }
+};

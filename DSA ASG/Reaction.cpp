@@ -24,7 +24,7 @@ void Reaction::setEmoji(string emoji) {
 };
 
 void Reaction::addCount() {
-	reactionCount++;
+	reactionCount = reactionCount + 1;
 }
 
 void Reaction::print() {

@@ -18,7 +18,7 @@ class Dictionary
 		{
 			KeyType key;
 			ItemType item;
-			Node* next; //or use hashnext;
+			Node* next; 
 		};
 
 		Node* items[HT_MAX_SIZE];
@@ -193,17 +193,16 @@ int Dictionary<KeyType, ItemType>::getLength()
 
 
 template <typename KeyType, typename ItemType>
-void Dictionary<KeyType, ItemType>::printWithCounter() {
-	int counter = 1;
+void Dictionary<KeyType, ItemType>::print() {
 	if (!isEmpty()) {
 		for (int i = 0; i < HT_MAX_SIZE; i++) {
 			Node* current = new Node;
 			current = items[i];
 			if (current != NULL) {
-				current->item.print(current->item, counter++);
+				current->item.print();
 
 				while (current->next != NULL) {
-					current->item.print(current->item, counter++);
+					current->item.print();
 					current = current->next;
 				}
 			}
@@ -218,16 +217,17 @@ void Dictionary<KeyType, ItemType>::printWithCounter() {
 
 
 template <typename KeyType, typename ItemType>
-void Dictionary<KeyType, ItemType>::print() {
+void Dictionary<KeyType, ItemType>::printWithCounter() {
+	int counter = 1;
 	if (!isEmpty()) {
 		for (int i = 0; i < HT_MAX_SIZE; i++) {
 			Node* current = new Node;
 			current = items[i];
 			if (current != NULL) {
-				current->item.print();
+				current->item.print(current->item, counter++);
 
 				while (current->next != NULL) {
-					current->item.print();
+					current->item.print(current->item, counter++);
 					current = current->next;
 				}
 			}
