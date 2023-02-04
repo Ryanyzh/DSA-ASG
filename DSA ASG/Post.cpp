@@ -102,27 +102,13 @@ bool Post::equivalent(Post anotherPost) {
 	return (this->getPTitle() == anotherPost.getPContent());
 }
 
-void Post::print() {
-	cout << "Rizz 2" << endl;
-	//?________________________________________________________________________?
-	//|                                                                        |
-	//|  # Post 1                                                              |
-	//|                                                                        |
-	//|  Name: 	       John Cena                          ????-??-?? ??-??-??  |
-	//|                                                                        |
-	//|  Title:        Your ---                                                |
-	//|  Decription:   Your --- --- Your --- --- Your --- --- Your --- --- Yo  |
-	//|                Your --- --- Your --- --- Your --- --- Your --- --- Yo  |
-	//|                                                                        |
-	//|  Reactions:    1 - 999    2 - 999    33 - 999    44 - 999    55 - 999  |
-	//|                                                                        |
-	//?________________________________________________________________________?
-	
+void Post::printChildren() {
+	replyStack.printWithCounter();
 }
 
 
 
-void Post::printChildren(int counter) {
+void Post::print(int counter) {
 	//?________________________________________________________________________?  #1
 	//|                                                                        |  #2
 	//|  # Post 1                                                              |  #3
@@ -170,7 +156,7 @@ void Post::printChildren(int counter) {
 	cout << "  |" << endl;
 
 	//printing the eighth line
-	int num_of_lines = (int)((getPContent().length() / 53) + 0.5);  //54 spaces
+	int num_of_lines = (int)((getPContent().length() / 53)) + 1;  //54 spaces
 	//cout << "lines: " << num_of_lines << endl;
 	if (num_of_lines == 1) {
 		int fourthSpacing = 72 - getPContent().length() - 18;
@@ -182,13 +168,13 @@ void Post::printChildren(int counter) {
 		//string one = this->getPContent().substr(0, 53);
 		cout << "|  Description:  " << this->getPContent().substr(0, 53) << "-" << "  |" << endl;
 		for (int i = 0; i < num_of_lines - 1; i++) {
-			if (i != num_of_lines - 1) {
+			if (i != num_of_lines - 2) {
 				cout << "|                " << this->getPContent().substr(53 * (i + 1), 53) << "-" << "  |" << endl;
 			}
 			else {
 				int char_left = this->getPContent().length() - ((i + 1) * 53);
 				int fifthSpacing = 72 - 16 - char_left - 2;
-				cout << "|                " << this->getPContent().substr((53*(i + 1)), char_left) << "-" << "  |" << endl;
+				cout << "|                " << this->getPContent().substr((53*(i + 1)), char_left);
 				for (int i = 0; i < fifthSpacing; i++) { cout << " "; }
 				cout << "  |" << endl;;
 			}
@@ -212,6 +198,18 @@ void Post::printChildren(int counter) {
 	for (int i = 0; i < 72; i++) { cout << char(196); }
 	cout << char(217) << endl;
 	
+
+	if (replyStack.isEmpty() != true) {
+		printChildren();
+	}
+	else {
+		cout << char(219) << char(219) << char(219) << char(219) << char(219) << char(219)
+			<< "|  There is no reply for this post.                                |" << endl;
+		cout << char(219) << char(219) << char(219) << char(219) << char(219) << char(219);
+		cout << char(192);
+		for (int i = 0; i < 66; i++) { cout << char(196); }
+		cout << char(217) << endl;
+	}
 
 	// ** TO BE EDITED BY RYAN **
 	// 

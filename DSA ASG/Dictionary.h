@@ -52,6 +52,8 @@ class Dictionary
 		//display the topics in the Dictionary
 		void print();
 
+		void printWithCounter();
+
 		// ** TO BE CHANGED (parameter name)
 		// ===================================================
 		ItemType* search(KeyType topicName);
@@ -191,7 +193,7 @@ int Dictionary<KeyType, ItemType>::getLength()
 
 
 template <typename KeyType, typename ItemType>
-void Dictionary<KeyType, ItemType>::print() {
+void Dictionary<KeyType, ItemType>::printWithCounter() {
 	int counter = 1;
 	if (!isEmpty()) {
 		for (int i = 0; i < HT_MAX_SIZE; i++) {
@@ -202,6 +204,30 @@ void Dictionary<KeyType, ItemType>::print() {
 
 				while (current->next != NULL) {
 					current->item.print(current->item, counter++);
+					current = current->next;
+				}
+			}
+		}
+	}
+	else {
+		cout << "There is nothing to display.";
+	}
+
+	cout << endl;
+}
+
+
+template <typename KeyType, typename ItemType>
+void Dictionary<KeyType, ItemType>::print() {
+	if (!isEmpty()) {
+		for (int i = 0; i < HT_MAX_SIZE; i++) {
+			Node* current = new Node;
+			current = items[i];
+			if (current != NULL) {
+				current->item.print();
+
+				while (current->next != NULL) {
+					current->item.print();
 					current = current->next;
 				}
 			}

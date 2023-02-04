@@ -71,6 +71,6 @@ void Topic::print(Topic t, int counter) {
 
 
 void Topic::printChildren() {
-	postList.printAll();
+	postList.printWithCounter();
 }
 

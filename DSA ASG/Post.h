@@ -51,8 +51,8 @@ class Post
 
 		void updateReaction(int index);
 
-		void print();
+		void print(int counter);
 
-		void printChildren(int counter);
+		void printChildren();
 };
 

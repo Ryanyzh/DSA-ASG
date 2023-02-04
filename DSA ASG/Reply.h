@@ -30,6 +30,7 @@ class Reply
 		User getRUser();
 
 		void print(int counter);
+		void printIdentation();
 		
 };
 

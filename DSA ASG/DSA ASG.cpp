@@ -66,6 +66,13 @@ Post editCurrentPost();
 Reply getNewReply();
 
 
+void saveTopicAddition();
+void savePostAddition();
+void savePostDeletion();
+void saveReplyAddition();
+void savePostRevision(); //for add reaction and edit post
+
+
 // --- Main function for execution ---
 int main()
 {
@@ -114,7 +121,7 @@ int main()
             if (count(mainOptions.begin(), mainOptions.end(), topicOption)) {
                 if (topicOption == 1) {
                     cout << endl;
-                    topicDictionary.print();
+                    topicDictionary.printWithCounter();
                     topicOption = -1;
                 }
                 else if (topicOption == 2) {
@@ -165,6 +172,9 @@ int main()
                     searchedTopic = topicDictionary.search(topicTitle);     //Return Topic Obj
                     Topic topicObj = *searchedTopic;
                     // what is the second parameter value?
+
+                    // IMPORTANT !!! SECOND PARAMETER IS THE INDEX + 1
+
                     searchedTopic->print(topicObj, 0);                  //Display topic
                 }
                 else {
@@ -188,12 +198,17 @@ int main()
                     cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.print();
+                    topicDictionary.printWithCounter();
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 //cout << currentTopicName << endl;
-                topicDictionary.search(currentTopicName)->printChildren();
+                if (topicDictionary.search(currentTopicName)->getPostList().isEmpty()) {
+                    cout << "There is no posts to display. " << endl;
+                }
+                else {
+                    topicDictionary.search(currentTopicName)->printChildren();
+                }
                 postOption = -1;
             }
             else if (postOption == 2) {
@@ -204,7 +219,7 @@ int main()
                     cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.print();
+                    topicDictionary.printWithCounter();
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
@@ -244,7 +259,7 @@ int main()
                     cout << "\n\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.print();
+                    topicDictionary.printWithCounter();
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
@@ -261,13 +276,16 @@ int main()
             else if (postOption == 5) {
                 // Add Reply
 
+                // !!! IMPORTANT: CANNOT ADD REPLY WHEN THERE IS NO POST !!!
+
+
                 int topicSelected = -1;
                 bool topicSelectionSuccess = false;
                 while (topicSelectionSuccess == false) {
                     cout << "\n\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.print();
+                    topicDictionary.printWithCounter();
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
@@ -277,17 +295,28 @@ int main()
                 chosenTopic->printChildren();
                 // Get user input
                 int postIndex = -1;
-                cout << "Enter post option: ";
+                cout << char(175) << char(175) << " Select a post to continue:  ";
                 cin >> postIndex;
                 LinkedList<Post> postList = chosenTopic->getPostList();
-                Post chosenPost = postList.get(0);
+                Post chosenPost = postList.get(postIndex - 1);
+
+                // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+
                 string chosenPostTitle = chosenPost.getPTitle();
                 Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                cout << endl;
+                
+                Reply newReply = getNewReply();
+                //newReply.setRTitle("testing title");
+                //newReply.setRContent("Reply content");
+                bool addReplySuccess = postObjPtr->addReply(newReply);
 
-                Reply newReply;
-                newReply.setRTitle("testing title");
-                newReply.setRContent("Reply content");
-                postObjPtr->addReply(newReply);
+                if (addReplySuccess) {
+                    cout << "\n[SUCCESS] Reply has been added." << endl;
+                }
+                else {
+                    cout << "\n[FAILED] Reply was not added." << endl;
+                }
 
                 //Topic chosenTopic = *chosenTopicPtr;
                 // ** TO BE EDITED BY RYAN **
@@ -376,6 +405,7 @@ void displayTopicMenu() {
     cout << "+-----+-----------------+-----+------------------------------------------+" << endl;
     cout << "|  0  | Exit Program                                                     |" << endl;
     cout << "+-----+------------------------------------------------------------------+" << endl;
+    cout << endl;
 };
 
 // --- ENTER DESCRIPTION HERE ---
@@ -392,6 +422,7 @@ void displayPostMenu() {
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
     cout << "|  8  | Return Back To Main Menu                |  0  | Exit Program     |" << endl;
     cout << "+-----+-----------------------------------------+-----+------------------+" << endl;
+    cout << endl;
 }
 
 // --- ENTER DESCRIPTION HERE ---
@@ -404,6 +435,7 @@ void displayReactionsMenu() {
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
     cout << "|  4  | :( [Sad]        |  5  | :0 [Shock]                               |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
+    cout << endl;
 }
 
 // --- ENTER DESCRIPTION HERE ---
@@ -413,6 +445,7 @@ void displayMainMenu() {
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
     cout << "|  1  | Sign In         |  2  | Sign Up         |  0  | Exit Program     |" << endl;
     cout << "+-----+-----------------+-----+-----------------+-----+------------------+" << endl;
+    cout << endl;
 };
 
 
@@ -533,7 +566,6 @@ int getOptionInput() {
     bool isInteger = false;
     string input;
     while (!isInteger) {
-        cout << endl;
         cout << char(175) << char(175) << " Select an option to continue:  ";
         cin >> input;
         cout << endl;

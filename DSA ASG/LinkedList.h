@@ -59,7 +59,7 @@ class LinkedList
 		//boolean to check if item is found
 		bool searchFound(ItemType i);
 
-		void printAll();
+		void printWithCounter();
 };
 
 
@@ -204,16 +204,18 @@ void LinkedList<ItemType>::print()
 }
 
 template <typename ItemType>
-void LinkedList<ItemType>::printAll ()
+void LinkedList<ItemType>::printWithCounter ()
 {
-	int counter = 0;
+	int counter = 1;
 	Node* tempPointer;
 	tempPointer = FirstNode;
 
 	while (tempPointer != NULL) {
-		tempPointer->item.printChildren(counter++);
+		tempPointer->item.print(counter++);
 		tempPointer = tempPointer->next;
 	}
+
+	cout << endl;
 }
 
 template <typename ItemType>

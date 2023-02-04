@@ -38,10 +38,12 @@ class Stack
 		bool isEmpty();
 
 		//Display replies in order
-		void printInOrder();
+		void print();
 
 		//Display replies in order of insertion
-		void printInOrderOfInsertion();
+		void printBackwards();
+
+		void printWithCounter();
 
 };
 
@@ -100,9 +102,23 @@ ItemType Stack<ItemType>::getTop() {
 	return ItemType();
 }
 
+
+//printInOrder
 template <typename ItemType>
-void Stack<ItemType>::printInOrder() {
-	int counter = 0;
+void Stack<ItemType>::print() {
+	Node* currentNode = new Node;
+	currentNode = topNode;
+	do {
+		currentNode->item.print();
+		currentNode = currentNode->next;
+	} while (currentNode != NULL);
+}
+
+
+//printInOrder but with Counter
+template <typename ItemType>
+void Stack<ItemType>::printWithCounter() {
+	int counter = 1;
 	Node* currentNode = new Node;
 	currentNode = topNode;
 	do {
@@ -111,8 +127,10 @@ void Stack<ItemType>::printInOrder() {
 	} while (currentNode != NULL);
 }
 
+
+//printInOrdderOfInsertion
 template <typename ItemType>
-void Stack<ItemType>::printInOrderOfInsertion() {
+void Stack<ItemType>::printBackwards() {
 	Stack newStack;
 	Node* current = new Node;
 	current = topNode;
