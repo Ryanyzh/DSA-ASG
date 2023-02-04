@@ -186,6 +186,7 @@ int main()
 
         // Post related functions
         while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 2) {
+            topicDictionary.isEmpty();
             postOption = -999;
             while (!count(postOptions.begin(), postOptions.end(), postOption)) {
                 displayPostMenu();
@@ -263,13 +264,15 @@ int main()
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
-                Post getPost = getNewPost();
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                chosenTopic->searchPostIndex(getPost.getPTitle());
-                // ** TO BE EDITED BY RYAN **
-                // 1. Loop through and display all post in chosenTopic
-                // 2. Prompt user to choose post
-                // 3. Delete post Call chosenTopic.remove(searchPostIndex(postTitle))
+                chosenTopic->printChildren();
+
+                int postIndex = -1;
+                cout << char(175) << char(175) << " Select a post to delete:  ";
+                cin >> postIndex;
+                chosenTopic->removePost(postIndex - 1);
+                cout << chosenTopic->getPostList().isEmpty();
+
                 postOption = -1;
 
             }
@@ -292,7 +295,7 @@ int main()
                 // Get topic ptr
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
                 // Print all post
-                chosenTopic->printChildren();
+                //chosenTopic->printChildren();
                 // Get user input
                 int postIndex = -1;
                 cout << char(175) << char(175) << " Select a post to continue:  ";
@@ -304,13 +307,14 @@ int main()
 
                 string chosenPostTitle = chosenPost.getPTitle();
                 Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                
                 cout << endl;
                 
                 Reply newReply = getNewReply();
                 //newReply.setRTitle("testing title");
                 //newReply.setRContent("Reply content");
                 bool addReplySuccess = postObjPtr->addReply(newReply);
-
+                chosenTopic = topicDictionary.search(currentTopicName);
                 if (addReplySuccess) {
                     cout << "\n[SUCCESS] Reply has been added." << endl;
                 }

@@ -140,6 +140,7 @@ void LinkedList<ItemType>::remove(int index)
 			tempNode->item.~Post();
 			// Delete node which contains post obj
 			delete tempNode;
+			size--;
 		}
 		else {
 			Node* current = FirstNode;
@@ -155,6 +156,7 @@ void LinkedList<ItemType>::remove(int index)
 			tempNode->item.~Post();
 			// Delete node which contains post obj
 			delete tempNode;
+			size--;
 		}
 	}
 }

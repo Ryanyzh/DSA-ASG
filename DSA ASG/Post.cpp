@@ -65,8 +65,8 @@ string Post::getPDateTime() {
 	return Pdatetime;
 }
 
-Stack<Reply> Post::getRStack() {
-	return replyStack;
+Stack<Reply>* Post::getRStack() {
+	return &replyStack;
 }
 
 void Post::setPDateTime() {
@@ -200,7 +200,8 @@ void Post::print(int counter) {
 	
 
 	if (replyStack.isEmpty() != true) {
-		printChildren();
+		//printChildren();
+		replyStack.printWithCounter();
 	}
 	else {
 		cout << char(219) << char(219) << char(219) << char(219) << char(219) << char(219)

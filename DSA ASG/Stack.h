@@ -119,8 +119,8 @@ void Stack<ItemType>::print() {
 template <typename ItemType>
 void Stack<ItemType>::printWithCounter() {
 	int counter = 1;
-	Node* currentNode = new Node;
-	currentNode = topNode;
+	Node* currentNode = topNode;
+	//currentNode = topNode;
 	do {
 		currentNode->item.print(counter++);
 		currentNode = currentNode->next;
