@@ -29,7 +29,7 @@ class Reply
 		string getRDateTime();
 		User getRUser();
 
-		void print();
+		void print(int counter);
 		
 };
 

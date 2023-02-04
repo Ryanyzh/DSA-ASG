@@ -102,10 +102,11 @@ ItemType Stack<ItemType>::getTop() {
 
 template <typename ItemType>
 void Stack<ItemType>::printInOrder() {
+	int counter = 0;
 	Node* currentNode = new Node;
 	currentNode = topNode;
 	do {
-		currentNode->item.print();
+		currentNode->item.print(counter++);
 		currentNode = currentNode->next;
 	} while (currentNode != NULL);
 }

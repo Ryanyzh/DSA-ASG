@@ -21,6 +21,10 @@ void Topic::setTopicName(string tn) {
 	topicName = tn;
 };
 
+LinkedList<Post> Topic::getPostList() {
+	return postList;
+}
+
 bool Topic::addPost(Post post) {
 	return postList.add(post);
 }
@@ -29,7 +33,7 @@ int Topic::searchPostIndex(string str) {
 	return postList.searchIndex(str);
 }
 
-Post Topic::searchPost(string str) {
+Post* Topic::searchPost(string str) {
 	return postList.search(str);
 }
 

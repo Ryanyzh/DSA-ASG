@@ -24,6 +24,9 @@ class Topic
 		//Topic getter
 		string getTopicName();
 
+		// Post list getter
+		LinkedList<Post> getPostList();
+
 		//Add post to topic
 		bool addPost(Post post);
 
@@ -34,7 +37,7 @@ class Topic
 		int searchPostIndex(string s);
 
 		//Search and return Post Object
-		Post searchPost(string s);
+		Post* searchPost(string s);
 
 		//Display topic details -> from the Dictionary class
 		void print(Topic t, int counter);

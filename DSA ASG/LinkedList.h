@@ -45,10 +45,10 @@ class LinkedList
 		void print();
 
 		//search and return an object
-		ItemType search(string s);
+		ItemType* search(string s);
 
 		//recusive search function for the above
-		ItemType search(string s, Node* nodePointer);
+		ItemType* search(string s, Node* nodePointer);
 
 		//search and return a index of object
 		int searchIndex(string s);
@@ -162,7 +162,7 @@ void LinkedList<ItemType>::remove(int index)
 template <typename ItemType>
 ItemType LinkedList<ItemType>::get(int index)
 {
-	Node* current = new Node;
+	/*Node* current = new Node;
 	if (index <= size) {
 		for (index; index > 0; index--) {
 			current = current->next;
@@ -171,8 +171,12 @@ ItemType LinkedList<ItemType>::get(int index)
 	}
 	else {
 		return ItemType();
+	}*/
+	Node* current = FirstNode;
+	for (int i = 0; i < index - 1; i++) {
+		current = current->next;
 	}
-
+	return current->item;
 }
 
 template <typename ItemType>
@@ -213,17 +217,17 @@ void LinkedList<ItemType>::printAll ()
 }
 
 template <typename ItemType>
-ItemType LinkedList<ItemType>::search(string str)
+ItemType* LinkedList<ItemType>::search(string str)
 {
 	Node* current = FirstNode;
 	return search(str, current);
 }
 
 template <typename ItemType>
-ItemType LinkedList<ItemType>::search(string str, Node* nodePointer)
+ItemType* LinkedList<ItemType>::search(string str, Node* nodePointer)
 {
 	if (nodePointer->item.retrieveString() == str) {
-		return nodePointer->item;
+		return &nodePointer->item;
 	}
 	else {
 		search(str, nodePointer->next);

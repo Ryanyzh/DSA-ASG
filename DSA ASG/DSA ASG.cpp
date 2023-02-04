@@ -31,7 +31,7 @@ using namespace std;
 
 // --- Instantiation of variables ---
 User currentUser;                                                   // User Obj for current user
-LinkedList<User> userList;                                          // List of users
+LinkedList<User> userList;                                          // List of 
 Dictionary<string, Topic> topicDictionary;                          // Dictionary (Hash Table) of topics
 vector<char> specialchar;                                           // Vector of special chars (!, @, #, $ etc..)
 vector<int> mainOptions;                                            // Vector of main options (Topic Level Options)
@@ -63,6 +63,7 @@ bool validateTopicNumber(int topicNum);                             // Function 
 
 Post getNewPost();
 Post editCurrentPost();
+Reply getNewReply();
 
 
 // --- Main function for execution ---
@@ -138,15 +139,15 @@ int main()
                     topicOption = -1;
                     // Insert Codes Here
                     string username;                                        //Username varaible
-                    User searchedUser;
+                    User* searchedUser;
 
                     cout << char(175) << char(175) << " Enter username:  ";                        //Get username from User
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     getline(cin, username);
 
                     searchedUser = userList.search(username);               //Return Topic Obj
-                    cout << searchedUser.getUsername() << endl;                                   //Display topic
-
+                    cout << searchedUser->getUsername() << endl;                                   //Display topic
+                    
                     // !!! IMPORTANT : WHAT IF THERE IS NO USERS FOUND !!! 
 
                 }
@@ -247,8 +248,9 @@ int main()
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
-                
-                Topic chosenTopic = *topicDictionary.search(currentTopicName);
+                Post getPost = getNewPost();
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                chosenTopic->searchPostIndex(getPost.getPTitle());
                 // ** TO BE EDITED BY RYAN **
                 // 1. Loop through and display all post in chosenTopic
                 // 2. Prompt user to choose post
@@ -269,8 +271,24 @@ int main()
                     topicSelected = getOptionInput();
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
+                // Get topic ptr
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                // Print all post
+                chosenTopic->printChildren();
+                // Get user input
+                int postIndex = -1;
+                cout << "Enter post option: ";
+                cin >> postIndex;
+                LinkedList<Post> postList = chosenTopic->getPostList();
+                Post chosenPost = postList.get(0);
+                string chosenPostTitle = chosenPost.getPTitle();
+                Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
 
-                Topic chosenTopicPtr = *topicDictionary.search(currentTopicName);
+                Reply newReply;
+                newReply.setRTitle("testing title");
+                newReply.setRContent("Reply content");
+                postObjPtr->addReply(newReply);
+
                 //Topic chosenTopic = *chosenTopicPtr;
                 // ** TO BE EDITED BY RYAN **
                 // 1. Loop through and display all post in chosenTopic
@@ -654,6 +672,23 @@ Post getNewPost() {
     newPost.setPDateTime();
     newPost.setPUser(currentUser);
     return newPost;
+}
+
+// --- ENTER DESCRIPTION HERE ---
+Reply getNewReply() {
+    string title;
+    string description;
+    Reply newReply = Reply();
+    cout << char(175) << char(175) << " Enter reply title:  ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, title);
+    cout << char(175) << char(175) << " Enter reply description:  ";
+    getline(cin, description);
+    newReply.setRTitle(title);
+    newReply.setRContent(description);
+    newReply.setRDateTime();
+    newReply.setRUser(currentUser);
+    return newReply;
 }
 
 Post editCurrentPost() {
