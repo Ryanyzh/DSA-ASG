@@ -19,7 +19,7 @@ class Reaction
 		void setEmoji(string e);
 
 		//Topic getter
-		int getEmojiCount(string e);
+		int getEmojiCount();
 
 		void addCount();
 

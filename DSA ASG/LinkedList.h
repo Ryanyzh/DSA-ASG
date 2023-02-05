@@ -35,6 +35,9 @@ class LinkedList
 		//get an item at a specified position of the list
 		ItemType* get(int index);
 
+		//get an item at a specified position of the list
+		ItemType getItem(int index);
+
 		//check if the size of the list is empty
 		bool isEmpty();
 
@@ -177,6 +180,24 @@ ItemType* LinkedList<ItemType>::get(int index)
 		}
 	}
 	return nullptr;
+}
+
+template <typename ItemType>
+ItemType LinkedList<ItemType>::getItem(int index)
+{
+	Node* current = new Node;
+	current = FirstNode;
+	int loop = index;
+	while (current != NULL) {
+		if (loop == 0) {
+			return current->item;
+		}
+		else {
+			loop--;
+			current = current->next;
+		}
+	}
+	return ItemType();
 }
 
 template <typename ItemType>

@@ -76,10 +76,10 @@ Reply getNewReply();
 
 
 void saveTopicAddition(Topic t);
-void savePostAddition(Post p);
-void savePostDeletion(Post p);
-void saveReplyAddition(Reply r);
-void savePostRevision(Post p); //for add reaction and edit post
+void savePostAddition(Post p, string topicName);
+void savePostDeletion(Post p, string topicName);
+void saveReplyAddition(Reply r, Post p, string topicName);
+void savePostRevision(Post p, string topicName); //for add reaction and edit post
 void saveUsers(User u);
 
 void loadFiles();
@@ -257,6 +257,7 @@ int main()
 
                 if (addPostSuccess) {
                     cout << "\n[SUCCESS] Post has been added." << endl;
+                    savePostAddition(newPost, searchedTopic->getTopicName());
                 }
                 else {
                     cout << "\n[FAILED] Post was not added." << endl;
@@ -396,6 +397,7 @@ int main()
                 bool addReplySuccess = postObjPtr->addReply(newReply);
                 if (addReplySuccess) {
                     cout << "\n[SUCCESS] Reply has been added." << endl;
+                    //saveReplyAddition(newReply, postListPtr->getItem(postIndex - 1), currentTopicName);
                 }
                 else {
                     cout << "\n[FAILED] Reply was not added." << endl;
@@ -974,22 +976,89 @@ void saveTopicAddition(Topic t) {
 };
 
 // --- ENTER DESCRIPTION HERE ---
-void savePostAddition(Post p) {
+void savePostAddition(Post p, string topicName) {
+    // Open the file for reading and writing in append mode
+    fstream file;
+    string filename = "Assets/Content/" + topicName + ".txt";
+    file.open(filename, ios::in | ios::out | ios::app);
+
+    // Read the existing contents of the file into a vector of strings
+    vector<string> contents;
+    string line;
+    while (getline(file, line)) {
+        contents.push_back(line);
+    }
+
+    // Add the new string to the end of the vector
+    string new_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword();
+    for (int i = 0; i < p.getReactions().getLength(); i++) {
+        Reaction* react = p.getReactions().get(i);
+        new_string = new_string + "\\" + to_string(react->getEmojiCount());
+    }
+    contents.push_back(new_string);
+
+    // Close the file
+    file.close();
+
+    // Open the file again, but this time in write mode
+    file.open(filename, ios::out | ios::trunc);
+
+    // Write the contents of the vector to the file
+    for (const string& s : contents) {
+        file << s << endl;
+    }
+
+    // Close the file
+    file.close();
+};
+
+// --- ENTER DESCRIPTION HERE ---
+void savePostDeletion(Post p, string topicName) {
 
 };
 
 // --- ENTER DESCRIPTION HERE ---
-void savePostDeletion(Post p) {
-
+void saveReplyAddition(Reply r, Post p, string topicName) {
+    vector<string> lines;
+    string filename = "Assets/Content/" + topicName + ".txt";
+    ifstream inputFile(filename);
+    if (inputFile.is_open()) {
+        string line;
+        while (getline(inputFile, line)) {
+            lines.push_back(line);
+        }
+        inputFile.close();
+    }
+    // Find the line where you want to insert the new string
+    //string targetLine = "This is the target line.";
+    string targetLine = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword();
+    for (int i = 0; i < p.getReactions().getLength(); i++) {
+        Reaction* react = p.getReactions().get(i);
+        targetLine = targetLine + "\\" + to_string(react->getEmojiCount());
+    }
+    int targetIndex = -1;
+    for (int i = 0; i < lines.size(); i++) {
+        if (lines[i] == targetLine) {
+            targetIndex = i;
+            break;
+        }
+    }
+    // Insert the new string after the target line
+    string new_string = "[Reply]" + r.getRTitle() + "\\" + r.getRContent() + "\\" + r.getRDateTime() + "\\" + r.getRUser().getUsername() + "\\" + r.getRUser().getPassword();
+    if (targetIndex != -1) {
+        lines.insert(lines.begin() + targetIndex + 1, new_string);
+    }
+    ofstream outputFile(filename);
+    if (outputFile.is_open()) {
+        for (const auto& line : lines) {
+            outputFile << line << '\n';
+        }
+        outputFile.close();
+    }
 };
 
 // --- ENTER DESCRIPTION HERE ---
-void saveReplyAddition(Reply r) {
-
-};
-
-// --- ENTER DESCRIPTION HERE ---
-void savePostRevision(Post r) {
+void savePostRevision(Post r, string topicName) {
 
 };
 

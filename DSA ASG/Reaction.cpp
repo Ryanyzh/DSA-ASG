@@ -14,7 +14,7 @@ Reaction::~Reaction() {
 	//idk
 };
 
-int Reaction::getEmojiCount(string emoji) {
+int Reaction::getEmojiCount() {
 	return reactionCount;
 };
 
