@@ -422,6 +422,7 @@ int main()
                 LinkedList<Post>* postList = chosenTopic->getPostList();
                 //If post exists
                 if (!postList->isEmpty()) {
+                    cout << endl;
                     // Print all post
                     chosenTopic->printChildren();
                     // Get user input
@@ -436,26 +437,32 @@ int main()
                     }
                     
                     Post* chosenPost = postList->get(postIndex - 1);
-
-                    // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
-
                     string chosenPostTitle = chosenPost->getPTitle();
                     Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
 
-                    cout << endl;
+                    //user can only add reaction 
+                    LinkedList<User> listOfUsersThatReacted = chosenPost->returnReactionUsers();
+                    if (listOfUsersThatReacted.search(currentUser.getUsername()) == nullptr) {
+                        cout << endl;
 
-                    // Prompt user for reaction (emoji)
-                    int reactionOption = -999;
-                    while (!count(reactionOptions.begin(), reactionOptions.end(), reactionOption)) {
-                        displayReactionsMenu();
-                        reactionOption = getOptionInput();
+                        // Prompt user for reaction (emoji)
+                        int reactionOption = -999;
+                        while (!count(reactionOptions.begin(), reactionOptions.end(), reactionOption)) {
+                            displayReactionsMenu();
+                            reactionOption = getOptionInput();
+                        }
+
+                        //Add reaction to post
+                        postObjPtr->addReaction(reactionOption);
+                        postObjPtr->addReactionUsers(currentUser);
                     }
-
-                    //Add reaction to post
-                    postObjPtr->addReaction(reactionOption);
+                    else {
+                        cout << "\nYou can only react once." << endl;
+                    }
+            
                 }
                 else {
-                    cout << "There is no post to react to. Please try again." << endl;
+                    cout << "\nThere is no post to react to. Please try again." << endl;
                 }
                 
               

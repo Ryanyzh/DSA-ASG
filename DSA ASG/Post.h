@@ -8,6 +8,7 @@
 #include "User.h"
 #include "Reply.h"
 #include "Reaction.h"
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ class Post
 		User user;
 		Array<Reaction> reactions;
 		Stack<Reply> replyStack;
+		LinkedList<User> reactionUsers;
 
 
 	public:
@@ -54,5 +56,9 @@ class Post
 		void print(int counter);
 
 		void printChildren();
+
+		LinkedList<User> returnReactionUsers();
+
+		void addReactionUsers(User u);
 };
 

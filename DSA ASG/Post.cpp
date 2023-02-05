@@ -3,7 +3,7 @@
 #include "Post.h"
 #include <string>
 #include <iostream>
-#include <string.h>
+#include <string>
 
 //for getting the datetime result
 #include <chrono>
@@ -34,6 +34,8 @@ Post::Post() {
 		r.setEmoji(reactString);
 		reactions.add(r);
 	}
+
+	reactionUsers = LinkedList<User>();
 };
 
 Post::~Post() {
@@ -95,9 +97,7 @@ bool Post::addReply(Reply reply) {
 }
 
 void Post::addReaction(int i) {
-	reactions.get(i - 1)->print();
 	reactions.get(i - 1)->addCount();
-	reactions.get(i - 1)->print();
 }
 
 bool Post::equivalent(Post anotherPost) {
@@ -251,4 +251,14 @@ void Post::print(int counter) {
 	//this->getRStack().printInOrder();
 	//this->getReactions().print();
 	//cout << this->getPUser().getUsername() << endl;
+}
+
+
+
+LinkedList<User> Post::returnReactionUsers() {
+	return reactionUsers;
+}
+
+void Post::addReactionUsers(User u) {
+	this->reactionUsers.add(u);
 }

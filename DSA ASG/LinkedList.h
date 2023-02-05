@@ -229,17 +229,23 @@ ItemType* LinkedList<ItemType>::search(string str)
 template <typename ItemType>
 ItemType* LinkedList<ItemType>::search(string str, Node* nodePointer)
 {
-	if (nodePointer->item.retrieveString() == str) {
-		return &nodePointer->item;
-	}
-	else {
-		if (nodePointer->next != NULL) {
-			return search(str, nodePointer->next);
+	if (!isEmpty()) {
+		if (nodePointer->item.retrieveString() == str) {
+			return &nodePointer->item;
 		}
 		else {
-			return nullptr;
+			if (nodePointer->next != NULL) {
+				return search(str, nodePointer->next);
+			}
+			else {
+				return nullptr;
+			}
 		}
 	}
+	else {
+		return nullptr;
+	}
+	
 }
 
 template <typename ItemType>
