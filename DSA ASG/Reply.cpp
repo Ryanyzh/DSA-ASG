@@ -121,7 +121,7 @@ void Reply::print(int counter) {
 	cout << "|                                                                  |" << endl;
 
 	//printing the seventh line
-	// ----- printIndentation
+	/*
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
@@ -129,13 +129,54 @@ void Reply::print(int counter) {
 	cout << "|  Title:        " << this->getRTitle();
 	for (int i = 0; i < thirdSpacing; i++) { cout << " "; }
 	cout << "  |" << endl;
+	*/
+
+	// ----- printIndentation
+	for (int b = 0; b < 6; b++) {
+		cout << char(219);
+	}
+	int num_of_lines = (int)((getRTitle().length() / 46)) + 1;  //48 spaces
+
+	if (num_of_lines == 1) {
+		int thirdSpacing = 66 - getRTitle().length() - 18;
+		cout << "|  Title:        " << this->getRTitle();
+		for (int i = 0; i < thirdSpacing; i++) { cout << " "; }
+		cout << "  |" << endl;
+	}
+	else {
+		cout << "|  Title:        " << this->getRTitle().substr(0, 47) << "-" << "  |" << endl;
+		for (int i = 0; i < num_of_lines - 1; i++) {
+			if (i != num_of_lines - 2) {
+				// ----- printIndentation
+				for (int b = 0; b < 6; b++) {
+					cout << char(219);
+				}
+				cout << "|                " << this->getRTitle().substr(47 * (i + 1), 47) << "-" << "  |" << endl;
+			}
+			else {
+				// ----- printIndentation
+				for (int b = 0; b < 6; b++) {
+					cout << char(219);
+				}
+				int char_left = this->getRTitle().length() - ((i + 1) * 47);
+				int newSpacing = 66 - 16 - char_left - 2;
+				cout << "|                " << this->getRTitle().substr((47 * (i + 1)), char_left);
+				for (int i = 0; i < newSpacing; i++) { cout << " "; }
+				cout << "  |" << endl;;
+			}
+		}
+	}
+
+
+
+
 
 	//printing the eighth line
 	// ----- printIndentation
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
-	int num_of_lines = (int)((getRContent().length() / 46)) + 1;  //48 spaces
+	num_of_lines = (int)((getRContent().length() / 46)) + 1;  //48 spaces
 	
 	if (num_of_lines == 1) {
 		int fourthSpacing = 66 - getRContent().length() - 18;

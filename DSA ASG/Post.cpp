@@ -152,13 +152,42 @@ void Post::print(int counter) {
 	cout << "|                                                                        |" << endl;
 
 	//printing the seventh line
+
+	/*
 	int thirdSpacing = 72 - getPTitle().length() - 18;
 	cout << "|  Title:        " << this->getPTitle();
 	for (int i = 0; i < thirdSpacing; i++) { cout << " "; }
 	cout << "  |" << endl;
+	*/
+
+	int num_of_lines = (int)((getPTitle().length() / 53)) + 1;  //54 spaces
+	//cout << "lines: " << num_of_lines << endl;
+	if (num_of_lines == 1) {
+		int thirdSpacing = 72 - getPTitle().length() - 18;
+		cout << "|  Title:        " << this->getPTitle();
+		for (int i = 0; i < thirdSpacing; i++) { cout << " "; }
+		cout << "  |" << endl;
+	}
+	else {
+		//string one = this->getPContent().substr(0, 53);
+		cout << "|  Title:        " << this->getPTitle().substr(0, 53) << "-" << "  |" << endl;
+		for (int i = 0; i < num_of_lines - 1; i++) {
+			if (i != num_of_lines - 2) {
+				cout << "|                " << this->getPTitle().substr(53 * (i + 1), 53) << "-" << "  |" << endl;
+			}
+			else {
+				int char_left = this->getPTitle().length() - ((i + 1) * 53);
+				int newSpacing = 72 - 16 - char_left - 2;
+				cout << "|                " << this->getPTitle().substr((53 * (i + 1)), char_left);
+				for (int i = 0; i < newSpacing; i++) { cout << " "; }
+				cout << "  |" << endl;;
+			}
+		}
+	}
+
 
 	//printing the eighth line
-	int num_of_lines = (int)((getPContent().length() / 53)) + 1;  //54 spaces
+	num_of_lines = (int)((getPContent().length() / 53)) + 1;  //54 spaces
 	//cout << "lines: " << num_of_lines << endl;
 	if (num_of_lines == 1) {
 		int fourthSpacing = 72 - getPContent().length() - 18;
