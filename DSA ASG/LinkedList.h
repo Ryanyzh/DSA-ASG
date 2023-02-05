@@ -224,6 +224,7 @@ template <typename ItemType>
 ItemType* LinkedList<ItemType>::search(string str)
 {
 	Node* current = FirstNode;
+	//return search(str, current);
 	return search(str, current);
 }
 
@@ -234,7 +235,12 @@ ItemType* LinkedList<ItemType>::search(string str, Node* nodePointer)
 		return &nodePointer->item;
 	}
 	else {
-		search(str, nodePointer->next);
+		if (nodePointer->next != NULL) {
+			return search(str, nodePointer->next);
+		}
+		else {
+			return nullptr;
+		}
 	}
 }
 

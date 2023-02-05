@@ -284,8 +284,12 @@ ItemType* Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
 		return &nextNode->item;
 	}
 	else {
-		search(str, nextNode->next);
-		return nullptr;
+		if (nextNode->next != NULL) {
+			return search(str, nextNode->next);
+		}
+		else {
+			return nullptr;
+		}		
 	}
 }
 

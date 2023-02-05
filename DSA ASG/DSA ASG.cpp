@@ -161,24 +161,26 @@ int main()
                     topicOption = -1;
                 }
                 else if (topicOption == 3) {
-                    cout << "searching users" << endl;
                     topicOption = -1;
                     // Insert Codes Here
-                    string username;                                        //Username varaible
+                    string username;                                                            //Username varaible
                     User* searchedUser;
 
-                    cout << char(175) << char(175) << " Enter username:  ";                        //Get username from User
+                    cout << char(175) << char(175) << " Enter username:  ";                     //Get username from User
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     getline(cin, username);
 
-                    searchedUser = userList.search(username);               //Return Topic Obj
-                    cout << searchedUser->getUsername() << endl;                                   //Display topic
-                    
-                    // !!! IMPORTANT : WHAT IF THERE IS NO USERS FOUND !!! 
+                    searchedUser = userList.search(username);                                   //Return Topic Obj
 
+                    if (searchedUser == NULL) {
+                        cout << "No users found!" << endl;
+                    }
+                    else {
+                        cout << "User found!" << endl;                                //Display topic
+                        cout << "Username: " << searchedUser->getUsername() << endl;
+                    }
                 }
                 else if (topicOption == 4) {
-                    cout << "searching topics" << endl;
                     topicOption = -1;
 
                     string topicTitle;                                      //Topic title varaible
@@ -189,12 +191,17 @@ int main()
                     getline(cin, topicTitle);                               
                     
                     searchedTopic = topicDictionary.search(topicTitle);     //Return Topic Obj
-                    Topic topicObj = *searchedTopic;
-                    // what is the second parameter value?
-
                     // IMPORTANT !!! SECOND PARAMETER IS THE INDEX + 1
 
-                    searchedTopic->print(topicObj, 0);                  //Display topic
+                    if (searchedTopic != NULL) {
+                        Topic topicObj = *searchedTopic;
+                        topicObj.print(topicObj, 1);                  //Display topic
+                    }
+                    else {
+                        cout << "No topic found!" << endl;
+                    }
+
+                    
                 }
                 else {
                     pageState = 2;
@@ -259,12 +266,62 @@ int main()
                 postOption = -1;
             }
             else if (postOption == 3) {
-                // Edit Post
-                // 1. Choose a topic
-                // 2. Choose a post
-                // 3. Prompt for post option (Validate post is by user)
-                // 4. Edit post
-                // 5. Set new post content
+                postOption = -1;
+                int topicSelected = -1;
+                bool topicSelectionSuccess = false;
+                while (topicSelectionSuccess == false) {
+                    cout << "\n\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.printWithCounter();
+                    topicSelected = getOptionInput();
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                }
+                // Get topic ptr
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                // Print all post
+                chosenTopic->printChildren();
+                // Get user input
+                int postIndex = -1;
+                cout << char(175) << char(175) << " Select a post to edit:  ";
+                cin >> postIndex;
+                LinkedList<Post> postList = chosenTopic->getPostList();
+                Post chosenPost = postList.get(postIndex - 1);
+
+                // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+
+                string chosenPostTitle = chosenPost.getPTitle();
+                Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                
+                if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {
+                    string currentPostTitle = postObjPtr->getPTitle();
+                    string currentPostDesc = postObjPtr->getPContent();
+
+                    string newPostTitle;
+                    string newPostDesc;
+
+                    cout << "Current Post Title: " << currentPostTitle << endl;
+                    cout << "Enter new Post Title: ";
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    getline(cin, newPostTitle);
+                    //newPostTitle = currentPostTitle + newPostTitle;
+
+                    cout << endl;
+
+                    cout << "Current Post Content: " << currentPostDesc << endl;
+                    cout << "Enter new Post Content: ";
+                    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    getline(cin, newPostDesc);
+                    //newPostDesc = currentPostDesc + newPostDesc;
+
+                    postObjPtr->setPTitle(newPostTitle);
+                    postObjPtr->setPContent(newPostDesc);
+
+                    cout << "Post updated!" << endl;
+                }
+                else {
+                    cout << "Unable to edit as you did not make this post." << endl;
+                }
 
                 // !!! IMPORTANT : NEED TO CHECK IF THE PERSON WHO POSTED IS THE CURRENT USER !!!
             }
@@ -299,8 +356,6 @@ int main()
                 // Add Reply
 
                 // !!! IMPORTANT: CANNOT ADD REPLY WHEN THERE IS NO POST !!!
-
-
                 int topicSelected = -1;
                 bool topicSelectionSuccess = false;
                 while (topicSelectionSuccess == false) {
@@ -340,14 +395,6 @@ int main()
                 else {
                     cout << "\n[FAILED] Reply was not added." << endl;
                 }
-
-                //Topic chosenTopic = *chosenTopicPtr;
-                // ** TO BE EDITED BY RYAN **
-                // 1. Loop through and display all post in chosenTopic
-                // 2. Prompt user to choose post
-                // 3. Prompt user for reply title
-                // 3. Prompt user for reply content
-                // 4. Add reply to post (Similar to add Post to Topic)
                 postOption = -1;
             }
             else if (postOption == 6) {
@@ -408,12 +455,36 @@ int main()
                 postOption = -1;
             }
             else if (postOption == 7) {
-                // Search Post
-                // 1. Choose a topic
-                // 2. Prompt user for post title
-                // 2. Search post in selected topic
-                // 3. Display post
                 postOption = -1;
+                int topicSelected = -1;
+                bool topicSelectionSuccess = false;
+                while (topicSelectionSuccess == false) {
+                    cout << "\n\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.printWithCounter();
+                    topicSelected = getOptionInput();
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                }
+                // Get topic ptr
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+
+                string chosenPostTitle;
+                cout << "Enter a post title: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, chosenPostTitle);
+                if (!chosenTopic->getPostList().isEmpty()) {
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                    if (postObjPtr != NULL) {
+                        postObjPtr->print(1);
+                    }
+                    else {
+                        cout << "No post found!" << endl;
+                    }
+                }
+                else {
+                    cout << "There are no post in this topic" << endl;
+                }
             }
             else {
                 pageState = 1;
