@@ -212,7 +212,6 @@ int main()
 
         // Post related functions
         while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 2) {
-            //topicDictionary.isEmpty();
             postOption = -999;
             while (!count(postOptions.begin(), postOptions.end(), postOption)) {
                 displayPostMenu();
@@ -230,7 +229,7 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 //cout << currentTopicName << endl;
-                if (topicDictionary.search(currentTopicName)->getPostList().isEmpty()) {
+                if (topicDictionary.search(currentTopicName)->getPostList()->isEmpty()) {
                     cout << "There is no posts to display. " << endl;
                 }
                 else {
@@ -285,12 +284,12 @@ int main()
                 int postIndex = -1;
                 cout << char(175) << char(175) << " Select a post to edit:  ";
                 cin >> postIndex;
-                LinkedList<Post> postList = chosenTopic->getPostList();
-                Post chosenPost = postList.get(postIndex - 1);
+                LinkedList<Post>* postList = chosenTopic->getPostList();
+                Post* chosenPost = postList->get(postIndex - 1);
 
                 // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
 
-                string chosenPostTitle = chosenPost.getPTitle();
+                string chosenPostTitle = chosenPost->getPTitle();
                 Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
                 
                 if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {
@@ -347,7 +346,7 @@ int main()
                 cout << char(175) << char(175) << " Select a post to delete:  ";
                 cin >> postIndex;
                 chosenTopic->removePost(postIndex - 1);
-                cout << chosenTopic->getPostList().isEmpty();
+                cout << chosenTopic->getPostList()->isEmpty();
 
                 postOption = -1;
 
@@ -367,28 +366,34 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 // Get topic ptr
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                // Print all post
-                chosenTopic->printChildren();
+                //Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                topicDictionary.search(currentTopicName)->printChildren();
+
+                LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
+
                 // Get user input
                 int postIndex = -1;
-                cout << char(175) << char(175) << " Select a post to continue:  ";
-                cin >> postIndex;
-                LinkedList<Post> postList = chosenTopic->getPostList();
-                Post chosenPost = postList.get(postIndex - 1);
+                bool postSelectionSuccess = false;
 
-                // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+                while (!postSelectionSuccess) {
+                    //Can try adding in validation for post number
+                    cout << char(175) << char(175) << " Select a post to continue:  ";
+                    cin >> postIndex;
+                    postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                }
 
-                string chosenPostTitle = chosenPost.getPTitle();
-                Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+
                 
+                Post* chosenPost = postListPtr->get(postIndex - 1);
+
+                Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
+
                 cout << endl;
-                
+
                 Reply newReply = getNewReply();
                 //newReply.setRTitle("testing title");
                 //newReply.setRContent("Reply content");
                 bool addReplySuccess = postObjPtr->addReply(newReply);
-                chosenTopic = topicDictionary.search(currentTopicName);
                 if (addReplySuccess) {
                     cout << "\n[SUCCESS] Reply has been added." << endl;
                 }
@@ -414,9 +419,9 @@ int main()
                 
                 // Get topic ptr
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                LinkedList<Post> postList = chosenTopic->getPostList();
+                LinkedList<Post>* postList = chosenTopic->getPostList();
                 //If post exists
-                if (!postList.isEmpty()) {
+                if (!postList->isEmpty()) {
                     // Print all post
                     chosenTopic->printChildren();
                     // Get user input
@@ -427,14 +432,14 @@ int main()
                         //Can try adding in validation for post number
                         cout << char(175) << char(175) << " Select a post to continue:  ";
                         cin >> postIndex;
-                        postSelectionSuccess = validatePostNumber(postIndex, postList);
+                        postSelectionSuccess = validatePostNumber(postIndex, *postList);
                     }
                     
-                    Post chosenPost = postList.get(postIndex - 1);
+                    Post* chosenPost = postList->get(postIndex - 1);
 
                     // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
 
-                    string chosenPostTitle = chosenPost.getPTitle();
+                    string chosenPostTitle = chosenPost->getPTitle();
                     Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
 
                     cout << endl;
@@ -448,6 +453,9 @@ int main()
 
                     //Add reaction to post
                     postObjPtr->addReaction(reactionOption);
+                }
+                else {
+                    cout << "There is no post to react to. Please try again." << endl;
                 }
                 
               
@@ -473,7 +481,7 @@ int main()
                 cout << "Enter a post title: ";
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 getline(cin, chosenPostTitle);
-                if (!chosenTopic->getPostList().isEmpty()) {
+                if (!chosenTopic->getPostList()->isEmpty()) {
                     Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
                     if (postObjPtr != NULL) {
                         postObjPtr->print(1);
@@ -862,7 +870,10 @@ bool checkSpecialCharacters(string p) {
 
 // --- ENTER DESCRIPTION HERE ---
 bool validateTopicNumber(int topicNum) {
-    if (topicNum == 0) {
+    if (isdigit(topicNum)) {
+        return false;
+    }
+    else if (topicNum <= 0) {
         return false;
     }
     currentTopicName = topicDictionary.returnSearchOption(topicNum).getTopicName();
@@ -927,7 +938,11 @@ Post editCurrentPost() {
 
 // --- ENTER DESCRIPTION HERE ---
 bool validatePostNumber(int postNum, LinkedList<Post> postListing) {
-    if (postNum <= 0) {
+
+    if (isdigit(postNum)) {
+        return false;
+    }
+    else if (postNum <= 0) {
         cout << "[ERROR] Invalid number inputted. Pls try again." << endl;
         return false;
     }

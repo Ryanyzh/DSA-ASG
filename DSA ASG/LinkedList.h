@@ -33,7 +33,7 @@ class LinkedList
 		void remove(int index);
 
 		//get an item at a specified position of the list
-		ItemType get(int index);
+		ItemType* get(int index);
 
 		//check if the size of the list is empty
 		bool isEmpty();
@@ -162,23 +162,21 @@ void LinkedList<ItemType>::remove(int index)
 }
 
 template <typename ItemType>
-ItemType LinkedList<ItemType>::get(int index)
+ItemType* LinkedList<ItemType>::get(int index)
 {
-	/*Node* current = new Node;
-	if (index <= size) {
-		for (index; index > 0; index--) {
+	Node* current = new Node;
+	current = FirstNode;
+	int loop = index;
+	while (current != NULL) {
+		if (loop == 0) {
+			return &current->item;
+		}
+		else {
+			loop--;
 			current = current->next;
 		}
-		return current->item;
 	}
-	else {
-		return ItemType();
-	}*/
-	Node* current = FirstNode;
-	for (int i = 0; i < index - 1; i++) {
-		current = current->next;
-	}
-	return current->item;
+	return nullptr;
 }
 
 template <typename ItemType>

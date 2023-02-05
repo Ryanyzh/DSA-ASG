@@ -21,8 +21,8 @@ void Topic::setTopicName(string tn) {
 	topicName = tn;
 };
 
-LinkedList<Post> Topic::getPostList() {
-	return postList;
+LinkedList<Post>* Topic::getPostList() {
+	return &postList;
 }
 
 bool Topic::addPost(Post post) {

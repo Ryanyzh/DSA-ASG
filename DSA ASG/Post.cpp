@@ -65,8 +65,8 @@ string Post::getPDateTime() {
 	return Pdatetime;
 }
 
-Stack<Reply>* Post::getRStack() {
-	return &replyStack;
+Stack<Reply> Post::getRStack() {
+	return replyStack;
 }
 
 void Post::setPDateTime() {
@@ -95,9 +95,9 @@ bool Post::addReply(Reply reply) {
 }
 
 void Post::addReaction(int i) {
-	reactions.get(i - 1).print();
-	this->reactions.get(i - 1).addCount();
-	reactions.get(i - 1).print();
+	reactions.get(i - 1)->print();
+	reactions.get(i - 1)->addCount();
+	reactions.get(i - 1)->print();
 }
 
 bool Post::equivalent(Post anotherPost) {

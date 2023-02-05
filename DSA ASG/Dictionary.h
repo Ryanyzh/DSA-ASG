@@ -41,7 +41,7 @@ class Dictionary
 		void remove(KeyType key);
 
 		//get an item with the specified key in the Dictionary
-		ItemType get(KeyType key);
+		ItemType* get(KeyType key);
 
 		//check if the Dictionary is empty
 		bool isEmpty();
@@ -58,7 +58,7 @@ class Dictionary
 		// ===================================================
 		ItemType* search(KeyType topicName);
 
-		ItemType returnSearchOption(int topicNum);
+		ItemType returnSearchOption(int topicNum); //no need to be edited
 
 		ItemType* search(KeyType topicName, Node* topicNode);
 		// ===================================================
@@ -161,7 +161,7 @@ void Dictionary<KeyType, ItemType>::remove(KeyType key) {
 
 
 template <typename KeyType, typename ItemType>
-ItemType Dictionary<KeyType, ItemType>::get(KeyType key) {
+ItemType* Dictionary<KeyType, ItemType>::get(KeyType key) {
 	int index = hash(key);
 	if (items[index] != NULL) {
 		Node* current = new Node;

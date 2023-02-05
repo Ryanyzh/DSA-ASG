@@ -32,7 +32,7 @@ class Stack
 		bool pop();
 
 		//Get reply at top of stack
-		ItemType getTop();
+		ItemType* getTop();
 
 		//Check for empty stack
 		bool isEmpty();
@@ -96,7 +96,7 @@ bool Stack<ItemType>::pop() {
 }
 
 template <typename ItemType>
-ItemType Stack<ItemType>::getTop() {
+ItemType* Stack<ItemType>::getTop() {
 	if (!isEmpty()) {
 		return topNode->item;
 	}

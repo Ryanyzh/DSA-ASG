@@ -31,7 +31,7 @@ class Array
 		void remove(int index);
 
 		// get an item at a specified position of the list (retrieve)
-		ItemType get(int index);
+		ItemType* get(int index);
 
 		// check if the list is empty
 		bool isEmpty();
@@ -98,13 +98,13 @@ void Array<ItemType>::remove(int index)
 }
 
 template <typename ItemType>
-ItemType Array<ItemType>::get(int index)
+ItemType* Array<ItemType>::get(int index)
 {
 	bool success = (index >= 0) && (index < size);
 	if (success)
-		return items[index];
+		return &items[index];
 	else
-		return ItemType();
+		return nullptr;
 }
 
 template <typename ItemType>
