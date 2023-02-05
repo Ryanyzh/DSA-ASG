@@ -38,6 +38,18 @@ Post::Post() {
 	reactionUsers = LinkedList<User>();
 };
 
+void Post::setPDateTime(string dateTime) {
+	Pdatetime = dateTime;
+}
+
+void Post::setReactions(Array<Reaction> newReactions) {
+	reactions = newReactions;
+}
+
+void Post::setReactionUsers(LinkedList<User> userList) {
+	reactionUsers = userList;
+}
+
 Post::~Post() {
 	// Deconstruct replyStack
 	replyStack.~Stack<Reply>();

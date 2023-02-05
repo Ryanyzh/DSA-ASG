@@ -27,6 +27,8 @@ class Topic
 		// Post list getter
 		LinkedList<Post>* getPostList();
 
+		LinkedList<Post> getPostListItem();
+
 		//Add post to topic
 		bool addPost(Post post);
 

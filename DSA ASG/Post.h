@@ -32,9 +32,12 @@ class Post
 
 		// Post setters
 		void setPDateTime();
+		void setPDateTime(string);
 		void setPTitle(string);
 		void setPContent(string);
 		void setPUser(User);
+		void setReactions(Array<Reaction>);
+		void setReactionUsers(LinkedList<User>);
 
 		//Post getters
 		string getPTitle();

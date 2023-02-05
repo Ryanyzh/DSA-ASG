@@ -25,6 +25,10 @@ LinkedList<Post>* Topic::getPostList() {
 	return &postList;
 }
 
+LinkedList<Post> Topic::getPostListItem() {
+	return postList;
+}
+
 bool Topic::addPost(Post post) {
 	return postList.add(post);
 }

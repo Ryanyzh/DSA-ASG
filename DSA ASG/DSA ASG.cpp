@@ -386,23 +386,33 @@ int main()
 
                 
                 Post* chosenPost = postListPtr->get(postIndex - 1);
+                Post newPost = Post();
+                newPost.setPContent(chosenPost->getPContent());
+                newPost.setPTitle(chosenPost->getPTitle());
+                newPost.setPDateTime(chosenPost->getPDateTime());
+                newPost.setPUser(currentUser);
+                newPost.setReactions(chosenPost->getReactions());
+                newPost.setReactionUsers(chosenPost->returnReactionUsers());
 
-                Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
+                //Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
 
                 cout << endl;
 
                 Reply newReply = getNewReply();
                 //newReply.setRTitle("testing title");
                 //newReply.setRContent("Reply content");
-                bool addReplySuccess = postObjPtr->addReply(newReply);
+                bool addReplySuccess = chosenPost->addReply(newReply);
                 if (addReplySuccess) {
                     cout << "\n[SUCCESS] Reply has been added." << endl;
-                    //saveReplyAddition(newReply, postListPtr->getItem(postIndex - 1), currentTopicName);
+                    //Post thisPost = topicDictionary.returnSearchOption(topicSelected).getPostListItem().getItem(postIndex - 1);
+                    saveReplyAddition(newReply, newPost, currentTopicName);
                 }
                 else {
                     cout << "\n[FAILED] Reply was not added." << endl;
                 }
+                chosenPost->getPContent();
                 postOption = -1;
+                topicDictionary.getLength();
             }
             else if (postOption == 6) {
                 // Add Reactions
