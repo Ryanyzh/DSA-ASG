@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -26,8 +34,10 @@ class Post
 
 
 	public:
-		//Post constructors and destructures
+		// Constructors 
 		Post();
+
+		// Destructors
 		~Post();
 
 		// Post setters
@@ -46,22 +56,27 @@ class Post
 		User getPUser();
 		Array<Reaction> getReactions();
 		Stack<Reply>* getRStack();
-
-		string retrieveString();
-
-		bool equivalent(Post p);
-
-		//Add reply to post
-		bool addReply(Reply reply);
-
-		void addReaction(int index);
-
-		void print(int counter);
-
-		void printChildren();
-
 		LinkedList<User> returnReactionUsers();
 
+		// Get the title of the post
+		string retrieveString();
+
+		// Check if both Post object matches
+		bool equivalent(Post p);
+
+		// Add reply to post
+		bool addReply(Reply reply);
+
+		// Add reaction to post
+		void addReaction(int index);
+
+		// Display the content of the post and reply
+		void print(int counter);
+
+		// Display the content of the post and reply with index number
+		void printChildren();
+
+		// Add users to reaction list
 		void addReactionUsers(User u);
 };
 

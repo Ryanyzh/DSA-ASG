@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -19,32 +27,34 @@ class Stack
 
 
 	public:
-		//Constructor
+		// Constructor
 		Stack();
 
-		//Deconstructor
+		// Deconstructor
 		~Stack();
 
-		//Add a reply to the stack
+		// Add an item to the front of the stack
 		bool push(ItemType item);
 
-		//Delete a reply from stack (Used for deconstructor)
+		// Remove an item from the front of the stack (Used for deconstructor)
 		bool pop();
 
-		//Get reply at top of stack
+		// Get the item at top of stack
 		ItemType* getTop();
 
-		//Check for empty stack
+		// Check if stack is empty
 		bool isEmpty();
 
-		//Display replies in order
+		// Display the contents of the stack
 		void print();
 
-		//Display replies in order of insertion
+		// Display the contents of the stack in reverse order
 		void printBackwards();
 
+		// Display the contents of the stack with index number
 		void printWithCounter();
 
+		// Get the size of the stack
 		int getSize();
 };
 

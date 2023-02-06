@@ -77,8 +77,5 @@
     <ClInclude Include="Reaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StackX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

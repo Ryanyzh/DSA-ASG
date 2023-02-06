@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -25,43 +33,45 @@ class Dictionary
 		int size;
 
 	public:
-		//constructor
+		// Constructor
 		Dictionary();
 
-		//destructor
+		// Destructor
 		~Dictionary();
 
-		//get hash value from key
+		// Get hash value from key
 		int hash(KeyType key);
 
-		//add a new item with the specified key in the Dictionary
+		// Add a new item with the specified key in the Dictionary 
 		bool add(KeyType newKey, ItemType item);
 
-		//remove an item with the specified key in the Dictionary
+		// Remove an item with the specified key in the Dictionary
 		void remove(KeyType key);
 
-		//get an item with the specified key in the Dictionary
+		// Get an item with the specified key in the Dictionary 
 		ItemType* get(KeyType key);
 
-		//check if the Dictionary is empty
+		// Check if the Dictionary is empty
 		bool isEmpty();
 
-		//check the size of the Dictionary
+		// Check the size of the Dictionary
 		int getLength();
 
-		//display the topics in the Dictionary
+		// Display the contents of the Dictionary
 		void print();
 
+		// Display the contents of the Dictionary wiith index numbers
 		void printWithCounter();
 
-		// ** TO BE CHANGED (parameter name)
-		// ===================================================
+		// Search for the item in the Dictionary with the key
 		ItemType* search(KeyType topicName);
 
-		ItemType returnSearchOption(int topicNum); //no need to be edited
+		// Search for the item in the Dictionary with the index
+		ItemType returnSearchOption(int topicNum); 
 
+		// Recusive search function for the above search function
 		ItemType* search(KeyType topicName, Node* topicNode);
-		// ===================================================
+		
 };
 
 

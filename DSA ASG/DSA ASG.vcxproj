@@ -161,7 +161,6 @@
     <ClInclude Include="Reaction.h" />
     <ClInclude Include="Reply.h" />
     <ClInclude Include="Stack.h" />
-    <ClInclude Include="StackX.h" />
     <ClInclude Include="Topic.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

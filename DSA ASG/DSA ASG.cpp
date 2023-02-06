@@ -1,606 +1,531 @@
-//  +------------------------------------------------------------+
+﻿//  +------------------------------------------------------------+
 //  |                      Team 02: AWOL                         |
 //  +------------------------------------------------------------+
 //  |        Student 1: Yong Zong Han Ryan, S10219317A           |
 //  |                                                            |
-//  |        Student 2: Tan Jin Daat, S10222867?                 |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
 //  +------------------------------------------------------------+
 
-//Note to developers: only 5 reactions combined : upvote [\x18], downvote [\x19], happy [:)], sad [:(], shock [:0], cry [:'(]
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// IMPORTANT NOTE:  Must upgrade to C++ 17 firstlink: https://stackoverflow.com/questions/41308933/how-to-enable-c17-compiling-in-visual-studio before running the program
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-//import all the necessary libraries 
-#include <iostream>
-#include <string>
-#include <cmath>
-#include <vector>
-#include <algorithm>
+/*  ################################################
+    ##     Import all the necessary libraries     ##
+    ################################################    */
+
+#include <iostream>                                                         //use C++ standard library (for input and output)      
+#include <string>                                                           //use C++ standard library (for using STRING data type)
+#include <cmath>                                                            //use C++ standard library (for mathematical operations)
+#include <vector>                                                           //use C++ standard library (for using vectors)
+
+#include <algorithm>                                                        //use C++ standard library (storing and loading data into the program)
 #include <fstream>
 #include <direct.h>
 #include <stdlib.h>
 #include <filesystem>
-namespace fs = std::filesystem;
+namespace fs = std::filesystem;                                             //uses the library (std) inside the global namespace
 
-#include "LinkedList.h"
-#include "Stack.h"
-#include "Dictionary.h"
-#include "Array.h"
+#include "LinkedList.h"                                                     //header files for data structures and algorithms - Linked List
+#include "Stack.h"                                                          //header files for data structures and algorithms - Stack
+#include "Dictionary.h"                                                     //header files for data structures and algorithms - Dictionary
+#include "Array.h"                                                          //header files for data structures and algorithms - Array
 
-#include "Post.h"
-#include "Reply.h"
-#include "Topic.h"
-#include "User.h"
-#include "Reaction.h"
+#include "Post.h"                                                           //header files for individual class - Post
+#include "Reply.h"                                                          //header files for individual class - Reply
+#include "Topic.h"                                                          //header files for individual class - Topic
+#include "User.h"                                                           //header files for individual class - User
+#include "Reaction.h"                                                       //header files for individual class - Reaction
 
-using namespace std;
-
-
-
-// --- Instantiation of variables ---
-User currentUser;                                                   // User Obj for current user
-LinkedList<User> userList;                                          // List of 
-Dictionary<string, Topic> topicDictionary;                          // Dictionary (Hash Table) of topics
-vector<char> specialchar;                                           // Vector of special chars (!, @, #, $ etc..)
-vector<int> mainOptions;                                            // Vector of main options (Topic Level Options)
-vector<int> postOptions;                                            // Vector of post options (Post Level Options) 
-vector<int> reactionOptions;
-int pageState;                                                      // int to store page state
-string currentTopicName;                                            // string to store current topic name
+using namespace std;                                                        //uses the library (std) inside the global namespace
 
 
-// --- List of functions used ---
-void displayBanner();                                               // Function to display banner
-bool displaySignInScreen();                                         // Function to display the sign in screen
-bool displaySignUpScreen();                                         // Finction to display the sign up screen
-void displayMainMenu();                                             // Function to display the menu of sign in options [note the change]
-void displayTopicMenu();                                            // Function to display the menu of topic options [note the change]
-void displayPostMenu();                                             // Function to display the menu of post options
-void displayReactionsMenu();                                        // Function to display the menu of reactions options
 
-void init();                                                        // Function to initialise variables for the program 
-int getOptionInput();                                               // Function to get the integer input from the menu (with validation)
+/*  ########################################
+    ##     Instantiation of variables     ##
+    ########################################    */
 
-bool validateUser(string username, string password);                // Function to validate the user with the backend when they sign in
-bool validateUsernameInput(string username);                        // Function to validate the user USERNAME input when they sign in/sign up 
-bool validatePasswordInput(string password);                        // Function to validate the user PASSWORD input when they sign in/sign up 
-bool checkSpecialCharacters(string p);                              // Function to check for special characters (!, @, #, $ etc..) -> found in the vector when the user enter their PASSWORD input
-bool checkInteger(string input);                                    // Function to check if the input is an integer -> for the function get Option Input
-bool validateTopicName(string nameOfTopic);                         // Function to validate the user NAME input when they enter the new topic name
-bool validateTopicNumber(int topicNum);                             // Function to validate the user OPTION input with the current topic dictionary when they select the topic name
+User currentUser;                                                           // User Obj for current user (that is logged in)
+LinkedList<User> userList;                                                  // Linked List of Users
+Dictionary<string, Topic> topicDictionary;                                  // Dictionary (Hash Table) of topics
+vector<char> specialchar;                                                   // Vector of special chars (!, @, #, $ etc..)
+vector<int> mainOptions;                                                    // Vector of main options (Topic Level Options)
+vector<int> postOptions;                                                    // Vector of post options (Post Level Options) 
+vector<int> reactionOptions;                                                // Vector of reaction options (Reaction Level Options) 
+int pageState;                                                              // Integer to store page state (0 = not set, 1 = main menu page, 2 = post menu page)
+string currentTopicName;                                                    // String to store current topic name
+
+
+ /* ####################################
+    ##     List of functions used     ##
+    ####################################    */
+
+void displayBanner();                                                       // Function to display banner
+bool displaySignInScreen();                                                 // Function to display the sign in screen
+bool displaySignUpScreen();                                                 // Finction to display the sign up screen
+void displayMainMenu();                                                     // Function to display the menu of sign in options [note the change]
+void displayTopicMenu();                                                    // Function to display the menu of topic options [note the change]
+void displayPostMenu();                                                     // Function to display the menu of post options
+void displayReactionsMenu();                                                // Function to display the menu of reactions options
+
+void init();                                                                // Function to initialise variables for the program 
+int getOptionInput();                                                       // Function to get the integer input from the menu (with validation)
+
+bool validateUser(string username, string password);                        // Function to validate the user with the backend when they sign in
+bool validateUsernameInput(string username);                                // Function to validate the user USERNAME input when they sign in/sign up 
+bool validatePasswordInput(string password);                                // Function to validate the user PASSWORD input when they sign in/sign up 
+bool checkSpecialCharacters(string p);                                      // Function to check for special characters (!, @, #, $ etc..) -> found in the vector when the user enter their PASSWORD input
+bool checkInteger(string input);                                            // Function to check if the input is an integer -> for the function get Option Input
+bool validateTopicName(string nameOfTopic);                                 // Function to validate the user NAME input when they enter the new topic name
+bool validateTopicNumber(int topicNum);                                     // Function to validate the user OPTION input with the current topic dictionary when they select the topic name
 bool validatePostNumber(int postNum, LinkedList<Post> postListing);
 
+Post getNewPost();                                                          // Function that gets the user input for the post details and return the Post object
+Post editCurrentPost();                                                     // Function that gets the user input for the post details and return the Post object
+Reply getNewReply();                                                        // Function that gets the user input for the reply details and return the Reply object
 
-Post getNewPost();
-Post editCurrentPost();
-Reply getNewReply();
-
-
-void saveTopicAddition(Topic t);
-void savePostAddition(Post p, string topicName);
-void savePostDeletion(Post p, string topicName);
-void saveReplyAddition(Reply r, Post *p, string topicName);
-void savePostRevision(Post *newPost, Post oldPost, string topicName); //for add reaction and edit post
+void saveTopicAddition(Topic t);                                            // Function to insert the new Topic object into the text file for saving - for adding new topic
+void savePostAddition(Post p, string topicName);                            // Function to insert the new Post object into the text file for saving - for adding new post
+void savePostDeletion(Post* p, string topicName, int replyNum);             // Function to remove the Post object into the text file for saving - for deleting post
+void saveReplyAddition(Reply r, Post *p, string topicName);                 // Function to insert the new Reply object into the text file for saving - for adding new reply
+void savePostRevision(Post* newPost, Post* oldPost, string topicName);       // Function to replace the Post object into the text file for saving - for adding reactions and editing posts
 void saveUsers(User u);
 
-void loadFiles();
 
 
-// --- Main function for execution ---
+/*  #########################################
+    ##     Main function for execution     ##
+    #########################################   */
 int main()
 {
-    init();
-    int signInOption = -1;
+    init();                                                                                                 // Call function to intialize some variables and load the data from text file
+    int signInOption = -1;                                                                                  // Initalize the options variables for Topic, Post and Log In Menu
     int topicOption = -1;
     int postOption = -1;
-    bool signInStatus = false;
+    bool signInStatus = false;                                                                              // Initalize the status of sign in/sign up of the user (true - success, false - failed)
     bool signUpStatus = false;
-    while (signInOption != 0 && topicOption != 0 && postOption != 0) {
+    while (signInOption != 0 && topicOption != 0 && postOption != 0) {                                      // Iterating the program until the option 0 is entered
 
-        while (currentUser.getUsername() == "" || currentUser.getPassword() == "") {
-            signInOption = -999;
-            while (signInOption != 1 && signInOption != 2) {
-                displayMainMenu();
-                signInOption = getOptionInput();
-                if (signInOption == 1 && userList.isEmpty() == true) {
-                    signInOption = -1;
+        while (currentUser.getUsername() == "" || currentUser.getPassword() == "") {                        // Iterating the sign in page when the user credentials are empty
+            signInOption = -999;                                                                    
+            while (signInOption != 1 && signInOption != 2) {                                                // Iterating the login menu until the correct option entered
+                displayMainMenu();                                                                          // Displaying the login menu
+                signInOption = getOptionInput();                                                            // Getting the option for the login menu
+                if (signInOption == 1 && userList.isEmpty() == true) {                                      // Preventing user sign in if there is nothing in the list of users extracted from the text files
+                    signInOption = -1;                                          
                 }
             }
-            if (signInOption == 1) {
-                while (!signInStatus) {
-                    signInStatus = displaySignInScreen();
+            if (signInOption == 1) {                                                                        // Sign In Process if the option entered is 1
+                while (!signInStatus) {                                                             
+                    signInStatus = displaySignInScreen();                                                   // Getting the status of sign in after entering the credentails and validation
                 }
-                pageState = 1;
-                displayBanner();
+                pageState = 1;                                                                              // Variable to proceeding to the topic menu
+                displayBanner();                                                                            // Displaying the banner to welcome the user
             }
             else {
-                while (!signUpStatus) {
-                    signUpStatus = displaySignUpScreen();
+                while (!signUpStatus) {                                                                     // Sign Up Process if the option entered is 2
+                    signUpStatus = displaySignUpScreen();                                                   // Getting the status of sign up after entering the credentails and validation
                 }
-                pageState = 1;
-                displayBanner();
+                pageState = 1;                                                                              // Variable to proceeding to the topic menu
+                displayBanner();                                                                            // Displaying the banner to welcome the user
             }
         }
 
-        // pageState 0 = not set
-        // pageState 1 = main menu page
-        // pageState 2 = post menu page
-
-
-        // Topic related functions
-        while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 1) {
+                                                                                                            // -------- Topic and Search related functions below --------
+        while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 1) {    // Iterating the topic page after the user has signed in
             topicOption = -999;
-            while (!count(mainOptions.begin(), mainOptions.end(), topicOption)) {
-                displayTopicMenu();
-                topicOption = getOptionInput();
+            while (!count(mainOptions.begin(), mainOptions.end(), topicOption)) {                           // Checking if the options are within the correct range for the Topic menu
+                displayTopicMenu();                                                                         // Displaying the topic menu
+                topicOption = getOptionInput();                                                             // Getting the option for the topic menu
             }
-            if (count(mainOptions.begin(), mainOptions.end(), topicOption)) {
-                if (topicOption == 1) {
+            if (count(mainOptions.begin(), mainOptions.end(), topicOption)) {                               
+                if (topicOption == 1) {                                                                     // Printing the topic names when the option is 1
                     cout << endl;
-                    topicDictionary.printWithCounter();
-                    topicOption = -1;
+                    topicDictionary.printWithCounter();                                                     // Printing the topic names from the dictionary into a table
+                    topicOption = -1;                                                                       // Resetting back to the topic menu
                 }
-                else if (topicOption == 2) {
-                    bool topicNameValid = false;    // boolean topic name validation
-                    Topic newTopic = Topic();       // Create new Topic Obj
-                    string topicName = "";          // string variable to store topic name
+                else if (topicOption == 2) {                                                                // Adding new topic when the option is 2
+                    bool topicNameValid = false;                                                            // Boolean to validate the topic name input
+                    Topic newTopic = Topic();                                                               // Create new Topic object 
+                    string topicName = "";                                                                  // Store topic name in this string variable
 
-                    // Validate topic name
-                    while (topicNameValid == false) {
-                        cout << char(175) << char(175) << " Enter new Topic name:  ";
+                    while (topicNameValid == false) {                                                       // Iterating until the topic name input is correct
+                        cout << char(175) << char(175) << " Enter new Topic name:  ";                       
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        getline(cin, topicName);
+                        getline(cin, topicName);                                                            // Storing the input into the string variable
                         cout << endl;
-                        topicNameValid = validateTopicName(topicName);
+                        topicNameValid = validateTopicName(topicName);                                      // Validate topic name input
                     }
-                    newTopic.setTopicName(topicName);           // Set topic name to Topic Obj
-                    topicDictionary.add(topicName, newTopic);   // Add topic Obj to Dictionary (Topic Hash Table)
+                    newTopic.setTopicName(topicName);                                                       // Set topic name to Topic object
+                    topicDictionary.add(topicName, newTopic);                                               // Add new topic object to Dictionary (Hash Table for Topics)
+                    
+                    saveTopicAddition(newTopic);                                                            // Saving the topic into a file
 
-                    //Saving the topic into a file
-                    saveTopicAddition(newTopic);
+                    cout << "[SUCCESS] Topic has been added." << endl;                                      // Display the result status
 
-                    cout << "[SUCCESS] Topic has been added." << endl;
-
-                    topicOption = -1;
+                    topicOption = -1;                                                                       // Resetting back to the topic menu
                 }
-                else if (topicOption == 3) {
-                    topicOption = -1;
-                    // Insert Codes Here
-                    string username;                                                            //Username varaible
-                    User* searchedUser;
+                else if (topicOption == 3) {                                                                // Searching for users 
+                    string username;                                                                        // String variable to store user input for username
+                    User* searchedUser;                                                                     // Storing the user class into this variable
 
-                    cout << char(175) << char(175) << " Enter username:  ";                     //Get username from User
+                    cout << char(175) << char(175) << " Enter username:  ";                                 // Getting user input
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    getline(cin, username);
+                    getline(cin, username);                                                                 // Storing into the string variable
 
-                    searchedUser = userList.search(username);                                   //Return Topic Obj
+                    searchedUser = userList.search(username);                                               // Search for user object from the user list containing all the user (extracted from the text file)
 
-                    if (searchedUser == NULL) {
-                        cout << "No users found!" << endl;
+                    if (searchedUser == NULL) { 
+                        cout << "No users found!" << endl;                                                  // Displaying the result status
                     }
                     else {
-                        cout << "User found!" << endl;                                //Display topic
-                        cout << "Username: " << searchedUser->getUsername() << endl; //implement UI for this
+                        cout << "User found!" << endl;                                
+                        cout << "Username: " << searchedUser->getUsername() << endl; 
                     }
-                }
-                else if (topicOption == 4) {
-                    topicOption = -1;
 
-                    string topicTitle;                                      //Topic title varaible
+                    topicOption = -1;                                                                       // Resetting back to the topic menu
+                }
+                else if (topicOption == 4) {                                                                // Searching for topics
+                    
+                    string topicTitle;                                                                      // Storing the topic object into the Topic pointer
                     Topic* searchedTopic;
 
-                    cout << char(175) << char(175) << " Enter Topic title:  ";                     //Get Topic title from User
+                    cout << char(175) << char(175) << " Enter Topic title:  ";                              // Getting user input for the topic name
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');    
-                    getline(cin, topicTitle);                               
+                    getline(cin, topicTitle);                                                               // Storing the input into the string variable        
                     
-                    searchedTopic = topicDictionary.search(topicTitle);     //Return Topic Obj
-                    // IMPORTANT !!! SECOND PARAMETER IS THE INDEX + 1
+                    searchedTopic = topicDictionary.search(topicTitle);                                     // Search the topic name inside the Topic dictionary and return the topic object found
 
-                    if (searchedTopic != NULL) {
-                        Topic topicObj = *searchedTopic;
-                        topicObj.print(1);                  //Display topic
+                    if (searchedTopic != NULL) {                                                            // Checking if the search return any non-empty object
+                        Topic topicObj = *searchedTopic;                                                    
+                        topicObj.print(1);                                                                  // Displaying the topic object
                     }
                     else {
-                        cout << "No topic found!" << endl;
+                        cout << "No topic found!" << endl;                                                  // Displaying the result status if there is no post object
                     }
-
-                    
+                    topicOption = -1;                                                                       // Resetting back to the topic menu
                 }
-                else {
-                    if (topicDictionary.getLength() != 0) {
-                        pageState = 2;
+                else {                                                                                      // Travel to the post menu options
+                    if (topicDictionary.getLength() != 0) {                                                 // Can advance only if there are topic object in topic dictionary
+                        pageState = 2;              
                         break;
                     }
                     else {
-                        cout << "A topic needs to be added before proceeding." << endl;
-                        topicOption = -1;
+                        cout << "A topic needs to be added before proceeding." << endl;                     // Cannot advance if there are np topic object in topic dictionary
+                        topicOption = -1;                                                                   // Resetting back to the topic menu
                     }
-                    
                 }
             }
         }
 
-        // Post related functions
-        while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 2) {
+                                                                                                            // -------- Post and Replyrelated functions --------
+        while ((currentUser.getUsername() != "" || currentUser.getPassword() != "") && pageState == 2) {    // Iterating the post page after the user has signed in
             postOption = -999;
-            while (!count(postOptions.begin(), postOptions.end(), postOption)) {
-                displayPostMenu();
-                postOption = getOptionInput();
+            while (!count(postOptions.begin(), postOptions.end(), postOption)) {                            // Checking if the options are within the correct range for the Post menu
+                displayPostMenu();                                                                          // Displaying the post menu 
+                postOption = getOptionInput();                                                              // Getting the option for the post menu
             }
-            if (postOption == 1) {
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            if (postOption == 1) {                                                                          // Printing the posts and replies when the option is 1
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option from the user
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
                 }
-                //cout << currentTopicName << endl;
-                if (topicDictionary.search(currentTopicName)->getPostList()->isEmpty()) {
-                    cout << "There is no posts to display. " << endl;
+                
+                if (topicDictionary.search(currentTopicName)->getPostList()->isEmpty()) {                   // Search for the list of post from current topic in the topic dictionary based on the topic name
+                    cout << "There is no posts to display. " << endl;                                       // Display the result status when there is no post inside that topic object
                 }
                 else {
-                    topicDictionary.search(currentTopicName)->printChildren();
+                    topicDictionary.search(currentTopicName)->printChildren();                              // Printing all the post and reply belonging to that topic object
                 }
-                postOption = -1;
+                postOption = -1;                                                                            // Resetting back to the post menu
             }
-            else if (postOption == 2) {
-                // Display the table for the user to choose
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            else if (postOption == 2) {                                                                     // Add post to the topic when the option is 2
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option from the user
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
                 }
+                   
+                Post newPost = getNewPost();                                                                // Get the new post details through user input and store into a post object
+                Topic* searchedTopic = topicDictionary.search(currentTopicName);                            // Searching for the topic based on the topic name (got from validateTopicNumber) and store the result into a topic pointer
+                bool addPostSuccess = searchedTopic->addPost(newPost);                                      // Adding the post to the topic through the topic pointer
 
-                // Add Post
-                Post newPost = getNewPost();
-                Topic* searchedTopic = topicDictionary.search(currentTopicName);
-                bool addPostSuccess = searchedTopic->addPost(newPost);
-
-                if (addPostSuccess) {
-                    cout << "\n[SUCCESS] Post has been added." << endl;
-                    savePostAddition(newPost, searchedTopic->getTopicName());
+                if (addPostSuccess) {                                                                       
+                    cout << "\n[SUCCESS] Post has been added." << endl;                                     // Displaying the corresponding status when the post is added successfully
+                    savePostAddition(newPost, searchedTopic->getTopicName());                               // Saving the new post to the text file
                 }
                 else {
-                    cout << "\n[FAILED] Post was not added." << endl;
+                    cout << "\n[FAILED] Post was not added." << endl;                                       // Displaying the corresponding status when the post is added unsuccessfully
                 }
-
-                postOption = -1;
+                postOption = -1;                                                                            // Resetting back to the post menu 
             }
-            else if (postOption == 3) {
-
-                // EDIT POST 
-
-                postOption = -1;
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            else if (postOption == 3) {                                                                     // Edit the post in the topic when the option is 3                                                    
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option for the topic table
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
                 }
-                // Get topic ptr
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                // Print all post
-                chosenTopic->printChildren();
+                
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);                              // Searching for the topic based on the topic name (got from validateTopicNumber) and store the result into a topic pointer
+                chosenTopic->printChildren();                                                               // Display the list of post and reply for the user to choose (can only choose post through its number)
 
-                if (!chosenTopic->getPostList()->isEmpty()) {
-                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
-                    // Get user input
-                    int postIndex = -1;
-                    bool postSelectionSuccess = false;
-
-                    while (!postSelectionSuccess) {
-                        //Can try adding in validation for post number
-                        cout << char(175) << char(175) << " Select a post to continue:  ";
-                        cin >> postIndex;
-                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                if (!chosenTopic->getPostList()->isEmpty()) {                                               // Checking if there is any posts in the topic before continuing
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();// Storing the list of posts into a list pointer 
+                      
+                    int postIndex = -1;                                                                     // Storing the index of the post chosen from the post list into a integer variable
+                    bool postSelectionSuccess = false;                                                      // Storing the status of the post selection into a boolen variable
+                    while (!postSelectionSuccess) {                                                         // Iterating to get the post option
+                        cout << char(175) << char(175) << " Select a post to continue:  ";          
+                        cin >> postIndex;                                                                   // Getting the post option from the user
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);                 // Validating the post number chosen and return the status
                     }
 
+                    LinkedList<Post>* postList = chosenTopic->getPostList();                                // Retrieving the list of post based on the topic name and storing into the list pointer
+                    Post* chosenPost = postList->get(postIndex - 1);                                        // Retrieving the post object based on the post index (from user input) and storing into the post pointer
+                    Post* anOldPost = postList->get(postIndex - 1);                                         // Retrieving the post object based on the post index (from user input) and storing into the post pointer --> repeated as this stores the old post object before it is being edited and is used when saving
 
-                    LinkedList<Post>* postList = chosenTopic->getPostList();
-                    Post* chosenPost = postList->get(postIndex - 1);
-                    Post* anOldPost = postList->get(postIndex - 1);
-                    Post theOldPost = *anOldPost;
+                    string chosenPostTitle = chosenPost->getPTitle();                                       // Retrieving the post title based on the post index (from user input) and storing into the string variable
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);                            // Retrieving the post object based on the post index (from user input) and storing into the string variable
 
-                    // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+                    if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {                // Checking if the user (who has created the post) is the same as the current user signed in 
+                        string currentPostTitle = postObjPtr->getPTitle();                                  // Storing the old post title into a string object
+                        string currentPostDesc = postObjPtr->getPContent();                                 // Storing the old post content into a string object
 
-                    string chosenPostTitle = chosenPost->getPTitle();
-                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                        string newPostTitle;                                                                // String variable to store new post title
+                        string newPostDesc;                                                                 // String variable to store new post description 
 
-                    if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {
-                        string currentPostTitle = postObjPtr->getPTitle();
-                        string currentPostDesc = postObjPtr->getPContent();
-
-                        string newPostTitle;
-                        string newPostDesc;
-
-                        cout << "Current Post Title: " << currentPostTitle << endl;
-                        cout << "Enter new Post Title: ";
+                        cout << "Current Post Title: " << currentPostTitle << endl;                         // Displaying the old post title
+                        cout << "Enter new Post Title: ";                                                   // Getting the post title from the user
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         getline(cin, newPostTitle);
-                        //newPostTitle = currentPostTitle + newPostTitle;
 
                         cout << endl;
 
-                        cout << "Current Post Content: " << currentPostDesc << endl;
-                        cout << "Enter new Post Content: ";
-                        //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Current Post Content: " << currentPostDesc << endl;                        // Displaying the old post description
+                        cout << "Enter new Post Content: ";                                                 // Getting the post description from the user
                         getline(cin, newPostDesc);
-                        //newPostDesc = currentPostDesc + newPostDesc;
 
-                        postObjPtr->setPTitle(newPostTitle);
-                        postObjPtr->setPContent(newPostDesc);
+                        postObjPtr->setPTitle(newPostTitle);                                                // Setting the new post title into the post object
+                        postObjPtr->setPContent(newPostDesc);                                               // Setting the new post description into the post object
 
-                        cout << "[SUCCESS] Post updated!" << endl;
-                        savePostRevision(postObjPtr, theOldPost, currentTopicName);
+                        cout << "[SUCCESS] Post updated!" << endl;                                          // Display the status of the post edit
+                        savePostRevision(postObjPtr, anOldPost, currentTopicName);                          // Saving the updated post into the text file
                     }
                     else {
-                        cout << "[FAILED] Unable to edit as you did not make this post." << endl;
-                    }
-
-                }
-                else {
-                    cout << "[FAILED] There is no post to edit. Please try again." << endl;
-                }
-
-                
-
-                // !!! IMPORTANT : NEED TO CHECK IF THE PERSON WHO POSTED IS THE CURRENT USER !!!
-            }
-            else if (postOption == 4) {
-                // Delete Post
-                // 1. Choose a topic
-                // 2. Choose a post in the topic to delete?
-
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
-                    cout << "\n\n" << endl;
-                    cout << "+------------------------------------------------------------------------+" << endl;
-                    cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
-                }
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                chosenTopic->printChildren();
-
-                if (!chosenTopic->getPostList()->isEmpty()) {
-
-                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
-                    // Get user input
-                    int postIndex = -1;
-                    bool postSelectionSuccess = false;
-
-                    while (!postSelectionSuccess) {
-                        //Can try adding in validation for post number
-                        cout << char(175) << char(175) << " Select a post to continue:  ";
-                        cin >> postIndex;
-                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
-                    }
-
-                    Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);
-
-                    if (toBeDeleted->getPUser().getUsername() == currentUser.getUsername()) {
-                        Post theDeletedPost = *toBeDeleted;
-                        chosenTopic->removePost(postIndex - 1);
-
-                        savePostDeletion(theDeletedPost, currentTopicName);
-
-                        //cout << chosenTopic->getPostList()->isEmpty();
-
-                        cout << "[SUCCESS] Post has been deleted." << endl;
-                    }
-                    else {
-                        cout << "[FAILED] Unable to delete this post as you did not write this post." << endl;
+                        cout << "[FAILED] Unable to edit as you did not make this post." << endl;           // Display the result status
                     }
                 }
                 else {
-                    cout << "[FAILED] There is no post to delete. Please try again." << endl;
+                    cout << "[FAILED] There is no post to edit. Please try again." << endl;                 // Display the result status
                 }
-
-                
-
-                postOption = -1;
-
+                postOption = -1;                                                                            // Resetting back to post menu
             }
-            else if (postOption == 5) {
-                // Add Reply
-
-                // !!! IMPORTANT: CANNOT ADD REPLY WHEN THERE IS NO POST !!!
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            else if (postOption == 4) {                                                                     // Delete post from the topic when the option is 4
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option for the topic table
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the value
                 }
-                // Get topic ptr
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                if (!chosenTopic->getPostList()->isEmpty()) {
-                    topicDictionary.search(currentTopicName)->printChildren();
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);                              // Searching for the topic based on the topic name (got from validation)
+                chosenTopic->printChildren();                                                               // Display the list of post and reply for the user to choose from
 
-                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
-
-                    // Get user input
-                    int postIndex = -1;
-                    bool postSelectionSuccess = false;
-
-                    while (!postSelectionSuccess) {
-                        //Can try adding in validation for post number
+                if (!chosenTopic->getPostList()->isEmpty()) {                                               // Checking if there is any posts in the topic before continuing
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();// Storing the list of posts into a list pointer 
+                    
+                    int postIndex = -1;                                                                     // Storing the index of the post chosen from the post list into a integer variable
+                    bool postSelectionSuccess = false;                                                      // Storing the status of the post selection into a boolen variable
+                    while (!postSelectionSuccess) {                                                         // Iterating to get the post option
                         cout << char(175) << char(175) << " Select a post to continue:  ";
-                        cin >> postIndex;
-                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                        cin >> postIndex;                                                                   // Getting the post option from the user
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);                 // Validating the post number chosen and return the status
                     }
 
+                    Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);                     // Retrieving the post object based on the post index (from user input) and storing into the post pointer
 
+                    if (toBeDeleted->getPUser().getUsername() == currentUser.getUsername()) {               // Checking if the user (who has created the post) is the same as the current user signed in 
+                        int replyNum = toBeDeleted->getRStack()->getSize();                                 // Getting the number of reply for removal during saving
+                        savePostDeletion(toBeDeleted, currentTopicName, replyNum);                          // Removing the post in the text file and saving it
+                        chosenTopic->removePost(postIndex - 1);                                             // Removing the post from the topic using the post index
+                        cout << "[SUCCESS] Post has been deleted." << endl;                                 // Display the result status
+                    }
+                    else {
+                        cout << "[FAILED] Unable to delete this post as you did not write this post." << endl;// Display the result status
+                    }
+                }
+                else {
+                    cout << "[FAILED] There is no post to delete. Please try again." << endl;               // Display the result status
+                }
+                postOption = -1;                                                                            // Resetting back to post menu
+            }
+            else if (postOption == 5) {                                                                     // Add reply in the post when the option is 5
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
+                    cout << "\n\n" << endl;
+                    cout << "+------------------------------------------------------------------------+" << endl;
+                    cout << "|  Choose a topic                                                        |" << endl;
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option for the topic table
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
+                }
+                
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);                              // Searching for the topic based on the topic name (got from validateTopicNumber) and store the result into a topic pointer
+                if (!chosenTopic->getPostList()->isEmpty()) {                                               // Checking if there is any posts in the topic before continuing
+                    topicDictionary.search(currentTopicName)->printChildren();                              // Display the list of post and reply for the user to choose (can only choose post through its number)
 
-                    Post* chosenPost = postListPtr->get(postIndex - 1);
-                    Post newPost = Post();
-                    newPost.setPContent(chosenPost->getPContent());
-                    newPost.setPTitle(chosenPost->getPTitle());
-                    newPost.setPDateTime(chosenPost->getPDateTime());
-                    newPost.setPUser(currentUser);
-                    newPost.setReactions(chosenPost->getReactions());
-                    newPost.setReactionUsers(chosenPost->returnReactionUsers());
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();// Storing the list of posts into a list pointer 
 
-                    //Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
+                    int postIndex = -1;                                                                     // Storing the index of the post chosen from the post list into a integer variable
+                    bool postSelectionSuccess = false;                                                      // Storing the status of the post selection into a boolen variable
+                    while (!postSelectionSuccess) {                                                         // Iterating to get the post option
+                        cout << char(175) << char(175) << " Select a post to continue:  ";
+                        cin >> postIndex;                                                                   // Getting the post option from the user
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);                 // Validating the post number chosen and return the status
+                    }
+
+                    Post* chosenPost = postListPtr->get(postIndex - 1);                                     // Retrieving the post object based on the post index (from user input) and storing into the post pointer
 
                     cout << endl;
 
-                    Reply newReply = getNewReply();
-                    //newReply.setRTitle("testing title");
-                    //newReply.setRContent("Reply content");
-                    bool addReplySuccess = chosenPost->addReply(newReply);
+                    Reply newReply = getNewReply();                                                         // Getting the reply details through user input and storing into a reply object
+                    bool addReplySuccess = chosenPost->addReply(newReply);                                  // Add reply to the post
                     if (addReplySuccess) {
-                        cout << "\n[SUCCESS] Reply has been added." << endl;
-                        //Post thisPost = topicDictionary.returnSearchOption(topicSelected).getPostListItem().getItem(postIndex - 1);
-                        saveReplyAddition(newReply, chosenPost, currentTopicName);
+                        cout << "\n[SUCCESS] Reply has been added." << endl;                                // Display the result status
+                        saveReplyAddition(newReply, chosenPost, currentTopicName);                          // Saving the new reply into the text files
                     }
                     else {
-                        cout << "\n[FAILED] Unable to add reply." << endl;
+                        cout << "\n[FAILED] Unable to add reply." << endl;                                  // Display the result status
                     }
                 }
                 else {
-                    cout << "[FAILED] There is no post to reply to. Please try again." << endl;
+                    cout << "[FAILED] There is no post to reply to. Please try again." << endl;             // Display the result status
                 }
 
-                
-                //chosenPost->getPContent();
-                postOption = -1;
-                //topicDictionary.getLength();
+                postOption = -1;                                                                            // Resetting back to the post menu
             }
-            else if (postOption == 6) {
-                // Add Reactions
-                
-                // Display the table for the user to choose
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            else if (postOption == 6) {                                                                     // Add reaction to the post when the option is 6
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option for the topic table
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
                 }
                 
-                // Get topic ptr
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                LinkedList<Post>* postList = chosenTopic->getPostList();
-                //If post exists
-                if (!chosenTopic->getPostList()->isEmpty()) {
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);                              // Searching for the topic based on the topic name (got from validateTopicNumber) and store the result into a topic pointer
+                LinkedList<Post>* postList = chosenTopic->getPostList();                                    // Storing the list of post for that topic into a list pointer
+                
+                if (!chosenTopic->getPostList()->isEmpty()) {                                               // Checking if there is any posts in the topic before continuing
                     cout << endl;
-                    // Print all post
-                    chosenTopic->printChildren();
-                    // Get user input
-                    int postIndex = -1;
-                    bool postSelectionSuccess = false;
-
-                    while (!postSelectionSuccess) {
-                        //Can try adding in validation for post number
+                    chosenTopic->printChildren();                                                           // Display the list of post and reply for the user to choose (can only choose post through its number)
+                    
+                    int postIndex = -1;                                                                     // Storing the index of the post chosen from the post list into a integer variable
+                    bool postSelectionSuccess = false;                                                      // Storing the status of the post selection into a boolen variable
+                    while (!postSelectionSuccess) {                                                         // Iterating to get the post option
                         cout << char(175) << char(175) << " Select a post to continue:  ";
-                        cin >> postIndex;
-                        postSelectionSuccess = validatePostNumber(postIndex, *postList);
+                        cin >> postIndex;                                                                   // Getting the post option from the user
+                        postSelectionSuccess = validatePostNumber(postIndex, *postList);                    // Validating the post number chosen and return the status
                     }
                     
-                    Post* chosenPost = postList->get(postIndex - 1);
-                    Post* anOldPost = postList->get(postIndex - 1);
-                    Post theOldPost = *anOldPost;
+                    Post* chosenPost = postList->get(postIndex - 1);                                        // Retrieving the post object based on the post index (from user input) and storing into the post pointer (changed along with codes)
+                    Post* anOldPost = postList->get(postIndex - 1);                                         // Retrieving the post object based on the post index (from user input) and storing into the post pointer (used for saving)
 
-                    string chosenPostTitle = chosenPost->getPTitle();
-                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                    string chosenPostTitle = chosenPost->getPTitle();                                       // Retrieving the post title based on the post index (from user input) and storing into the string variable
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);                            // Retrieving the post object based on the post title and storing into the post pointer
 
-                    //user can only add reaction 
-                    LinkedList<User> listOfUsersThatReacted = chosenPost->returnReactionUsers();
-                    if (listOfUsersThatReacted.search(currentUser.getUsername()) == nullptr) {
+                    LinkedList<User> listOfUsersThatReacted = chosenPost->returnReactionUsers();            // Checking if the user has reacted before (based on the linked list of users stored in the post object)
+                    if (listOfUsersThatReacted.search(currentUser.getUsername()) == nullptr) {              // Checking if the user exists in the list 
                         cout << endl;
 
-                        // Prompt user for reaction (emoji)
-                        int reactionOption = -999;
-                        while (!count(reactionOptions.begin(), reactionOptions.end(), reactionOption)) {
-                            displayReactionsMenu();
-                            reactionOption = getOptionInput();
+                        int reactionOption = -999;                                                          // Prompt user for reaction (emoji)
+                        while (!count(reactionOptions.begin(), reactionOptions.end(), reactionOption)) {    // Checking if the reaction option is within acceptable range
+                            displayReactionsMenu();                                                         // Display the option menu for the user to choose
+                            reactionOption = getOptionInput();                                              // Getting the user input for the reaction option
                         }
 
-                        //Add reaction to post
-                        postObjPtr->addReaction(reactionOption);
-                        postObjPtr->addReactionUsers(currentUser);
+                        postObjPtr->addReaction(reactionOption);                                            // Add reaction to post
+                        postObjPtr->addReactionUsers(currentUser);                                          // Add user to reaction users in the post 
 
-
-                        savePostRevision(postObjPtr, theOldPost, currentTopicName);
-
-                        cout << "\n[SUCCESS] Reaction added to post." << endl;
+                        savePostRevision(postObjPtr, anOldPost, currentTopicName);                          // Saving new updated post with reactions into the text file
+                        cout << "\n[SUCCESS] Reaction added to post." << endl;                              // Display the result status
                     }
                     else {
-                        cout << "\n[FAILED]You can only react once." << endl;
+                        cout << "\n[FAILED]You can only react once." << endl;                               // Display the result status
                     }
-            
                 }
                 else {
-                    cout << "\n[FAILED] There is no post to react to. Please try again." << endl;
+                    cout << "\n[FAILED] There is no post to react to. Please try again." << endl;           // Display the result status
                 }
-                
-              
-                //return back to post menu
-                postOption = -1;
+                postOption = -1;                                                                            // Resetting back to post menu
             }
-            else if (postOption == 7) {
-                postOption = -1;
-                int topicSelected = -1;
-                bool topicSelectionSuccess = false;
-                while (topicSelectionSuccess == false) {
+            else if (postOption == 7) {                                                                     // Search for post in the topic when the option is 7                               
+                int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
+                bool topicSelectionSuccess = false;                                                         // Storing the status of the topic selection into a boolean variable
+                while (topicSelectionSuccess == false) {                                                    // Iterating to get the topic object
                     cout << "\n\n" << endl;
                     cout << "+------------------------------------------------------------------------+" << endl;
                     cout << "|  Choose a topic                                                        |" << endl;
-                    topicDictionary.printWithCounter();
-                    topicSelected = getOptionInput();
-                    topicSelectionSuccess = validateTopicNumber(topicSelected);
+                    topicDictionary.printWithCounter();                                                     // Display the table of topics for the user to choose
+                    topicSelected = getOptionInput();                                                       // Getting the option for the topic table
+                    topicSelectionSuccess = validateTopicNumber(topicSelected);                             // Validating the topic number chosen and return the status
                 }
-                // Get topic ptr
-                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);                              // Searching for the topic based on the topic name (got from validateTopicNumber) and store the result into a topic pointer
 
-                string chosenPostTitle;
+                string chosenPostTitle;                                                                     // String variable to store the title of the post to search
                 cout << char(175) << char(175) << "Enter a post title: ";
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                getline(cin, chosenPostTitle);
-                if (!chosenTopic->getPostList()->isEmpty()) {
-                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');                            
+                getline(cin, chosenPostTitle);                                                              // Getting the user input for the post title
+                if (!chosenTopic->getPostList()->isEmpty()) {                                               // Checking if there is any posts in the topic before continuing
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);                            // Retrieving the post object based on the post title (from user input) and storing into the post pointer
                     if (postObjPtr != NULL) {
-                        postObjPtr->print(1);
+                        postObjPtr->print(1);                                                               // Displaying the details of the post if found
                     }
                     else {
-                        cout << "No post found!" << endl;
+                        cout << "No post found!" << endl;                                                   // Display the result status
                     }
                 }
                 else {
-                    cout << "There are no post in this topic" << endl;
+                    cout << "There are no post in this topic" << endl;                                      // Display the result status
                 }
+                postOption = -1;                                                                            // Resetting back to the post menu
+
             }
             else {
-                pageState = 1;
+                pageState = 1;                                                                              // Travel to the post menu options
                 break;
             }
         }
     }
 
 
-
-    while (signInOption == 0 || topicOption == 0 || postOption == 0) {
+    while (signInOption == 0 || topicOption == 0 || postOption == 0) {                                      // Exiting the program when any one of the options is 0 (zero)       
         cout << "Exiting program. See you again!" << endl;
         exit(0);
     }
@@ -608,22 +533,25 @@ int main()
     return 0;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+/*  ##########################################################################################
+    ##     Initialize function for variables and load the data from the saved text file     ##
+    ##########################################################################################   */
 void init() {
-    specialchar.push_back('!');
-    specialchar.push_back('@');
+    specialchar.push_back('!');                                                                             // Vector containing the special characters for new user registration (password) -> adding to the vector
+    specialchar.push_back('@');                                                                             
     specialchar.push_back('#');
     specialchar.push_back('$');
     specialchar.push_back('%');
     specialchar.push_back('&');
 
-    mainOptions.push_back(1);
+    mainOptions.push_back(1);                                                                               // Vector containing the list of acceptable number range for the topic options -> adding to the vector
     mainOptions.push_back(2);
     mainOptions.push_back(3);
     mainOptions.push_back(4);
     mainOptions.push_back(5);
 
-    postOptions.push_back(1);
+    postOptions.push_back(1);                                                                               // Vector containing the list of acceptable number range for the post options -> adding to the vector
     postOptions.push_back(2);
     postOptions.push_back(3);
     postOptions.push_back(4);
@@ -632,144 +560,122 @@ void init() {
     postOptions.push_back(7);
     postOptions.push_back(8);
 
-    reactionOptions.push_back(1);
+    reactionOptions.push_back(1);                                                                           // Vector containing the list of acceptable number range for the reactions options -> adding to the vector
     reactionOptions.push_back(2);
     reactionOptions.push_back(3);
     reactionOptions.push_back(4);
     reactionOptions.push_back(5);
 
 
-    currentUser = User();
+    currentUser = User();                                                                                   // Initializing an empty user (used to store the current user signed in) with empty username and password
     currentUser.setUsername("");
     currentUser.setPassword("");
 
-    currentTopicName = "";
+    currentTopicName = "";                                                                                  // Initializing an empty string to store the topic name (required for loading post and reply)
     pageState = 0;
 
-    //creating directories --> must upgrade to C++ 17 first 
-    //link: https://stackoverflow.com/questions/41308933/how-to-enable-c17-compiling-in-visual-studio
-    fs::create_directories("./Assets/Content");
+    fs::create_directories("./Assets/Content");                                                             // Creating the directories to store the text files if there is none currently
     fs::create_directories("./Assets/Users");
 
-    vector<string> linesOfContent;
+    vector<string> linesOfContent;                                                                          // Vector to store the split strings (delimiter : \\)
 
-    //getting the topic names and storing into the topic dictionary
-    std::string path = "Assets/Content";
-    for (const auto& entry : fs::directory_iterator(path)) {
+    
+    std::string path = "Assets/Content";                                                                    
+    for (const auto& entry : fs::directory_iterator(path)) {                                                // Getting each text file from the stated path and extracting the topic name from the filename
         string nameOfFile = entry.path().string();
         string delimiter1 = "Content\\";
         string delimiter2 = ".txt";
         size_t start_pos = nameOfFile.find(delimiter1) + delimiter1.length();
         size_t end_pos = nameOfFile.find(delimiter2);
         string topicResult = nameOfFile.substr(start_pos, end_pos - start_pos);
-        //cout << topicResult << endl;
-        Topic newSavedTopic = Topic();
+        
+        Topic newSavedTopic = Topic();                                                                      // Adding the topic to the topic dictionary
         newSavedTopic.setTopicName(topicResult);
         topicDictionary.add(topicResult, newSavedTopic);
 
-        //getting the content out of each text file
-        if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+        if (entry.is_regular_file() && entry.path().extension() == ".txt") {                                // Getting the content out of the text file
             ifstream inputFile(entry.path());
             if (inputFile.is_open()) {
                 string line;
                 while (std::getline(inputFile, line)) {
                     linesOfContent.push_back(line);
-                    //cout << line << endl;
                 }
                 inputFile.close();
             }
         }
 
-        //cout << "this is a line break" << endl;
-
-        int postCounter = 0;
+        int postCounter = 0;                                                                                // Used to find the post index when adding reply
 
         for (string contentLine : linesOfContent) {
-            
-            if (contentLine.rfind("[Post]", 0) == 0) {
+            if (contentLine.rfind("[Post]", 0) == 0) {                                                      // Check if the line belongs to a Post object
+                string toRemove = "[Post]";                                                                 // Remove '[Post]' from the string
 
-                //removing '[Post]' from the string
-                string toRemove = "[Post]";
-
-                // find the position of the string to remove
-                size_t pos = contentLine.find(toRemove);
+                size_t pos = contentLine.find(toRemove);                                                    // Find the position of the string to remove
                 if (pos != std::string::npos) {
-                    // erase the string from the original string
-                    contentLine.erase(pos, toRemove.length());
+                    contentLine.erase(pos, toRemove.length());                                              // Erase the string from the original string
                 }
 
-                string primarydelimiter = "\\";
-                vector<string> postDetails;
+                string primarydelimiter = "\\";                                                             
+                vector<string> postDetails;                                                                 // Vector to store the split strings                                   
                 size_t prev = 0;
                 size_t next = 0;
 
-                // split the string with the delimiter "\\"
-                while ((next = contentLine.find(primarydelimiter, prev)) != string::npos) {
+                while ((next = contentLine.find(primarydelimiter, prev)) != string::npos) {                 // Splitting the string with the delimiter - (\\)
                     postDetails.push_back(contentLine.substr(prev, next - prev));
                     prev = next + primarydelimiter.size();
                 }
                 postDetails.push_back(contentLine.substr(prev));
 
-                /*
-                for (const auto& token : tokens) {
-                    cout << token << endl;
-                }
-                */
+                Post extractPost = Post();                                                                  // Create an empty post object to store the details of the post
 
-                Post extractPost = Post();
-
-                string postTitle = postDetails[0];
-                extractPost.setPTitle(postTitle);
+                string postTitle = postDetails[0];                                                          
+                extractPost.setPTitle(postTitle);                                                           // Store the first string as the post title
 
                 string postDescription = postDetails[1];
-                extractPost.setPContent(postDescription);
+                extractPost.setPContent(postDescription);                                                   // Store the second string as the post content
 
                 string postDateTime = postDetails[2];
-                extractPost.setPDateTime(postDateTime);
+                extractPost.setPDateTime(postDateTime);                                                     // Store the third string as the post datetime
 
                 User postUser = User();
                 string postUsername = postDetails[3];
                 string postPassword = postDetails[4];
                 postUser.setUsername(postUsername);
                 postUser.setPassword(postPassword);
-                extractPost.setPUser(postUser);
+                extractPost.setPUser(postUser);                                                             // Store the fourth and fifth string as the post user
 
-                string postReactions = postDetails[5];
+                string postReactions = postDetails[5];                                                      // Store the sixth string as the post reactions
                 string secondarydelimiter = ",";
                 vector<string> reactionDetails;
                 size_t thePrev = 0;
                 size_t theNext = 0;
 
-                // split the string with the delimiter ","
-                while ((theNext = postReactions.find(secondarydelimiter, thePrev)) != string::npos) {
+                while ((theNext = postReactions.find(secondarydelimiter, thePrev)) != string::npos) {       // split the string with the delimiter (,)
                     reactionDetails.push_back(postReactions.substr(thePrev, theNext - thePrev));
                     thePrev = theNext + secondarydelimiter.size();
                 }
                 reactionDetails.push_back(postReactions.substr(thePrev));
                 
-                extractPost.getReactions().get(0)->setCount(stoi(reactionDetails[0]));
+                extractPost.getReactions().get(0)->setCount(stoi(reactionDetails[0]));                      // Storing the relevant reactions into the array of reactions
                 extractPost.getReactions().get(1)->setCount(stoi(reactionDetails[1]));
                 extractPost.getReactions().get(2)->setCount(stoi(reactionDetails[2]));
                 extractPost.getReactions().get(3)->setCount(stoi(reactionDetails[3]));
                 extractPost.getReactions().get(4)->setCount(stoi(reactionDetails[4]));
 
-                //cout << postDetails.size() << endl;
-
-                if (postDetails.size() > 6) {
+                if (postDetails.size() > 6) {                                                               // Store the seventh string as the (post) reaction users
                     string postReactionsUser = postDetails[6];
                     string tertiarydelimiter = "<>";
-                    vector<string> reactionUserDetails;
+                    vector<string> reactionUserDetails;                                                     // Vector to store the split strings 
                     size_t aPrev = 0;
                     size_t aNext = 0;
 
-                    // split the string with the delimiter "<>"
-                    while ((aNext = postReactionsUser.find(tertiarydelimiter, aPrev)) != string::npos) {
+                    while ((aNext = postReactionsUser.find(tertiarydelimiter, aPrev)) != string::npos) {    // split the string with the delimiter (<>)
                         reactionUserDetails.push_back(postReactionsUser.substr(aPrev, aNext - aPrev));
                         aPrev = aNext + tertiarydelimiter.size();
                     }
                     reactionUserDetails.push_back(postReactionsUser.substr(aPrev));
 
-                    for (string userdetails : reactionUserDetails) {
+                    for (string userdetails : reactionUserDetails) {                                        // Storing the username and password extracted into user object and add them to the list of reaction users
                         string quaternarydelimiter = "|";
                         size_t pos = userdetails.find(quaternarydelimiter);
                         string usernameString = userdetails.substr(0, pos);
@@ -781,73 +687,58 @@ void init() {
                     }
                 }
 
-                //cout << extractPost.getPTitle() << endl;
-                //add post to topic dictionary
-
-                topicDictionary.search(topicResult)->addPost(extractPost);
+                topicDictionary.search(topicResult)->addPost(extractPost);                                  // Add post to the topic in the topic dictionary
                 postCounter++;
-
             }
             else {
-
+                                                                                                            // Check if the line belongs to a Reply object
                 string delimiter = "\\";
-                vector<string> replyDetails;
+                vector<string> replyDetails;                                                                // Vector to store the split strings
                 size_t prev = 0;
                 size_t next = 0;
 
-                //removing '[Post]' from the string
-                string toRemove = "[Reply]";
+                string toRemove = "[Reply]";                                                                // Removing '[Reply]' from the string
 
-                // find the position of the string to remove
-                size_t pos = contentLine.find(toRemove);
+                size_t pos = contentLine.find(toRemove);                                                    // Find the position of the string to remove
                 if (pos != std::string::npos) {
-                    // erase the string from the original string
-                    contentLine.erase(pos, toRemove.length());
+                    contentLine.erase(pos, toRemove.length());                                              // Erase the string from the original string
                 }
 
-
-                // split the string with the delimiter "\\"
-                while ((next = contentLine.find(delimiter, prev)) != string::npos) {
+                while ((next = contentLine.find(delimiter, prev)) != string::npos) {                        // split the string with the delimiter (\\)
                     replyDetails.push_back(contentLine.substr(prev, next - prev));
                     prev = next + delimiter.size();
                 }
                 replyDetails.push_back(contentLine.substr(prev));
 
-                Reply extractReply = Reply();
+                Reply extractReply = Reply();                                                               // Create an empty Reply object to store the reply details
 
                 string replyTitle = replyDetails[0];
-                extractReply.setRTitle(replyTitle);
+                extractReply.setRTitle(replyTitle);                                                         // Store the first string as the reply title
 
                 string replyDescription = replyDetails[1];
-                extractReply.setRContent(replyDescription);
+                extractReply.setRContent(replyDescription);                                                 // Store the second string as the reply description
 
                 string replyDateTime = replyDetails[2];
-                extractReply.setRDateTime(replyDateTime);
+                extractReply.setRDateTime(replyDateTime);                                                   // Store the third string as the reply datetime
 
                 User replyUser = User();
                 string postUsername = replyDetails[3];
                 string postPassword = replyDetails[4];
                 replyUser.setUsername(postUsername);
                 replyUser.setPassword(postPassword);
-                extractReply.setRUser(replyUser);
+                extractReply.setRUser(replyUser);                                                           // Store the fourth and fifth string as the reply user
 
-                //cout << extractReply.getRTitle() << endl;
-
-                Post* postPtr = topicDictionary.search(topicResult)->getPostList()->get(postCounter-1);
+                Post* postPtr = topicDictionary.search(topicResult)->getPostList()->get(postCounter-1);     // Add reply to the post in the topic dictionary
                 postPtr->addReply(extractReply);
 
             }
-
         }
-
-
     }
 
-    //getting the users and storing into a user list
-    ifstream userfile;
+    ifstream userfile;                                                                                      // Getting the users and storing them into a user list
     userfile.open("Assets/Users/userlist.txt");
     string line;
-    while (getline(userfile, line)) {
+    while (getline(userfile, line)) {                                                                       // Splitting the string with the delimiter (,)
         string userString =  line;
         string delimiter = ",";
         size_t pos = userString.find(delimiter);
@@ -856,21 +747,23 @@ void init() {
         User newSavedUser = User();
         newSavedUser.setUsername(usernameString);
         newSavedUser.setPassword(passwordString);
-        bool addedSavedUserSuccess = userList.add(newSavedUser);
+        bool addedSavedUserSuccess = userList.add(newSavedUser);                                
     }
     userfile.close();
-
-}
-
-
-void loadFiles() {
-
 }
 
 
 
 
-// --- ENTER DESCRIPTION HERE ---
+/*  #####################################################################################
+    ##     Display the options for the topic menu such as add topic and view topic     ##
+    ##     1. View topics in the topic dictionary                                      ##
+    ##     2. Add topics to the topic dictionary                                       ##
+    ##     3. Search for the current users in the user list                            ##
+    ##     4. Search topics in the topic dictionary                                    ##
+    ##     5. Display the post menu                                                    ##
+    ##     0. Exit the program                                                         ##
+    #####################################################################################   */
 void displayTopicMenu() {
     cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
@@ -885,7 +778,20 @@ void displayTopicMenu() {
     cout << endl;
 };
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ##################################################################################
+    ##     Display the options for the post menu such as add post and add reply     ##
+    ##     1. View post and reply in the topic                                      ##
+    ##     2. Add post to the topic                                                 ##
+    ##     3. Edit the post in the topic                                            ##
+    ##     4. Delete post from the topic                                            ##
+    ##     5. Add reply to the post                                                 ##
+    ##     6. Add reaction to the post                                              ##
+    ##     7. Search for post in the topic                                          ##
+    ##     8. Display the topic menu                                                ##
+    ##     0. Exit the program                                                      ##
+    ##################################################################################   */
 void displayPostMenu() {
     cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
@@ -902,7 +808,16 @@ void displayPostMenu() {
     cout << endl;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ########################################################
+    ##     Display the options for the reactions menu     ##
+    ##     1. Upvote (like)                               ##
+    ##     2. Downvote (dislike)                          ##
+    ##     3. Happy Emoji                                 ##
+    ##     4. Sad Emoji                                   ##
+    ##     5. Chock Emoji                                 ##
+    ########################################################   */
 void displayReactionsMenu() {
     cout << endl;
     cout << "+------------------------------------------------------------------------+" << endl;
@@ -915,7 +830,14 @@ void displayReactionsMenu() {
     cout << endl;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ################################################################################
+    ##     Display the options for the login menu such as sign in and sign up     ##
+    ##     1. Sign in                                                             ##
+    ##     2. Sign up                                                             ##
+    ##     0. Exit the program                                                    ##
+    ################################################################################   */
 void displayMainMenu() {
     cout << "+------------------------------------------------------------------------+" << endl;
     cout << "|  Options                                                               |" << endl;
@@ -926,7 +848,13 @@ void displayMainMenu() {
 };
 
 
-// --- ENTER DESCRIPTION HERE ---
+
+/*  ┌────────────────────────────────────────────────────────────────────────┐
+    |                                                                        |
+    |                      Welcome [firstUsername] to                        |
+    |                        Discussion Forum 2023                           |
+    |                                                                        |
+    └────────────────────────────────────────────────────────────────────────┘  */
 void displayBanner()
 {
     cout << "\n" << endl;
@@ -975,7 +903,9 @@ void displayBanner()
     cout << endl;
 };
 
-// --- ENTER DESCRIPTION HERE ---
+/*  ####################################################################################
+    ##     Retrieve the user's username and password to log in for authentication     ##
+    ####################################################################################   */
 bool displaySignInScreen() {
     string username;
     string password;
@@ -989,11 +919,7 @@ bool displaySignInScreen() {
     cin >> username;
     cout << char(175) << char(175) << " Password:  ";
     cin >> password;
-    //string correctname;
-    //string correctpassword;
-    //correctname = "abcdef";
-    //correctpassword = "123456";
-    if (validateUser(username, password)) {
+    if (validateUser(username, password)) {                                                                 // Checking the username and password inputted corresponds to any of the users in the list of users 
         currentUser.setUsername(username);
         currentUser.setPassword(password);
         return true;
@@ -1006,7 +932,10 @@ bool displaySignInScreen() {
 }
 
 
-// --- ENTER DESCRIPTION HERE ---
+
+/*  ##############################################################################################################
+    ##     Retrieve the user's username and password to register for new account to authenticate themselves     ##
+    ##############################################################################################################   */
 bool displaySignUpScreen() {
     string username;
     string password;
@@ -1019,28 +948,28 @@ bool displaySignUpScreen() {
     }
     cout << "\n" << endl;
     while (usernameClear == false) {
-        cout << char(175) << char(175) << " New Username:  ";
+        cout << char(175) << char(175) << " New Username:  ";                                   
         cin >> username;
         cout << endl;
-        usernameClear = validateUsernameInput(username);
+        usernameClear = validateUsernameInput(username);                                                    // Get the user input for the username and validate it (check if it exist in the user list)
     }
 
     while (passwordClear == false) {
         cout << char(175) << char(175) << " New Password:  ";
         cin >> password;
         cout << endl;
-        passwordClear = validatePasswordInput(password);
+        passwordClear = validatePasswordInput(password);                                                    // Get the user input for the password and validate it (check if it exist in the user list)
     }
-    currentUser.setUsername(username);
+    currentUser.setUsername(username);                                                                      // Set the global user with the username and password details
     currentUser.setPassword(password);
-
-    //saving user to the text files
-    saveUsers(currentUser);
+    saveUsers(currentUser);                                                                                 // Saving user to the text files
 
     return true;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+/*  #########################################################################################################################
+    ##     Retrieve the user's integer input from the menu options (Topic Menu, Post Menu, Reaction Menu, Log In Menu)     ##
+    #########################################################################################################################   */
 int getOptionInput() {
     bool isInteger = false;
     string input;
@@ -1050,27 +979,31 @@ int getOptionInput() {
         cout << endl;
         isInteger = checkInteger(input);
         if (checkInteger(input) == false) {
-            cout << "[ERROR] Only (integer) numbers are accepted. Pls try again." << endl;
+            cout << "[ERROR] Only (integer) numbers are accepted. Pls try again." << endl;                  // Checking if the input given by the user is a positive numerical digit
         }
     }
 
-    return stoi(input);
+    return stoi(input);                                                                                     // tranforming the string to an int and returning it
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  #################################################
+    ##     Check if the given input is a digit     ##
+    #################################################   */
 bool checkInteger(string input)
 {
     bool isNeg = false;
     int itr = 0;
-    if (input.size() == 0)
+    if (input.size() == 0)                                                                                  // Check if there is any input
         return false;
-    if (input[0] == '-')
+    if (input[0] == '-')                                                                                    // Check if input is negative
     {
         isNeg = true;
         itr = 1;
     }
 
-    for (int i = itr; i < (int)input.size(); i++)
+    for (int i = itr; i < (int)input.size(); i++)                                                           // Check if each position of the input is a positive numerical digit
     {
         if (!isdigit(input[i]))
             return false;
@@ -1079,37 +1012,47 @@ bool checkInteger(string input)
 }
 
 
-// --- ENTER DESCRIPTION HERE ---
+
+/*  #######################################################################################
+    ##     Checking if the user details correspond to the users inside the user list     ##
+    #######################################################################################   */
 bool validateUser(string usernameInput, string passwordInput) {
     User tempUser = User();
-    tempUser.setUsername(usernameInput);
+    tempUser.setUsername(usernameInput);                                                
     tempUser.setPassword(passwordInput);
-    return userList.searchFound(tempUser);
+    return userList.searchFound(tempUser);                                                                  // Check if the username log in details matches with that in the user list
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+/*  #############################################################################
+    ##     Checking if the username string mets the necessary requirements     ##
+    #############################################################################   */
 bool validateUsernameInput(string u) {
     if (u.length() > 30 || u.length() < 5) {
-        cout << "[ERROR] Your username needs to be between 5 to 30 characters. Please try again.\n" << endl;
+        cout << "[ERROR] Your username needs to be between 5 to 30 characters. Please try again.\n" << endl;            // Checking if the string input between 5 to 30 characters
         return false;
     }
     for (char c : u) {
         if (iswalnum(c) == false) {
-            cout << "[ERROR] Your username can only consists of alphabets and numbers. Please try again.\n" << endl;
+            cout << "[ERROR] Your username can only consists of alphabets and numbers. Please try again.\n" << endl;    // Checking if the string input is alphanumeric
             return false;
         }
     }
     return true;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  #############################################################################
+    ##     Checking if the password string mets the necessary requirements     ##
+    #############################################################################   */
 bool validatePasswordInput(string p) {
     if (p.length() > 20 || p.length() < 8) {
-        cout << "[ERROR] Your password needs to be between 8 to 20 characters. Please try again.\n" << endl;
+        cout << "[ERROR] Your password needs to be between 8 to 20 characters. Please try again.\n" << endl;                                                // Checking if the string input between 8 to 20 characters
         return false;
     }
     if (checkSpecialCharacters(p) == false) {
-        cout << "[ERROR] Your password need to include these special characters - !@#$%&. Please try again.\n" << endl;
+        cout << "[ERROR] Your password need to include these special characters - !@#$%&. Please try again.\n" << endl;                                     // Checking if the string input contains special characters
         return false;
     }
 
@@ -1122,19 +1065,22 @@ bool validatePasswordInput(string p) {
 
     for (char c2 : p) {
         if (iswalnum(c2) == false) {
-            cout << "[ERROR] Your password can only consists of alphabets, numbers and these special characters - !@#$%&. Please try again.\n" << endl;
+            cout << "[ERROR] Your password can only consists of alphabets, numbers and these special characters - !@#$%&. Please try again.\n" << endl;     // Checking if the string input is alphanumeric
             return false;
         }
     }
     return true;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ###############################################################################################################
+    ##     Checking if the input string contains any special characters (from the vector<string> specialchar)    ##
+    ###############################################################################################################   */
 bool checkSpecialCharacters(string p) {
     for (char character1 : p) {
         for (char character2 : specialchar) {
-            //cout << character << " : " << typeid(character).name() << " and " << spc << " : " << typeid(spc).name() << endl;
-            if (character1 == character2) {
+            if (character1 == character2) {                                                                                                                 //Check if any part of the string input contains special characters
                 return true;
             }
         }
@@ -1142,7 +1088,11 @@ bool checkSpecialCharacters(string p) {
     return false;
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  #####################################################################################
+    ##     Checking if the topic number is a digit and return a topic when searched    ##
+    #####################################################################################   */
 bool validateTopicNumber(int topicNum) {
     if (isdigit(topicNum)) {
         return false;
@@ -1150,7 +1100,7 @@ bool validateTopicNumber(int topicNum) {
     else if (topicNum <= 0) {
         return false;
     }
-    currentTopicName = topicDictionary.returnSearchOption(topicNum).getTopicName();
+    currentTopicName = topicDictionary.returnSearchOption(topicNum).getTopicName();                         // Checking if the topic index retrieve any topic object from the topic dictionary
     if (currentTopicName != "") {
         return true;
     }
@@ -1160,64 +1110,83 @@ bool validateTopicNumber(int topicNum) {
     }
 };
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ########################################################################
+    ##     Checking if the input string mets the necessary requirement    ##
+    ########################################################################   */
 bool validateTopicName(string nameOfTopic) {
-    if (iswalnum(nameOfTopic[0]) && nameOfTopic.length() >= 1 && nameOfTopic.length() <= 50) {
+    if (iswalnum(nameOfTopic[0]) && nameOfTopic.length() >= 1 && nameOfTopic.length() <= 60) {              // Checking if the new topic name does not contain spacing at the start and is between 1 to 60 characters
         return true;
     }
     else {
-        cout << "The first character needs to be an alphanumeric character and only 1 to 50 characters are allowed." << endl;
+        cout << "The first character needs to be an alphanumeric character and only 1 to 60 characters are allowed." << endl;
         return false;
     }
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ##############################################################################
+    ##     Retrieve the user's input for the post title and post description    ##
+    ##############################################################################   */
 Post getNewPost() {
     string title;
     string description;
     Post newPost = Post();
-    cout << char(175) << char(175) << " Enter post title:  ";
+    cout << char(175) << char(175) << " Enter post title:  ";                                               // Get user input for the new post title
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(cin, title);
-    cout << char(175) << char(175) << " Enter post description:  ";
-    getline(cin, description);
-    newPost.setPTitle(title);
+    getline(cin, title);                                                                                    
+    cout << char(175) << char(175) << " Enter post description:  ";                                         // Get user input for the new post description
+    getline(cin, description);                                                                              
+    newPost.setPTitle(title);                                                                               // Populate the post object with the necessary detials
     newPost.setPContent(description);
     newPost.setPDateTime();
     newPost.setPUser(currentUser);
-    return newPost;
+    return newPost;                                                                                         
 }
 
-// --- ENTER DESCRIPTION HERE ---
+
+
+/*  ###############################################################################
+    ##     Retrieve the user's input for the reply title and post description    ##
+    ###############################################################################   */
 Reply getNewReply() {
     string title;
     string description;
     Reply newReply = Reply();
-    cout << char(175) << char(175) << " Enter reply title:  ";
+    cout << char(175) << char(175) << " Enter reply title:  ";                                              // Get the user input for the title of the reply
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, title);
-    cout << char(175) << char(175) << " Enter reply description:  ";
+    cout << char(175) << char(175) << " Enter reply description:  ";                                        // Get the user input for the content of the reply                       
     getline(cin, description);
-    newReply.setRTitle(title);
+    newReply.setRTitle(title);                                                                              // Populate the reply object with the necessary detials
     newReply.setRContent(description);
     newReply.setRDateTime();
     newReply.setRUser(currentUser);
     return newReply;
 }
 
+
+
+/*  ################################################################
+    ##     Edit the current post and returning the post object    ##
+    ################################################################   */
 Post editCurrentPost() {
     return Post();
 }
 
 
-// --- ENTER DESCRIPTION HERE ---
+/*  #########################################################################
+    ##     Checking if the input option mets the necessary requirements    ##
+    #########################################################################   */
 bool validatePostNumber(int postNum, LinkedList<Post> postListing) {
 
-    if (isdigit(postNum)) {
+    if (isdigit(postNum)) {                                                                                 // Checking if the post index is a digit
         return false;
     }
     else if (postNum <= 0) {
-        cout << "[ERROR] Invalid number inputted. Pls try again." << endl;
+        cout << "[ERROR] Invalid number inputted. Pls try again." << endl;                                  // Checking if the post index retrieve any post object from the post list
         return false;
     }
     else if (postNum > postListing.getLength()) {
@@ -1230,136 +1199,123 @@ bool validatePostNumber(int postNum, LinkedList<Post> postListing) {
 };
 
 
-// --- ENTER DESCRIPTION HERE ---
+/*  ###########################################################################
+    ##     Saving the new topic into the directory (folder) as text files    ##
+    ###########################################################################   */
 void saveTopicAddition(Topic t) {
-
-//creating file for writing
-string filename = "Assets/Content/" + t.getTopicName() + ".txt";
-ofstream file;
-file.open(filename.c_str());
-file.close();
+    //creating file for writing
+    string filename = "Assets/Content/" + t.getTopicName() + ".txt";                                        // Save the topic name as the file name with the .txt extension
+    ofstream file;
+    file.open(filename.c_str());                                                                            // Open the file
+    file.close();                                                                                           // Close the file
 };
 
-// --- ENTER DESCRIPTION HERE ---
-void savePostAddition(Post p, string topicName) {
-    // Open the file for reading and writing in append mode
-    fstream file;
-    string filename = "Assets/Content/" + topicName + ".txt";
-    file.open(filename, ios::in | ios::out | ios::app);
 
-    // Read the existing contents of the file into a vector of strings
-    vector<string> contents;
+
+/*  ##############################################################################
+    ##     Saving the new post into the text file with the name of the topic    ##
+    ##############################################################################   */
+void savePostAddition(Post p, string topicName) {
+    fstream file;
+    string filename = "Assets/Content/" + topicName + ".txt";                                               // Open the file for reading and writing
+    file.open(filename, ios::in | ios::out | ios::app);
+    
+    vector<string> contents;                                                                                // Read the existing contents of the file into a vector of strings
     string line;
     while (getline(file, line)) {
         contents.push_back(line);
     }
 
-    // Add the new string to the end of the vector
-    string new_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword() + "\\";
-    for (int i = 0; i < p.getReactions().getLength(); i++) {
+    string new_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword() + "\\";         // Add the new string with the post details to the end of the vector
+    for (int i = 0; i < p.getReactions().getLength(); i++) {                                                // Looping through to store the reactions into a string                                                                                                                     
         Reaction* react = p.getReactions().get(i);
         new_string = new_string + to_string(react->getEmojiCount()) + ",";
     }
-    new_string.pop_back(); //removing the last comma
+    new_string.pop_back();                                                                                  //removing the last symbol (,)
     new_string = new_string + "\\";
-    if (p.returnReactionUsers().getLength() != 0) {
+    if (p.returnReactionUsers().getLength() != 0) {                                                         // Looping through to store the reaction users into a string
         for (int i = 0; i < p.returnReactionUsers().getLength(); i++) {
             User* us = p.returnReactionUsers().get(i);
             new_string = new_string + us->getUsername() + "|" + us->getPassword() + "<>";
         }
-        new_string.pop_back(); //removing the last symbol
-        new_string.pop_back(); //removing the last symbol
+        new_string.pop_back();                                                                              //removing the last symbol (>)
+        new_string.pop_back();                                                                              //removing the last symbol (<)
     }
     else {
-        new_string.pop_back(); //removing the last symbol
+        new_string.pop_back();                                                                              //removing the last symbol (\)
     }
-
-
-
-
-
     contents.push_back(new_string);
 
-    // Close the file
-    file.close();
+    file.close();                                                                                           // Close the file
 
-    // Open the file again, but this time in write mode
-    file.open(filename, ios::out | ios::trunc);
+    file.open(filename, ios::out | ios::trunc);                                                             // Open the file again in write mode
 
-    // Write the contents of the vector to the file
-    for (const string& s : contents) {
+    for (const string& s : contents) {                                                                      // Write the contents of the vector to the file
         file << s << endl;
     }
 
-    // Close the file
-    file.close();
+    file.close();                                                                                           // Close the file
 };
 
 
 
-
-// --- ENTER DESCRIPTION HERE ---
-void savePostDeletion(Post p, string topicName) {
+/*  ######################################################################################
+    ##     Removing the post and reply from the text file with the name of the topic    ##
+    ######################################################################################   */
+void savePostDeletion(Post* p, string topicName, int replyNum) {
     vector<string> lines;
-    string filename = "Assets/Content/" + topicName + ".txt";
+    string filename = "Assets/Content/" + topicName + ".txt";                                               // Open the file for reading and writing
     ifstream inputFile(filename);
-    if (inputFile.is_open()) {
+    if (inputFile.is_open()) {                                                                              
         string line;
-        while (std::getline(inputFile, line)) {
+        while (std::getline(inputFile, line)) {                                                             // Read the existing contents of the file into a vector of strings
             lines.push_back(line);
         }
-        inputFile.close();
+        inputFile.close();                                                                                  // Close the file
     
     }
 
-    cout << p.getPTitle() << endl;
-    //string hello = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";
-    //cout << hello << endl;
-
-    string old_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword() + "\\";
-    for (int i = 0; i < p.getReactions().getLength(); i++) {
-        Reaction* react = p.getReactions().get(i);
+    string old_string = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";  // Add the new string with the post details 
+    for (int i = 0; i < p->getReactions().getLength(); i++) {                                               // Looping through to store the reactions into a string
+        Reaction* react = p->getReactions().get(i);
         old_string = old_string + to_string(react->getEmojiCount()) + ",";
     }
 
-    old_string.pop_back(); //removing the last comma
+    old_string.pop_back();                                                                                  //removing the last symbol (,)
     old_string = old_string + "\\";
-    if (p.returnReactionUsers().getLength() != 0) {
-        for (int i = 0; i < p.returnReactionUsers().getLength(); i++) {
-            User* us = p.returnReactionUsers().get(i);
+    if (p->returnReactionUsers().getLength() != 0) {
+        for (int i = 0; i < p->returnReactionUsers().getLength(); i++) {                                    // Looping through to store the reaction users into a string
+            User* us = p->returnReactionUsers().get(i);
             old_string = old_string + us->getUsername() + "|" + us->getPassword() + "<>";
         }
-        old_string.pop_back(); //removing the last symbol
-        old_string.pop_back(); //removing the last symbol
+        old_string.pop_back();                                                                              //removing the last symbol (>)
+        old_string.pop_back();                                                                              //removing the last symbol (<)
     }
     else {
-        old_string.pop_back(); //removing the last symbol
+        old_string.pop_back();                                                                              //removing the last symbol (\)
     }
 
-
-    int numOfLines;
-    //cout << p.getRStack()->isEmpty() << endl;
-    if (p.getRStack()->isEmpty()){
+    int numOfLines;                                                                                         // Obtain the number of replies to remove
+    if (replyNum == 0){
         numOfLines = 1;
     }
     else {
-        numOfLines = p.getRStack()->getSize() + 1;
+        numOfLines = replyNum + 1;
     }
     
 
-
-    for (int i = 0; i < (int)lines.size(); i++) {
+    for (int i = 0; i < (int)lines.size(); i++) {                                                           // Removing the post and reply lines
         if (lines[i].find(old_string) != string::npos) {
             lines.erase(lines.begin() + i, lines.begin() + i + numOfLines);
             break;
         }
     }
     ofstream outputFile(filename);
-    if (outputFile.is_open()) {
+    if (outputFile.is_open()) {                                                                             // Open the file
         for (const auto& line : lines) {
-            outputFile << line << endl;
+            outputFile << line << endl;                                                                     // Write the contents of the vector to the file
         }
-        outputFile.close();
+        outputFile.close();                                                                                 // Close the file
     }
 };
 
@@ -1367,43 +1323,41 @@ void savePostDeletion(Post p, string topicName) {
 
 
 
-// --- ENTER DESCRIPTION HERE ---
+/*  ################################################################################
+    ##     Saving the new reply into the text files with the name of the topic    ##
+    ################################################################################   */
 void saveReplyAddition(Reply r, Post *p, string topicName) {
     vector<string> lines;
-    string filename = "Assets/Content/" + topicName + ".txt";
+    string filename = "Assets/Content/" + topicName + ".txt";                                               // Open the file for reading and writing
     ifstream inputFile(filename);
     if (inputFile.is_open()) {
         string line;
-        while (getline(inputFile, line)) {
+        while (getline(inputFile, line)) {                                                                  // Read the existing contents of the file into a vector of strings
             lines.push_back(line);
         }
-        inputFile.close();
+        inputFile.close();                                                                                  // Close the file
     }
-    // Find the line where you want to insert the new string
-    //string targetLine = "This is the target line.";
-    string targetLine = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";
-    for (int i = 0; i < p->getReactions().getLength(); i++) {
+    
+    string targetLine = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";    // Find the line insert the new string
+    for (int i = 0; i < p->getReactions().getLength(); i++) {                                               // Looping through to store the reactions into a string
         Reaction* react = p->getReactions().get(i);
         targetLine = targetLine + to_string(react->getEmojiCount()) + ",";
     }
 
-    targetLine.pop_back(); //removing the last comma
+    targetLine.pop_back(); 
     targetLine = targetLine + "\\";
     if (p->returnReactionUsers().getLength() != 0) {
-        for (int i = 0; i < p->returnReactionUsers().getLength(); i++) {
+        for (int i = 0; i < p->returnReactionUsers().getLength(); i++) {                                    // Looping through to store the reaction users into a string
             User* us = p->returnReactionUsers().get(i);
             targetLine = targetLine + us->getUsername() + "|" + us->getPassword() + "<>";
         }
 
-        targetLine.pop_back(); //removing the last symbol
-        targetLine.pop_back(); //removing the last symbol
+        targetLine.pop_back(); 
+        targetLine.pop_back(); 
     }
     else {
-        targetLine.pop_back(); //removing the last symbol
+        targetLine.pop_back(); 
     }
-    
-
-
 
     int targetIndex = -1;
     for (int i = 0; i < (int)lines.size(); i++) {
@@ -1412,109 +1366,107 @@ void saveReplyAddition(Reply r, Post *p, string topicName) {
             break;
         }
     }
-    // Insert the new string after the target line
+    
 
     int num_of_line = p->getRStack()->getSize();
 
-    string new_string = "[Reply]" + r.getRTitle() + "\\" + r.getRContent() + "\\" + r.getRDateTime() + "\\" + r.getRUser().getUsername() + "\\" + r.getRUser().getPassword();
+    string new_string = "[Reply]" + r.getRTitle() + "\\" + r.getRContent() + "\\" + r.getRDateTime() + "\\" + r.getRUser().getUsername() + "\\" + r.getRUser().getPassword();       // Insert the new string after the target line
     if (targetIndex != -1) {
         lines.insert(lines.begin() + targetIndex + num_of_line, new_string);
     }
     ofstream outputFile(filename);
-    if (outputFile.is_open()) {
+    if (outputFile.is_open()) {                                                                             // Open the file to write
         for (const auto& line : lines) {
-            outputFile << line << '\n';
+            outputFile << line << '\n';                                                                     // Write the contents of the vector to the file
         }
-        outputFile.close();
+        outputFile.close();                                                                                 // Close the file
     }
 };
 
 
 
 
-// --- ENTER DESCRIPTION HERE ---
-void savePostRevision(Post *newPost, Post oldPost, string topicName) {
+/*  ###################################################################################
+    ##     Saving the updated post into the text files with the name of the topic    ##
+    ###################################################################################   */
+void savePostRevision(Post *newPost, Post* oldPost, string topicName) {
     vector<string> lines;
     string filename = "Assets/Content/" + topicName + ".txt";
     ifstream inputFile(filename);
-    if (inputFile.is_open()) {
+    if (inputFile.is_open()) {                                                                              // Open the file for reading and writing
         string line;
-        while (getline(inputFile, line)) {
+        while (getline(inputFile, line)) {                                                                  // Read the existing contents of the file inot a vector of things
             lines.push_back(line);
         }
-        inputFile.close();
+        inputFile.close();                                                                                  // Close the file
     }
     for (auto& line : lines) {
-        string oldString = "[Post]" + oldPost.getPTitle() + "\\" + oldPost.getPContent() + "\\" + oldPost.getPDateTime() + "\\" + oldPost.getPUser().getUsername() + "\\" + oldPost.getPUser().getPassword() + "\\";
-        for (int i = 0; i < oldPost.getReactions().getLength(); i++) {
-            Reaction* react = oldPost.getReactions().get(i);
+        string oldString = "[Post]" + oldPost->getPTitle() + "\\" + oldPost->getPContent() + "\\" + oldPost->getPDateTime() + "\\" + oldPost->getPUser().getUsername() + "\\" + oldPost->getPUser().getPassword() + "\\";       // Gather all the OLD post details into a string
+        for (int i = 0; i < oldPost->getReactions().getLength(); i++) {                                     // Looping through to store the reactons into the string                              
+            Reaction* react = oldPost->getReactions().get(i);
             oldString = oldString + to_string(react->getEmojiCount()) + ",";
         }
-        oldString.pop_back(); //removing the last comma
+        oldString.pop_back(); 
         oldString = oldString + "\\";
-        if (oldPost.returnReactionUsers().getLength() != 0) {
-            for (int i = 0; i < oldPost.returnReactionUsers().getLength(); i++) {
-                User* us = oldPost.returnReactionUsers().get(i);
+        if (oldPost->returnReactionUsers().getLength() != 0) {
+            for (int i = 0; i < oldPost->returnReactionUsers().getLength(); i++) {                          // Looping through to store the reacton users into the string     
+                User* us = oldPost->returnReactionUsers().get(i);
                 oldString = oldString + us->getUsername() + "|" + us->getPassword() + "<>";
             }
-            oldString.pop_back(); //removing the last symbol
-            oldString.pop_back(); //removing the last symbol
+            oldString.pop_back(); 
+            oldString.pop_back(); 
         }
         else {
-            oldString.pop_back(); //removing the last symbol
+            oldString.pop_back(); 
         }
         
 
-
-
-
-        string newString = "[Post]" + newPost->getPTitle() + "\\" + newPost->getPContent() + "\\" + newPost->getPDateTime() + "\\" + newPost->getPUser().getUsername() + "\\" + newPost->getPUser().getPassword() + "\\";
-        for (int i = 0; i < newPost->getReactions().getLength(); i++) {
+        string newString = "[Post]" + newPost->getPTitle() + "\\" + newPost->getPContent() + "\\" + newPost->getPDateTime() + "\\" + newPost->getPUser().getUsername() + "\\" + newPost->getPUser().getPassword() + "\\";       // Gather all the NEW post details into a string
+        for (int i = 0; i < newPost->getReactions().getLength(); i++) {                                     // Looping through to store the reactons into the string 
             Reaction* react = newPost->getReactions().get(i);
             newString = newString + to_string(react->getEmojiCount()) + ",";
         }
-        newString.pop_back(); //removing the last comma
+        newString.pop_back(); 
         newString = newString + "\\";
-        if (newPost->returnReactionUsers().getLength() != 0) {
+        if (newPost->returnReactionUsers().getLength() != 0) {                                              // Looping through to store the reacton users into the string     
             for (int i = 0; i < newPost->returnReactionUsers().getLength(); i++) {
                 User* us = newPost->returnReactionUsers().get(i);
                 newString = newString + us->getUsername() + "|" + us->getPassword() + "<>";
             }
-            newString.pop_back(); //removing the last symbol
-            newString.pop_back(); //removing the last symbol
+            newString.pop_back(); 
+            newString.pop_back(); 
         }
         else {
-            newString.pop_back(); //removing the last symbol
+            newString.pop_back();
         }
         
-
-
-
         if (line.find(oldString) != string::npos) {
-            line.replace(line.find(oldString), oldString.length(), newString);
+            line.replace(line.find(oldString), oldString.length(), newString);                              // Replace the old string with the new string in the text file
         }
     }
     ofstream outputFile(filename);
-    if (outputFile.is_open()) {
+    if (outputFile.is_open()) {                                                                             // Open the file for writing purposes
         for (const auto& line : lines) {
-            outputFile << line << endl;
+            outputFile << line << endl;                                                                     // Write the contents of the vector to the file
         }
-        outputFile.close();
+        outputFile.close();                                                                                 // Close the file
     }
 };
 
 
-// --- ENTER DESCRIPTION HERE ---
+/*  ##################################################
+    ##     Saving the users into the text files     ##
+    ##################################################   */
 void saveUsers(User u) {
-    string filename = "Assets/Users/userlist.txt";
+    string filename = "Assets/Users/userlist.txt";                                                          
     ofstream file;
-    file.open(filename.c_str(), ios::app);
+    file.open(filename.c_str(), ios::app);                                                                  // Open the user file 
 
 
     if (file.is_open()) {
-        string inputUser = u.getUsername() + "," + u.getPassword();
+        string inputUser = u.getUsername() + "," + u.getPassword();                                         // Add new user string into the text file
         file << inputUser << endl;
-        file.close();
+        file.close();                                                                                       // Close the file
     }
     else {
         std::cout << "Error in opening file." << std::endl;

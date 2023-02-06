@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -17,51 +25,52 @@ class LinkedList
 		int size;
 
 	public:
-		//constructor
+		// Constructor
 		LinkedList();
 
-		//destrcutor
+		// Destructor
 		~LinkedList();
 
-		//add an item to the back of the list
+		// Add an item to the back of the list
 		bool add(ItemType item);
 
-		//add an item at a specified position in the list
+		// Add an item at a specified position in the list
 		bool add(int index, ItemType item);
 
-		//remove an item at a specified position of the list
+		// Remove an item at a specified position of the list
 		void remove(int index);
 
-		//get an item at a specified position of the list
+		// Get an item at a specified position of the list
 		ItemType* get(int index);
 
-		//get an item at a specified position of the list
+		// Get an item at a specified position of the list
 		ItemType getItem(int index);
 
-		//check if the size of the list is empty
+		// Check if the size of the list is empty
 		bool isEmpty();
 
-		//check the size of the list
+		// Check the size of the list
 		int getLength();
 
-		//display all the items in the list
+		// Display all the items in the list
 		void print();
 
-		//search and return an object
+		// Search the list with a string
 		ItemType* search(string s);
 
-		//recusive search function for the above
+		// Recusive search function for the above seach function
 		ItemType* search(string s, Node* nodePointer);
 
-		//search and return a index of object
+		// Search and return the index pf item
 		int searchIndex(string s);
 
-		//recursive search function for the above
+		// Recursive search function for the above searchIndex function
 		int searchIndex(string s, Node* nodePointer, int index);
 
-		//boolean to check if item is found
+		// Search the list with the item
 		bool searchFound(ItemType i);
 
+		// Display the contents of the list with index number
 		void printWithCounter();
 };
 

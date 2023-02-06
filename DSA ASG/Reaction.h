@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -11,20 +19,25 @@ class Reaction
 		int reactionCount;
 
 	public:
-		//PLinkedList::PNode* postPointer;
+		// Constructor
 		Reaction();
+
+		//Destructor
 		~Reaction();
 
-		//Topic Setter 
+		//Reaction setters
 		void setEmoji(string e);
+		void setCount(int number);
 
-		//Topic getter
+		//Reaction getters
 		int getEmojiCount();
 
+		// Add reaction count by 1
 		void addCount();
 
+		// Display the contents of reactions
 		void print();
 
-		void setCount(int number);
+		
 };
 

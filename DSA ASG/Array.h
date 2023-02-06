@@ -1,3 +1,11 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
 #pragma once
 #include <iostream>
 
@@ -15,32 +23,34 @@ class Array
 
 	public:
 
-		// constructor
+		// Constructor
 		Array();
 
-		// destructor
+		// Destructor
 		~Array();
 
-		// add an item to the back of the list (append)
+		// Add an item to the back of the array list 
 		bool add(ItemType item);
 
-		// add an item at a specified position in the list (insert)
+		// Add an item at a specified position in the array list 
 		bool add(int index, ItemType item);
 
-		// remove an item at a specified position in the list
+		// Remove an item at a specified position in the array list
 		void remove(int index);
 
-		// get an item at a specified position of the list (retrieve)
+		// Get an item at a specified position of the array list 
 		ItemType* get(int index);
 
-		// check if the list is empty
+		// Check if the array list is empty
 		bool isEmpty();
 
-		// check the size of the list
+		// Check the size of the array list
 		int getLength();
 
+		// Display the content of the array list
 		void print();
 
+		// Replace the item at a specified postion of the array list 
 		void replace(int index, ItemType item);
 
 };

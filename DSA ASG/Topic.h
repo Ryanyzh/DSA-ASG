@@ -1,3 +1,12 @@
+//  +------------------------------------------------------------+
+//  |                      Team 02: AWOL                         |
+//  +------------------------------------------------------------+
+//  |        Student 1: Yong Zong Han Ryan, S10219317A           |
+//  |                                                            |
+//  |        Student 2: Tan Jin Daat, S10222867E                 |
+//  +------------------------------------------------------------+
+
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -14,36 +23,36 @@ class Topic
 		LinkedList<Post> postList;
 
 	public:
-		//PLinkedList::PNode* postPointer;
+		// Constructor
 		Topic();
+
+		// Destrcutor
 		~Topic();
 
-		//Topic Setter 
+		// Topic setter 
 		void setTopicName(string);
 
-		//Topic getter
+		// Topic getters
 		string getTopicName();
-
-		// Post list getter
 		LinkedList<Post>* getPostList();
-
 		LinkedList<Post> getPostListItem();
 
-		//Add post to topic
+		// Add post to topic
 		bool addPost(Post post);
 
-		//Remove post from topic
+		// Remove post from topic
 		void removePost(int index);
 
-		//Search and return Post index
+		// Search and return post index from post name
 		int searchPostIndex(string s);
 
-		//Search and return Post Object
+		// Search and return post object from post name
 		Post* searchPost(string s);
 
-		//Display topic details -> from the Dictionary class
+		// Display contents of the topic (from the Dictionary class)
 		void print(int counter);
 
+		// Display all the reply details
 		void printChildren();
 
 
