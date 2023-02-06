@@ -204,6 +204,7 @@ int Dictionary<KeyType, ItemType>::getLength()
 
 template <typename KeyType, typename ItemType>
 void Dictionary<KeyType, ItemType>::print() {
+	/*
 	if (!isEmpty()) {
 		for (int i = 0; i < HT_MAX_SIZE; i++) {
 			Node* current = new Node;
@@ -215,6 +216,17 @@ void Dictionary<KeyType, ItemType>::print() {
 					current->item.print();
 					current = current->next;
 				}
+			}
+		}
+	}
+	*/
+	if (!isEmpty()) {
+		for (int i = 0; i < HT_MAX_SIZE; i++) {
+			Node* current = new Node;
+			current = items[i];
+			while (current != NULL) {
+				current->item.print();
+				current = current->next;
 			}
 		}
 	}
