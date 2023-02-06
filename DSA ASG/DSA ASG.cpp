@@ -90,8 +90,10 @@ void saveTopicAddition(Topic t);                                            // F
 void savePostAddition(Post p, string topicName);                            // Function to insert the new Post object into the text file for saving - for adding new post
 void savePostDeletion(Post* p, string topicName, int replyNum);             // Function to remove the Post object into the text file for saving - for deleting post
 void saveReplyAddition(Reply r, Post *p, string topicName);                 // Function to insert the new Reply object into the text file for saving - for adding new reply
-void savePostRevision(Post* newPost, Post* oldPost, string topicName);       // Function to replace the Post object into the text file for saving - for adding reactions and editing posts
-void saveUsers(User u);
+void savePostRevision(Post* newPost, Post* oldPost, string topicName);      // Function to replace the Post object into the text file for saving - for adding reactions and editing posts
+void saveUsers(User u);                                                     // Function to insert the User object into the text file for saving 
+
+void exitProgram();                                                         // Function used to exit the program
 
 
 
@@ -106,13 +108,18 @@ int main()
     int postOption = -1;
     bool signInStatus = false;                                                                              // Initalize the status of sign in/sign up of the user (true - success, false - failed)
     bool signUpStatus = false;
-    while (signInOption != 0 && topicOption != 0 && postOption != 0) {                                      // Iterating the program until the option 0 is entered
+    while (true) {                                                                                          // Iterating the program until the option for exit is entered
 
         while (currentUser.getUsername() == "" || currentUser.getPassword() == "") {                        // Iterating the sign in page when the user credentials are empty
             signInOption = -999;                                                                    
             while (signInOption != 1 && signInOption != 2) {                                                // Iterating the login menu until the correct option entered
                 displayMainMenu();                                                                          // Displaying the login menu
                 signInOption = getOptionInput();                                                            // Getting the option for the login menu
+
+                if (signInOption == 0) {
+                    exitProgram();
+                }
+
                 if (signInOption == 1 && userList.isEmpty() == true) {                                      // Preventing user sign in if there is nothing in the list of users extracted from the text files
                     signInOption = -1;                                          
                 }
@@ -139,6 +146,9 @@ int main()
             while (!count(mainOptions.begin(), mainOptions.end(), topicOption)) {                           // Checking if the options are within the correct range for the Topic menu
                 displayTopicMenu();                                                                         // Displaying the topic menu
                 topicOption = getOptionInput();                                                             // Getting the option for the topic menu
+                if (topicOption == 0) {
+                    exitProgram();
+                }
             }
             if (count(mainOptions.begin(), mainOptions.end(), topicOption)) {                               
                 if (topicOption == 1) {                                                                     // Printing the topic names when the option is 1
@@ -226,6 +236,9 @@ int main()
             while (!count(postOptions.begin(), postOptions.end(), postOption)) {                            // Checking if the options are within the correct range for the Post menu
                 displayPostMenu();                                                                          // Displaying the post menu 
                 postOption = getOptionInput();                                                              // Getting the option for the post menu
+                if (postOption == 0) {
+                    exitProgram();
+                }
             }
             if (postOption == 1) {                                                                          // Printing the posts and replies when the option is 1
                 int topicSelected = -1;                                                                     // Storing the index of the topic chosen into a integer variable
@@ -522,12 +535,6 @@ int main()
                 break;
             }
         }
-    }
-
-
-    while (signInOption == 0 || topicOption == 0 || postOption == 0) {                                      // Exiting the program when any one of the options is 0 (zero)       
-        cout << "Exiting program. See you again!" << endl;
-        exit(0);
     }
 
     return 0;
@@ -1472,3 +1479,9 @@ void saveUsers(User u) {
         std::cout << "Error in opening file." << std::endl;
     }
 };
+
+
+void exitProgram() {
+    cout << "Exiting program. See you again!" << endl;
+    exit(0);
+}
