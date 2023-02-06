@@ -291,50 +291,59 @@ int main()
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
                 // Print all post
                 chosenTopic->printChildren();
-                // Get user input
-                int postIndex = -1;
-                cout << char(175) << char(175) << " Select a post to edit:  ";
-                cin >> postIndex;
-                LinkedList<Post>* postList = chosenTopic->getPostList();
-                Post* chosenPost = postList->get(postIndex - 1);
-                Post* anOldPost = postList->get(postIndex - 1);
-                Post theOldPost = *anOldPost;
 
-                // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
+                if (!chosenTopic->getPostList()->isEmpty()) {
+                    // Get user input
+                    int postIndex = -1;
+                    cout << char(175) << char(175) << " Select a post to edit:  ";
+                    cin >> postIndex;
+                    LinkedList<Post>* postList = chosenTopic->getPostList();
+                    Post* chosenPost = postList->get(postIndex - 1);
+                    Post* anOldPost = postList->get(postIndex - 1);
+                    Post theOldPost = *anOldPost;
 
-                string chosenPostTitle = chosenPost->getPTitle();
-                Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
-                
-                if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {
-                    string currentPostTitle = postObjPtr->getPTitle();
-                    string currentPostDesc = postObjPtr->getPContent();
+                    // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
 
-                    string newPostTitle;
-                    string newPostDesc;
+                    string chosenPostTitle = chosenPost->getPTitle();
+                    Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
 
-                    cout << "Current Post Title: " << currentPostTitle << endl;
-                    cout << "Enter new Post Title: ";
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    getline(cin, newPostTitle);
-                    //newPostTitle = currentPostTitle + newPostTitle;
+                    if (postObjPtr->getPUser().getUsername() == currentUser.getUsername()) {
+                        string currentPostTitle = postObjPtr->getPTitle();
+                        string currentPostDesc = postObjPtr->getPContent();
 
-                    cout << endl;
+                        string newPostTitle;
+                        string newPostDesc;
 
-                    cout << "Current Post Content: " << currentPostDesc << endl;
-                    cout << "Enter new Post Content: ";
-                    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    getline(cin, newPostDesc);
-                    //newPostDesc = currentPostDesc + newPostDesc;
+                        cout << "Current Post Title: " << currentPostTitle << endl;
+                        cout << "Enter new Post Title: ";
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        getline(cin, newPostTitle);
+                        //newPostTitle = currentPostTitle + newPostTitle;
 
-                    postObjPtr->setPTitle(newPostTitle);
-                    postObjPtr->setPContent(newPostDesc);
+                        cout << endl;
 
-                    cout << "Post updated!" << endl;
-                    savePostRevision(postObjPtr, theOldPost, currentTopicName);
+                        cout << "Current Post Content: " << currentPostDesc << endl;
+                        cout << "Enter new Post Content: ";
+                        //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        getline(cin, newPostDesc);
+                        //newPostDesc = currentPostDesc + newPostDesc;
+
+                        postObjPtr->setPTitle(newPostTitle);
+                        postObjPtr->setPContent(newPostDesc);
+
+                        cout << "Post updated!" << endl;
+                        savePostRevision(postObjPtr, theOldPost, currentTopicName);
+                    }
+                    else {
+                        cout << "Unable to edit as you did not make this post." << endl;
+                    }
+
                 }
                 else {
-                    cout << "Unable to edit as you did not make this post." << endl;
+                    cout << "No Post to edit" << endl;
                 }
+
+                
 
                 // !!! IMPORTANT : NEED TO CHECK IF THE PERSON WHO POSTED IS THE CURRENT USER !!!
             }
@@ -356,17 +365,30 @@ int main()
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
                 chosenTopic->printChildren();
 
-                int postIndex = -1;
-                cout << char(175) << char(175) << " Select a post to delete:  ";
-                cin >> postIndex;
+                if (!chosenTopic->getPostList()->isEmpty()) {
+                    int postIndex = -1;
+                    cout << char(175) << char(175) << " Select a post to delete:  ";
+                    cin >> postIndex;
 
-                Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);
-                Post theDeletedPost = *toBeDeleted;
-                chosenTopic->removePost(postIndex - 1);
+                    Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);
 
-                savePostDeletion(theDeletedPost, currentTopicName);
+                    if (toBeDeleted->getPUser().getUsername() == currentUser.getUsername()) {
+                        Post theDeletedPost = *toBeDeleted;
+                        chosenTopic->removePost(postIndex - 1);
 
-                cout << chosenTopic->getPostList()->isEmpty();
+                        savePostDeletion(theDeletedPost, currentTopicName);
+
+                        cout << chosenTopic->getPostList()->isEmpty();
+                    }
+                    else {
+                        cout << "Unable to delete this post as you did not write this post." << endl;
+                    }
+                }
+                else {
+                    cout << "No post to delete." << endl;
+                }
+
+                
 
                 postOption = -1;
 

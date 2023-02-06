@@ -280,17 +280,23 @@ ItemType* Dictionary<KeyType, ItemType>::search(KeyType str) {
 // Recusrive search function
 template <typename KeyType, typename ItemType>
 ItemType* Dictionary<KeyType, ItemType>::search(KeyType str, Node* nextNode) {
-	if (nextNode->item.getTopicName() == str) {
-		return &nextNode->item;
-	}
-	else {
-		if (nextNode->next != NULL) {
-			return search(str, nextNode->next);
+	if (nextNode != NULL) {
+		if (nextNode->item.getTopicName() == str) {
+			return &nextNode->item;
 		}
 		else {
-			return nullptr;
-		}		
+			if (nextNode->next != NULL) {
+				return search(str, nextNode->next);
+			}
+			else {
+				return nullptr;
+			}
+		}
 	}
+	else {
+		return nullptr;
+	}
+	
 }
 
 
