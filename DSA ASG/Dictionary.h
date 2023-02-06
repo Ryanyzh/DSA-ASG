@@ -233,13 +233,9 @@ void Dictionary<KeyType, ItemType>::printWithCounter() {
 		for (int i = 0; i < HT_MAX_SIZE; i++) {
 			Node* current = new Node;
 			current = items[i];
-			if (current != NULL) {
+			while (current != NULL) {
 				current->item.print(counter++);
-
-				while (current->next != NULL) {
-					current->item.print(counter++);
-					current = current->next;
-				}
+				current = current->next;
 			}
 		}
 	}
