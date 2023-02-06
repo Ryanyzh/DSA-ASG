@@ -9,41 +9,29 @@ Topic::Topic() {
 	postList = LinkedList<Post>();
 };
 
-Topic::~Topic() {
-	//idk
-};
+Topic::~Topic() {};
 
-string Topic::getTopicName() {
-	return topicName;
-};
 
-void Topic::setTopicName(string tn) {
-	topicName = tn;
-};
 
-LinkedList<Post>* Topic::getPostList() {
-	return &postList;
-}
+void Topic::setTopicName(string tn) { topicName = tn; };
 
-LinkedList<Post> Topic::getPostListItem() {
-	return postList;
-}
 
-bool Topic::addPost(Post post) {
-	return postList.add(post);
-}
 
-int Topic::searchPostIndex(string str) {
-	return postList.searchIndex(str);
-}
+string Topic::getTopicName() { return topicName; };
+LinkedList<Post>* Topic::getPostList() { return &postList; }
+LinkedList<Post> Topic::getPostListItem() { return postList; }
 
-Post* Topic::searchPost(string str) {
-	return postList.search(str);
-}
 
-void Topic::removePost(int index) {
-	postList.remove(index);
-}
+
+bool Topic::addPost(Post post) { return postList.add(post); }
+
+int Topic::searchPostIndex(string str) { return postList.searchIndex(str); }
+
+Post* Topic::searchPost(string str) { return postList.search(str); }
+
+void Topic::removePost(int index) { postList.remove(index); }
+
+
 
 void Topic::print(int counter) {
 	int spacing = 0;
@@ -72,6 +60,8 @@ void Topic::print(int counter) {
 		//counter++;
 	}
 }
+
+
 
 
 void Topic::printChildren() {

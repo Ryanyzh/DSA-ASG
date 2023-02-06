@@ -95,7 +95,7 @@ Dictionary<KeyType, ItemType>::~Dictionary() {
 
 
 template <typename KeyType, typename ItemType>
-int Dictionary<KeyType, ItemType>::hash(KeyType key) { //use string or int
+int Dictionary<KeyType, ItemType>::hash(KeyType key) { 
 	// https://dev.to/muiz6/string-hashing-in-c-1np3
 	size_t hashCode = 0;
 	for (int i = 0; i < (int)key.length(); i++) {

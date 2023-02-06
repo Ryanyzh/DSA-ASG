@@ -18,25 +18,14 @@ Reply::Reply() {
 	user = User();
 };
 
-Reply::~Reply() {
-	//idk
-};
+Reply::~Reply() {};
 
-string Reply::getRTitle() {
-	return Rtitle;
-};
 
-string Reply::getRContent() {
-	return Rcontent;
-};
 
-string Reply::getRDateTime() {
-	return Rdatetime;
-}
-
-User Reply::getRUser() {
-	return user;
-}
+string Reply::getRTitle() { return Rtitle; };
+string Reply::getRContent() { return Rcontent; };
+string Reply::getRDateTime() { return Rdatetime; }
+User Reply::getRUser() { return user; }
 
 
 
@@ -48,22 +37,12 @@ void Reply::setRDateTime() {
 	string current_time = ss.str(); //2023-01-30 18:40:00
 	Rdatetime = current_time;
 };
+void Reply::setRDateTime(string s) { Rdatetime = s; }
+void Reply::setRTitle(string rt) { Rtitle = rt; };
+void Reply::setRContent(string rc) { Rcontent = rc; };
+void Reply::setRUser(User u) { user = u; }
 
-void Reply::setRDateTime(string s) {
-	Rdatetime = s;
-}
 
-void Reply::setRTitle(string rt) {
-	Rtitle = rt;
-};
-
-void Reply::setRContent(string rc) {
-	Rcontent = rc;
-};
-
-void Reply::setRUser(User u) {
-	user = u;
-}
 
 void Reply::print(int counter) {
 	//XXXXXX|                                                                  |  #2
@@ -76,22 +55,17 @@ void Reply::print(int counter) {
 	//XXXXXX|                Your --- --- Your --- --- Your --- --- Your ---Y  |  #9
 	//XXXXXX|                                                                  |  #10
 	//XXXXXX?__________________________________________________________________?  #11
-	/*cout << this->getRTitle() << endl;
-	cout << this->getRContent() << endl;
-	cout << this->getRDateTime() << endl;
-	cout << this->getRUser().getUsername() << endl;*/
-
 
 
 	//printing the second line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
 	cout << "|                                                                  |" << endl;
 
 	//printing the third line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
@@ -101,14 +75,14 @@ void Reply::print(int counter) {
 	cout << "|" << endl;
 
 	//printing the fourth line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}  
 	cout << "|                                                                  |" << endl;
 
 	//printing the fifth line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
@@ -118,24 +92,14 @@ void Reply::print(int counter) {
 	cout << this->getRDateTime() << "  |" << endl;
 
 	//printing the sixth line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
 	cout << "|                                                                  |" << endl;
 
 	//printing the seventh line
-	/*
-	for (int b = 0; b < 6; b++) {
-		cout << char(219);
-	}
-	int thirdSpacing = 66 - getRTitle().length() - 18;
-	cout << "|  Title:        " << this->getRTitle();
-	for (int i = 0; i < thirdSpacing; i++) { cout << " "; }
-	cout << "  |" << endl;
-	*/
-
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
@@ -151,14 +115,14 @@ void Reply::print(int counter) {
 		cout << "|  Title:        " << this->getRTitle().substr(0, 47) << "-" << "  |" << endl;
 		for (int i = 0; i < num_of_lines - 1; i++) {
 			if (i != num_of_lines - 2) {
-				// ----- printIndentation
+				// ----- printIndentation -----
 				for (int b = 0; b < 6; b++) {
 					cout << char(219);
 				}
 				cout << "|                " << this->getRTitle().substr(47 * (i + 1), 47) << "-" << "  |" << endl;
 			}
 			else {
-				// ----- printIndentation
+				// ----- printIndentation -----
 				for (int b = 0; b < 6; b++) {
 					cout << char(219);
 				}
@@ -172,11 +136,8 @@ void Reply::print(int counter) {
 	}
 
 
-
-
-
 	//printing the eighth line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
@@ -192,14 +153,14 @@ void Reply::print(int counter) {
 		cout << "|  Description:  " << this->getRContent().substr(0, 47) << "-" << "  |" << endl;
 		for (int i = 0; i < num_of_lines - 1; i++) {
 			if (i != num_of_lines - 2) {
-				// ----- printIndentation
+				// ----- printIndentation -----
 				for (int b = 0; b < 6; b++) {
 					cout << char(219);
 				}
 				cout << "|                " << this->getRContent().substr(47 * (i + 1), 47) << "-" << "  |" << endl;
 			}
 			else {
-				// ----- printIndentation
+				// ----- printIndentation -----
 				for (int b = 0; b < 6; b++) {
 					cout << char(219);
 				}
@@ -213,14 +174,14 @@ void Reply::print(int counter) {
 	}
 
 	//printing the tenth line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}
 	cout << "|                                                                  |" << endl;
 
 	//printing the eleventh line
-	// ----- printIndentation
+	// ----- printIndentation -----
 	for (int b = 0; b < 6; b++) {
 		cout << char(219);
 	}

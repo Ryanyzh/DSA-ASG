@@ -10,22 +10,16 @@ Reaction::Reaction() {
 	reactionCount = 0;
 };
 
-Reaction::~Reaction() {
-	//idk
-};
+Reaction::~Reaction() {};
 
-int Reaction::getEmojiCount() {
-	return reactionCount;
-};
+int Reaction::getEmojiCount() { return reactionCount; };
 
 void Reaction::setEmoji(string emoji) {
 	reactionEmoji = emoji;
 	reactionCount = 0;
 };
 
-void Reaction::addCount() {
-	reactionCount = reactionCount + 1;
-}
+void Reaction::addCount() { reactionCount = reactionCount + 1; }
 
 void Reaction::print() {
 	if (reactionEmoji == ":0") {
@@ -37,7 +31,5 @@ void Reaction::print() {
 	
 }
 
-void Reaction::setCount(int number) {
-	reactionCount = number;
-}
+void Reaction::setCount(int number) { reactionCount = number; }
 

@@ -38,50 +38,30 @@ Post::Post() {
 	reactionUsers = LinkedList<User>();
 };
 
-void Post::setPDateTime(string dateTime) {
-	Pdatetime = dateTime;
-}
+void Post::setPDateTime(string dateTime) { Pdatetime = dateTime; }
 
-void Post::setReactions(Array<Reaction> newReactions) {
-	reactions = newReactions;
-}
+void Post::setReactions(Array<Reaction> newReactions) { reactions = newReactions; }
 
-void Post::setReactionUsers(LinkedList<User> userList) {
-	reactionUsers = userList;
-}
+void Post::setReactionUsers(LinkedList<User> userList) { reactionUsers = userList; }
 
 Post::~Post() {
 	// Deconstruct replyStack
 	replyStack.~Stack<Reply>();
 };
 
-string Post::retrieveString() {
-	return getPTitle();
-}
+string Post::retrieveString() { return getPTitle(); }
 
-Array<Reaction> Post::getReactions() {
-	return reactions;
-}
+Array<Reaction> Post::getReactions() { return reactions; }
 
-User Post::getPUser() {
-	return user;
-}
+User Post::getPUser() { return user; }
 
-string Post::getPTitle() {
-	return Ptitle;
-};
+string Post::getPTitle() { return Ptitle; };
 
-string Post::getPContent() {
-	return Pcontent;
-};
+string Post::getPContent() { return Pcontent; };
 
-string Post::getPDateTime() {
-	return Pdatetime;
-}
+string Post::getPDateTime() { return Pdatetime; }
 
-Stack<Reply>* Post::getRStack() {
-	return &replyStack;
-}
+Stack<Reply>* Post::getRStack() { return &replyStack; }
 
 void Post::setPDateTime() {
 	auto nowtime = chrono::system_clock::now();
@@ -92,34 +72,22 @@ void Post::setPDateTime() {
 	Pdatetime = current_time;
 };
 
-void Post::setPTitle(string pt) {
-	Ptitle = pt;
-};
+void Post::setPTitle(string pt) { Ptitle = pt; };
 
-void Post::setPContent(string pc) {
-	Pcontent = pc;
-};
+void Post::setPContent(string pc) { Pcontent = pc; };
 
-void Post::setPUser(User u) {
-	user = u;
-}
+void Post::setPUser(User u) { user = u; }
 
 bool Post::addReply(Reply reply) {
 	replyStack.getSize();
 	return replyStack.push(reply);
 }
 
-void Post::addReaction(int i) {
-	reactions.get(i - 1)->addCount();
-}
+void Post::addReaction(int i) { reactions.get(i - 1)->addCount(); }
 
-bool Post::equivalent(Post anotherPost) {
-	return (this->getPTitle() == anotherPost.getPContent());
-}
+bool Post::equivalent(Post anotherPost) { return (this->getPTitle() == anotherPost.getPContent()); }
 
-void Post::printChildren() {
-	replyStack.printWithCounter();
-}
+void Post::printChildren() { replyStack.printWithCounter(); }
 
 
 
@@ -255,23 +223,10 @@ void Post::print(int counter) {
 		for (int i = 0; i < 66; i++) { cout << char(196); }
 		cout << char(217) << endl;
 	}
-
-	// ** TO BE EDITED BY RYAN **
-	// 
-	//cout << this->getPTitle() << endl;
-	//cout << this->getPContent() << endl;
-	//cout << this->getPDateTime() << endl;
-	//this->getRStack().printInOrder();
-	//this->getReactions().print();
-	//cout << this->getPUser().getUsername() << endl;
 }
 
 
 
-LinkedList<User> Post::returnReactionUsers() {
-	return reactionUsers;
-}
+LinkedList<User> Post::returnReactionUsers() { return reactionUsers; }
 
-void Post::addReactionUsers(User u) {
-	this->reactionUsers.add(u);
-}
+void Post::addReactionUsers(User u) { this->reactionUsers.add(u); }
