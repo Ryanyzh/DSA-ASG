@@ -79,8 +79,8 @@ string Post::getPDateTime() {
 	return Pdatetime;
 }
 
-Stack<Reply> Post::getRStack() {
-	return replyStack;
+Stack<Reply>* Post::getRStack() {
+	return &replyStack;
 }
 
 void Post::setPDateTime() {

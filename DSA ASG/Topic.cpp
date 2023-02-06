@@ -45,16 +45,16 @@ void Topic::removePost(int index) {
 	postList.remove(index);
 }
 
-void Topic::print(Topic t, int counter) {
+void Topic::print(int counter) {
 	int spacing = 0;
 	if (counter == 1) {
 		cout << "+------------------------------------------------------------------------+" << endl;
 		cout << "| Topic |     Name                                                       |" << endl;
 		cout << "+------------------------------------------------------------------------+" << endl;
 	}
-	spacing = 64 - 5 - (int)t.getTopicName().length();
+	spacing = 64 - 5 - (int)topicName.length();
 	if (counter < 10) {
-		cout << "|   " << counter << "   |     " << t.getTopicName();
+		cout << "|   " << counter << "   |     " << topicName;
 		for (int spaces = 0; spaces < spacing; spaces++) {
 			cout << " ";
 		}
@@ -63,7 +63,7 @@ void Topic::print(Topic t, int counter) {
 		//counter++;
 	}
 	else {
-		cout << "|  " << counter << "   |     " << t.getTopicName();
+		cout << "|  " << counter << "   |     " << topicName;
 		for (int spaces = 0; spaces < spacing; spaces++) {
 			cout << " ";
 		}

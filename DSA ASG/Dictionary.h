@@ -224,10 +224,10 @@ void Dictionary<KeyType, ItemType>::printWithCounter() {
 			Node* current = new Node;
 			current = items[i];
 			if (current != NULL) {
-				current->item.print(current->item, counter++);
+				current->item.print(counter++);
 
 				while (current->next != NULL) {
-					current->item.print(current->item, counter++);
+					current->item.print(counter++);
 					current = current->next;
 				}
 			}

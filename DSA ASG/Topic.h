@@ -42,7 +42,7 @@ class Topic
 		Post* searchPost(string s);
 
 		//Display topic details -> from the Dictionary class
-		void print(Topic t, int counter);
+		void print(int counter);
 
 		void printChildren();
 

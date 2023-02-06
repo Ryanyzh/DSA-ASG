@@ -78,8 +78,8 @@ Reply getNewReply();
 void saveTopicAddition(Topic t);
 void savePostAddition(Post p, string topicName);
 void savePostDeletion(Post p, string topicName);
-void saveReplyAddition(Reply r, Post p, string topicName);
-void savePostRevision(Post p, string topicName); //for add reaction and edit post
+void saveReplyAddition(Reply r, Post *p, string topicName);
+void savePostRevision(Post *newPost, Post oldPost, string topicName); //for add reaction and edit post
 void saveUsers(User u);
 
 void loadFiles();
@@ -195,7 +195,7 @@ int main()
 
                     if (searchedTopic != NULL) {
                         Topic topicObj = *searchedTopic;
-                        topicObj.print(topicObj, 1);                  //Display topic
+                        topicObj.print(1);                  //Display topic
                     }
                     else {
                         cout << "No topic found!" << endl;
@@ -204,8 +204,15 @@ int main()
                     
                 }
                 else {
-                    pageState = 2;
-                    break;
+                    if (topicDictionary.getLength() != 0) {
+                        pageState = 2;
+                        break;
+                    }
+                    else {
+                        cout << "A topic needs to be added before proceeding." << endl;
+                        topicOption = -1;
+                    }
+                    
                 }
             }
         }
@@ -266,6 +273,9 @@ int main()
                 postOption = -1;
             }
             else if (postOption == 3) {
+
+                // EDIT POST 
+
                 postOption = -1;
                 int topicSelected = -1;
                 bool topicSelectionSuccess = false;
@@ -287,6 +297,8 @@ int main()
                 cin >> postIndex;
                 LinkedList<Post>* postList = chosenTopic->getPostList();
                 Post* chosenPost = postList->get(postIndex - 1);
+                Post* anOldPost = postList->get(postIndex - 1);
+                Post theOldPost = *anOldPost;
 
                 // !!! IMPORTANT : DO YOU WANT TO ACCOUNT FOR INVALID INPUT? !!!
 
@@ -318,6 +330,7 @@ int main()
                     postObjPtr->setPContent(newPostDesc);
 
                     cout << "Post updated!" << endl;
+                    savePostRevision(postObjPtr, theOldPost, currentTopicName);
                 }
                 else {
                     cout << "Unable to edit as you did not make this post." << endl;
@@ -346,7 +359,13 @@ int main()
                 int postIndex = -1;
                 cout << char(175) << char(175) << " Select a post to delete:  ";
                 cin >> postIndex;
+
+                Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);
+                Post theDeletedPost = *toBeDeleted;
                 chosenTopic->removePost(postIndex - 1);
+
+                savePostDeletion(theDeletedPost, currentTopicName);
+
                 cout << chosenTopic->getPostList()->isEmpty();
 
                 postOption = -1;
@@ -405,7 +424,7 @@ int main()
                 if (addReplySuccess) {
                     cout << "\n[SUCCESS] Reply has been added." << endl;
                     //Post thisPost = topicDictionary.returnSearchOption(topicSelected).getPostListItem().getItem(postIndex - 1);
-                    saveReplyAddition(newReply, newPost, currentTopicName);
+                    saveReplyAddition(newReply, chosenPost, currentTopicName);
                 }
                 else {
                     cout << "\n[FAILED] Reply was not added." << endl;
@@ -449,6 +468,9 @@ int main()
                     }
                     
                     Post* chosenPost = postList->get(postIndex - 1);
+                    Post* anOldPost = postList->get(postIndex - 1);
+                    Post theOldPost = *anOldPost;
+
                     string chosenPostTitle = chosenPost->getPTitle();
                     Post* postObjPtr = chosenTopic->searchPost(chosenPostTitle);
 
@@ -467,6 +489,11 @@ int main()
                         //Add reaction to post
                         postObjPtr->addReaction(reactionOption);
                         postObjPtr->addReactionUsers(currentUser);
+
+
+                        savePostRevision(postObjPtr, theOldPost, currentTopicName);
+
+                        cout << "\n[SUCCESS] Reaction added to post." << endl;
                     }
                     else {
                         cout << "\nYou can only react once." << endl;
@@ -497,7 +524,7 @@ int main()
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
 
                 string chosenPostTitle;
-                cout << "Enter a post title: ";
+                cout << char(175) << char(175) << "Enter a post title: ";
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 getline(cin, chosenPostTitle);
                 if (!chosenTopic->getPostList()->isEmpty()) {
@@ -978,11 +1005,11 @@ bool validatePostNumber(int postNum, LinkedList<Post> postListing) {
 // --- ENTER DESCRIPTION HERE ---
 void saveTopicAddition(Topic t) {
 
-    //creating file for writing
-    string filename = "Assets/Content/" + t.getTopicName() + ".txt";
-    ofstream file;
-    file.open(filename.c_str());
-    file.close();
+//creating file for writing
+string filename = "Assets/Content/" + t.getTopicName() + ".txt";
+ofstream file;
+file.open(filename.c_str());
+file.close();
 };
 
 // --- ENTER DESCRIPTION HERE ---
@@ -1000,11 +1027,29 @@ void savePostAddition(Post p, string topicName) {
     }
 
     // Add the new string to the end of the vector
-    string new_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword();
+    string new_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword() + "\\";
     for (int i = 0; i < p.getReactions().getLength(); i++) {
         Reaction* react = p.getReactions().get(i);
-        new_string = new_string + "\\" + to_string(react->getEmojiCount());
+        new_string = new_string + to_string(react->getEmojiCount()) + ",";
     }
+    new_string.pop_back(); //removing the last comma
+    new_string = new_string + "\\";
+    if (p.returnReactionUsers().getLength() != 0) {
+        for (int i = 0; i < p.returnReactionUsers().getLength(); i++) {
+            User* us = p.returnReactionUsers().get(i);
+            new_string = new_string + us->getUsername() + "|" + us->getPassword() + "<>";
+        }
+        new_string.pop_back(); //removing the last symbol
+        new_string.pop_back(); //removing the last symbol
+    }
+    else {
+        new_string.pop_back(); //removing the last symbol
+    }
+
+
+
+
+
     contents.push_back(new_string);
 
     // Close the file
@@ -1022,13 +1067,80 @@ void savePostAddition(Post p, string topicName) {
     file.close();
 };
 
+
+
+
 // --- ENTER DESCRIPTION HERE ---
 void savePostDeletion(Post p, string topicName) {
+    vector<string> lines;
+    string filename = "Assets/Content/" + topicName + ".txt";
+    ifstream inputFile(filename);
+    if (inputFile.is_open()) {
+        string line;
+        while (std::getline(inputFile, line)) {
+            lines.push_back(line);
+        }
+        inputFile.close();
+    
+    }
 
+    cout << p.getPTitle() << endl;
+    //string hello = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";
+    //cout << hello << endl;
+
+    string old_string = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword() + "\\";
+    for (int i = 0; i < p.getReactions().getLength(); i++) {
+        Reaction* react = p.getReactions().get(i);
+        old_string = old_string + to_string(react->getEmojiCount()) + ",";
+    }
+
+    old_string.pop_back(); //removing the last comma
+    old_string = old_string + "\\";
+    if (p.returnReactionUsers().getLength() != 0) {
+        for (int i = 0; i < p.returnReactionUsers().getLength(); i++) {
+            User* us = p.returnReactionUsers().get(i);
+            old_string = old_string + us->getUsername() + "|" + us->getPassword() + "<>";
+        }
+        old_string.pop_back(); //removing the last symbol
+        old_string.pop_back(); //removing the last symbol
+    }
+    else {
+        old_string.pop_back(); //removing the last symbol
+    }
+
+
+    int numOfLines;
+    //cout << p.getRStack()->isEmpty() << endl;
+    if (p.getRStack()->isEmpty()){
+        numOfLines = 1;
+    }
+    else {
+        numOfLines = p.getRStack()->getSize() + 1;
+    }
+    
+
+
+    for (int i = 0; i < lines.size(); i++) {
+        if (lines[i].find(old_string) != string::npos) {
+            lines.erase(lines.begin() + i, lines.begin() + i + numOfLines);
+            break;
+        }
+    }
+    ofstream outputFile(filename);
+    if (outputFile.is_open()) {
+        for (const auto& line : lines) {
+            outputFile << line << endl;
+        }
+        outputFile.close();
+    }
 };
 
+
+
+
+
 // --- ENTER DESCRIPTION HERE ---
-void saveReplyAddition(Reply r, Post p, string topicName) {
+void saveReplyAddition(Reply r, Post *p, string topicName) {
     vector<string> lines;
     string filename = "Assets/Content/" + topicName + ".txt";
     ifstream inputFile(filename);
@@ -1041,11 +1153,30 @@ void saveReplyAddition(Reply r, Post p, string topicName) {
     }
     // Find the line where you want to insert the new string
     //string targetLine = "This is the target line.";
-    string targetLine = "[Post]" + p.getPTitle() + "\\" + p.getPContent() + "\\" + p.getPDateTime() + "\\" + p.getPUser().getUsername() + "\\" + p.getPUser().getPassword();
-    for (int i = 0; i < p.getReactions().getLength(); i++) {
-        Reaction* react = p.getReactions().get(i);
-        targetLine = targetLine + "\\" + to_string(react->getEmojiCount());
+    string targetLine = "[Post]" + p->getPTitle() + "\\" + p->getPContent() + "\\" + p->getPDateTime() + "\\" + p->getPUser().getUsername() + "\\" + p->getPUser().getPassword() + "\\";
+    for (int i = 0; i < p->getReactions().getLength(); i++) {
+        Reaction* react = p->getReactions().get(i);
+        targetLine = targetLine + to_string(react->getEmojiCount()) + ",";
     }
+
+    targetLine.pop_back(); //removing the last comma
+    targetLine = targetLine + "\\";
+    if (p->returnReactionUsers().getLength() != 0) {
+        for (int i = 0; i < p->returnReactionUsers().getLength(); i++) {
+            User* us = p->returnReactionUsers().get(i);
+            targetLine = targetLine + us->getUsername() + "|" + us->getPassword() + "<>";
+        }
+
+        targetLine.pop_back(); //removing the last symbol
+        targetLine.pop_back(); //removing the last symbol
+    }
+    else {
+        targetLine.pop_back(); //removing the last symbol
+    }
+    
+
+
+
     int targetIndex = -1;
     for (int i = 0; i < lines.size(); i++) {
         if (lines[i] == targetLine) {
@@ -1067,9 +1198,78 @@ void saveReplyAddition(Reply r, Post p, string topicName) {
     }
 };
 
-// --- ENTER DESCRIPTION HERE ---
-void savePostRevision(Post r, string topicName) {
 
+
+
+// --- ENTER DESCRIPTION HERE ---
+void savePostRevision(Post *newPost, Post oldPost, string topicName) {
+    vector<string> lines;
+    string filename = "Assets/Content/" + topicName + ".txt";
+    ifstream inputFile(filename);
+    if (inputFile.is_open()) {
+        string line;
+        while (getline(inputFile, line)) {
+            lines.push_back(line);
+        }
+        inputFile.close();
+    }
+    for (auto& line : lines) {
+        string oldString = "[Post]" + oldPost.getPTitle() + "\\" + oldPost.getPContent() + "\\" + oldPost.getPDateTime() + "\\" + oldPost.getPUser().getUsername() + "\\" + oldPost.getPUser().getPassword() + "\\";
+        for (int i = 0; i < oldPost.getReactions().getLength(); i++) {
+            Reaction* react = oldPost.getReactions().get(i);
+            oldString = oldString + to_string(react->getEmojiCount()) + ",";
+        }
+        oldString.pop_back(); //removing the last comma
+        oldString = oldString + "\\";
+        if (oldPost.returnReactionUsers().getLength() != 0) {
+            for (int i = 0; i < oldPost.returnReactionUsers().getLength(); i++) {
+                User* us = oldPost.returnReactionUsers().get(i);
+                oldString = oldString + us->getUsername() + "|" + us->getPassword() + "<>";
+            }
+            oldString.pop_back(); //removing the last symbol
+            oldString.pop_back(); //removing the last symbol
+        }
+        else {
+            oldString.pop_back(); //removing the last symbol
+        }
+        
+
+
+
+
+        string newString = "[Post]" + newPost->getPTitle() + "\\" + newPost->getPContent() + "\\" + newPost->getPDateTime() + "\\" + newPost->getPUser().getUsername() + "\\" + newPost->getPUser().getPassword() + "\\";
+        for (int i = 0; i < newPost->getReactions().getLength(); i++) {
+            Reaction* react = newPost->getReactions().get(i);
+            newString = newString + to_string(react->getEmojiCount()) + ",";
+        }
+        newString.pop_back(); //removing the last comma
+        newString = newString + "\\";
+        if (newPost->returnReactionUsers().getLength() != 0) {
+            for (int i = 0; i < newPost->returnReactionUsers().getLength(); i++) {
+                User* us = newPost->returnReactionUsers().get(i);
+                newString = newString + us->getUsername() + "|" + us->getPassword() + "<>";
+            }
+            newString.pop_back(); //removing the last symbol
+            newString.pop_back(); //removing the last symbol
+        }
+        else {
+            newString.pop_back(); //removing the last symbol
+        }
+        
+
+
+
+        if (line.find(oldString) != string::npos) {
+            line.replace(line.find(oldString), oldString.length(), newString);
+        }
+    }
+    ofstream outputFile(filename);
+    if (outputFile.is_open()) {
+        for (const auto& line : lines) {
+            outputFile << line << endl;
+        }
+        outputFile.close();
+    }
 };
 
 

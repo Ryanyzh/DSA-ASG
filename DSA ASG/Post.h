@@ -45,7 +45,7 @@ class Post
 		string getPDateTime();
 		User getPUser();
 		Array<Reaction> getReactions();
-		Stack<Reply> getRStack();
+		Stack<Reply>* getRStack();
 
 		string retrieveString();
 
