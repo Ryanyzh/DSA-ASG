@@ -503,7 +503,7 @@ int main()
                 Topic* chosenTopic = topicDictionary.search(currentTopicName);
                 LinkedList<Post>* postList = chosenTopic->getPostList();
                 //If post exists
-                if (!postList->isEmpty()) {
+                if (!chosenTopic->getPostList()->isEmpty()) {
                     cout << endl;
                     // Print all post
                     chosenTopic->printChildren();
@@ -833,7 +833,8 @@ void init() {
 
                 //cout << extractReply.getRTitle() << endl;
 
-                topicDictionary.search(topicResult)->getPostList()->get(postCounter)->addReply(extractReply);
+                Post* postPtr = topicDictionary.search(topicResult)->getPostList()->get(postCounter-1);
+                postPtr->addReply(extractReply);
 
             }
 
@@ -1347,7 +1348,7 @@ void savePostDeletion(Post p, string topicName) {
     
 
 
-    for (int i = 0; i < lines.size(); i++) {
+    for (int i = 0; i < (int)lines.size(); i++) {
         if (lines[i].find(old_string) != string::npos) {
             lines.erase(lines.begin() + i, lines.begin() + i + numOfLines);
             break;
@@ -1405,7 +1406,7 @@ void saveReplyAddition(Reply r, Post *p, string topicName) {
 
 
     int targetIndex = -1;
-    for (int i = 0; i < lines.size(); i++) {
+    for (int i = 0; i < (int)lines.size(); i++) {
         if (lines[i] == targetLine) {
             targetIndex = i;
             break;
@@ -1413,7 +1414,7 @@ void saveReplyAddition(Reply r, Post *p, string topicName) {
     }
     // Insert the new string after the target line
 
-    int num_of_line = p->getRStack()->getSize() + 1;
+    int num_of_line = p->getRStack()->getSize();
 
     string new_string = "[Reply]" + r.getRTitle() + "\\" + r.getRContent() + "\\" + r.getRDateTime() + "\\" + r.getRUser().getUsername() + "\\" + r.getRUser().getPassword();
     if (targetIndex != -1) {

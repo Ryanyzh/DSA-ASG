@@ -284,6 +284,7 @@ int LinkedList<ItemType>::searchIndex(string str, Node* nodePointer, int index) 
 	else {
 		searchIndex(str, nodePointer->next, index + 1);
 	}
+	return 0;
 }
 
 template <typename ItemType>

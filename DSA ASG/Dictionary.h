@@ -266,6 +266,7 @@ ItemType Dictionary<KeyType, ItemType>::returnSearchOption(int topicNum) {
 			}
 		}
 	}
+	return ItemType();
 }
 
 
