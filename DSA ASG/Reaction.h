@@ -24,5 +24,7 @@ class Reaction
 		void addCount();
 
 		void print();
+
+		void setCount(int number);
 };
 

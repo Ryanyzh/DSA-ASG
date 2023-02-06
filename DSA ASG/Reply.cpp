@@ -49,6 +49,10 @@ void Reply::setRDateTime() {
 	Rdatetime = current_time;
 };
 
+void Reply::setRDateTime(string s) {
+	Rdatetime = s;
+}
+
 void Reply::setRTitle(string rt) {
 	Rtitle = rt;
 };

@@ -105,7 +105,7 @@ void Post::setPUser(User u) {
 }
 
 bool Post::addReply(Reply reply) {
-	return replyStack.push(reply);
+	return this->getRStack()->push(reply);
 }
 
 void Post::addReaction(int i) {

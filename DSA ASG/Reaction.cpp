@@ -37,3 +37,7 @@ void Reaction::print() {
 	
 }
 
+void Reaction::setCount(int number) {
+	reactionCount = number;
+}
+

@@ -19,6 +19,7 @@ class Reply
 		~Reply();
 
 		void setRDateTime();
+		void setRDateTime(string);
 		void setRTitle(string);
 		void setRContent(string);
 		void setRUser(User);

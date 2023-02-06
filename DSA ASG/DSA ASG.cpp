@@ -158,6 +158,8 @@ int main()
                     //Saving the topic into a file
                     saveTopicAddition(newTopic);
 
+                    cout << "[SUCCESS] Topic has been added." << endl;
+
                     topicOption = -1;
                 }
                 else if (topicOption == 3) {
@@ -177,7 +179,7 @@ int main()
                     }
                     else {
                         cout << "User found!" << endl;                                //Display topic
-                        cout << "Username: " << searchedUser->getUsername() << endl;
+                        cout << "Username: " << searchedUser->getUsername() << endl; //implement UI for this
                     }
                 }
                 else if (topicOption == 4) {
@@ -293,10 +295,19 @@ int main()
                 chosenTopic->printChildren();
 
                 if (!chosenTopic->getPostList()->isEmpty()) {
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
                     // Get user input
                     int postIndex = -1;
-                    cout << char(175) << char(175) << " Select a post to edit:  ";
-                    cin >> postIndex;
+                    bool postSelectionSuccess = false;
+
+                    while (!postSelectionSuccess) {
+                        //Can try adding in validation for post number
+                        cout << char(175) << char(175) << " Select a post to continue:  ";
+                        cin >> postIndex;
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                    }
+
+
                     LinkedList<Post>* postList = chosenTopic->getPostList();
                     Post* chosenPost = postList->get(postIndex - 1);
                     Post* anOldPost = postList->get(postIndex - 1);
@@ -331,16 +342,16 @@ int main()
                         postObjPtr->setPTitle(newPostTitle);
                         postObjPtr->setPContent(newPostDesc);
 
-                        cout << "Post updated!" << endl;
+                        cout << "[SUCCESS] Post updated!" << endl;
                         savePostRevision(postObjPtr, theOldPost, currentTopicName);
                     }
                     else {
-                        cout << "Unable to edit as you did not make this post." << endl;
+                        cout << "[FAILED] Unable to edit as you did not make this post." << endl;
                     }
 
                 }
                 else {
-                    cout << "No Post to edit" << endl;
+                    cout << "[FAILED] There is no post to edit. Please try again." << endl;
                 }
 
                 
@@ -366,9 +377,18 @@ int main()
                 chosenTopic->printChildren();
 
                 if (!chosenTopic->getPostList()->isEmpty()) {
+
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
+                    // Get user input
                     int postIndex = -1;
-                    cout << char(175) << char(175) << " Select a post to delete:  ";
-                    cin >> postIndex;
+                    bool postSelectionSuccess = false;
+
+                    while (!postSelectionSuccess) {
+                        //Can try adding in validation for post number
+                        cout << char(175) << char(175) << " Select a post to continue:  ";
+                        cin >> postIndex;
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                    }
 
                     Post* toBeDeleted = chosenTopic->getPostList()->get(postIndex - 1);
 
@@ -378,14 +398,16 @@ int main()
 
                         savePostDeletion(theDeletedPost, currentTopicName);
 
-                        cout << chosenTopic->getPostList()->isEmpty();
+                        //cout << chosenTopic->getPostList()->isEmpty();
+
+                        cout << "[SUCCESS] Post has been deleted." << endl;
                     }
                     else {
-                        cout << "Unable to delete this post as you did not write this post." << endl;
+                        cout << "[FAILED] Unable to delete this post as you did not write this post." << endl;
                     }
                 }
                 else {
-                    cout << "No post to delete." << endl;
+                    cout << "[FAILED] There is no post to delete. Please try again." << endl;
                 }
 
                 
@@ -408,52 +430,59 @@ int main()
                     topicSelectionSuccess = validateTopicNumber(topicSelected);
                 }
                 // Get topic ptr
-                //Topic* chosenTopic = topicDictionary.search(currentTopicName);
-                topicDictionary.search(currentTopicName)->printChildren();
+                Topic* chosenTopic = topicDictionary.search(currentTopicName);
+                if (!chosenTopic->getPostList()->isEmpty()) {
+                    topicDictionary.search(currentTopicName)->printChildren();
 
-                LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
+                    LinkedList<Post>* postListPtr = topicDictionary.search(currentTopicName)->getPostList();
 
-                // Get user input
-                int postIndex = -1;
-                bool postSelectionSuccess = false;
+                    // Get user input
+                    int postIndex = -1;
+                    bool postSelectionSuccess = false;
 
-                while (!postSelectionSuccess) {
-                    //Can try adding in validation for post number
-                    cout << char(175) << char(175) << " Select a post to continue:  ";
-                    cin >> postIndex;
-                    postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
-                }
+                    while (!postSelectionSuccess) {
+                        //Can try adding in validation for post number
+                        cout << char(175) << char(175) << " Select a post to continue:  ";
+                        cin >> postIndex;
+                        postSelectionSuccess = validatePostNumber(postIndex, *postListPtr);
+                    }
 
 
-                
-                Post* chosenPost = postListPtr->get(postIndex - 1);
-                Post newPost = Post();
-                newPost.setPContent(chosenPost->getPContent());
-                newPost.setPTitle(chosenPost->getPTitle());
-                newPost.setPDateTime(chosenPost->getPDateTime());
-                newPost.setPUser(currentUser);
-                newPost.setReactions(chosenPost->getReactions());
-                newPost.setReactionUsers(chosenPost->returnReactionUsers());
 
-                //Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
+                    Post* chosenPost = postListPtr->get(postIndex - 1);
+                    Post newPost = Post();
+                    newPost.setPContent(chosenPost->getPContent());
+                    newPost.setPTitle(chosenPost->getPTitle());
+                    newPost.setPDateTime(chosenPost->getPDateTime());
+                    newPost.setPUser(currentUser);
+                    newPost.setReactions(chosenPost->getReactions());
+                    newPost.setReactionUsers(chosenPost->returnReactionUsers());
 
-                cout << endl;
+                    //Post* postObjPtr = topicDictionary.search(currentTopicName)->searchPost(chosenPost->getPTitle());
 
-                Reply newReply = getNewReply();
-                //newReply.setRTitle("testing title");
-                //newReply.setRContent("Reply content");
-                bool addReplySuccess = chosenPost->addReply(newReply);
-                if (addReplySuccess) {
-                    cout << "\n[SUCCESS] Reply has been added." << endl;
-                    //Post thisPost = topicDictionary.returnSearchOption(topicSelected).getPostListItem().getItem(postIndex - 1);
-                    saveReplyAddition(newReply, chosenPost, currentTopicName);
+                    cout << endl;
+
+                    Reply newReply = getNewReply();
+                    //newReply.setRTitle("testing title");
+                    //newReply.setRContent("Reply content");
+                    bool addReplySuccess = chosenPost->addReply(newReply);
+                    if (addReplySuccess) {
+                        cout << "\n[SUCCESS] Reply has been added." << endl;
+                        //Post thisPost = topicDictionary.returnSearchOption(topicSelected).getPostListItem().getItem(postIndex - 1);
+                        saveReplyAddition(newReply, chosenPost, currentTopicName);
+                    }
+                    else {
+                        cout << "\n[FAILED] Unable to add reply." << endl;
+                    }
                 }
                 else {
-                    cout << "\n[FAILED] Reply was not added." << endl;
+                    cout << "[FAILED] There is no post to reply to. Please try again." << endl;
                 }
-                chosenPost->getPContent();
+
+                
+                //chosenPost->getPContent();
                 postOption = -1;
-                topicDictionary.getLength();
+                //topicDictionary.getLength();
             }
             else if (postOption == 6) {
                 // Add Reactions
@@ -518,12 +547,12 @@ int main()
                         cout << "\n[SUCCESS] Reaction added to post." << endl;
                     }
                     else {
-                        cout << "\nYou can only react once." << endl;
+                        cout << "\n[FAILED]You can only react once." << endl;
                     }
             
                 }
                 else {
-                    cout << "\nThere is no post to react to. Please try again." << endl;
+                    cout << "\n[FAILED] There is no post to react to. Please try again." << endl;
                 }
                 
               
@@ -622,6 +651,8 @@ void init() {
     fs::create_directories("./Assets/Content");
     fs::create_directories("./Assets/Users");
 
+    vector<string> linesOfContent;
+
     //getting the topic names and storing into the topic dictionary
     std::string path = "Assets/Content";
     for (const auto& entry : fs::directory_iterator(path)) {
@@ -635,6 +666,180 @@ void init() {
         Topic newSavedTopic = Topic();
         newSavedTopic.setTopicName(topicResult);
         topicDictionary.add(topicResult, newSavedTopic);
+
+        //getting the content out of each text file
+        if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+            ifstream inputFile(entry.path());
+            if (inputFile.is_open()) {
+                string line;
+                while (std::getline(inputFile, line)) {
+                    linesOfContent.push_back(line);
+                    //cout << line << endl;
+                }
+                inputFile.close();
+            }
+        }
+
+        //cout << "this is a line break" << endl;
+
+        int postCounter = 0;
+
+        for (string contentLine : linesOfContent) {
+            
+            if (contentLine.rfind("[Post]", 0) == 0) {
+
+                //removing '[Post]' from the string
+                string toRemove = "[Post]";
+
+                // find the position of the string to remove
+                size_t pos = contentLine.find(toRemove);
+                if (pos != std::string::npos) {
+                    // erase the string from the original string
+                    contentLine.erase(pos, toRemove.length());
+                }
+
+                string primarydelimiter = "\\";
+                vector<string> postDetails;
+                size_t prev = 0;
+                size_t next = 0;
+
+                // split the string with the delimiter "\\"
+                while ((next = contentLine.find(primarydelimiter, prev)) != string::npos) {
+                    postDetails.push_back(contentLine.substr(prev, next - prev));
+                    prev = next + primarydelimiter.size();
+                }
+                postDetails.push_back(contentLine.substr(prev));
+
+                /*
+                for (const auto& token : tokens) {
+                    cout << token << endl;
+                }
+                */
+
+                Post extractPost = Post();
+
+                string postTitle = postDetails[0];
+                extractPost.setPTitle(postTitle);
+
+                string postDescription = postDetails[1];
+                extractPost.setPContent(postDescription);
+
+                string postDateTime = postDetails[2];
+                extractPost.setPDateTime(postDateTime);
+
+                User postUser = User();
+                string postUsername = postDetails[3];
+                string postPassword = postDetails[4];
+                postUser.setUsername(postUsername);
+                postUser.setPassword(postPassword);
+                extractPost.setPUser(postUser);
+
+                string postReactions = postDetails[5];
+                string secondarydelimiter = ",";
+                vector<string> reactionDetails;
+                size_t thePrev = 0;
+                size_t theNext = 0;
+
+                // split the string with the delimiter ","
+                while ((theNext = postReactions.find(secondarydelimiter, thePrev)) != string::npos) {
+                    reactionDetails.push_back(postReactions.substr(thePrev, theNext - thePrev));
+                    thePrev = theNext + secondarydelimiter.size();
+                }
+                reactionDetails.push_back(postReactions.substr(thePrev));
+                
+                extractPost.getReactions().get(0)->setCount(stoi(reactionDetails[0]));
+                extractPost.getReactions().get(1)->setCount(stoi(reactionDetails[1]));
+                extractPost.getReactions().get(2)->setCount(stoi(reactionDetails[2]));
+                extractPost.getReactions().get(3)->setCount(stoi(reactionDetails[3]));
+                extractPost.getReactions().get(4)->setCount(stoi(reactionDetails[4]));
+
+                //cout << postDetails.size() << endl;
+
+                if (postDetails.size() > 6) {
+                    string postReactionsUser = postDetails[6];
+                    string tertiarydelimiter = "<>";
+                    vector<string> reactionUserDetails;
+                    size_t aPrev = 0;
+                    size_t aNext = 0;
+
+                    // split the string with the delimiter "<>"
+                    while ((aNext = postReactionsUser.find(tertiarydelimiter, aPrev)) != string::npos) {
+                        reactionUserDetails.push_back(postReactionsUser.substr(aPrev, aNext - aPrev));
+                        aPrev = aNext + tertiarydelimiter.size();
+                    }
+                    reactionUserDetails.push_back(postReactionsUser.substr(aPrev));
+
+                    for (string userdetails : reactionUserDetails) {
+                        string quaternarydelimiter = "|";
+                        size_t pos = userdetails.find(quaternarydelimiter);
+                        string usernameString = userdetails.substr(0, pos);
+                        string passwordString = userdetails.substr(pos + quaternarydelimiter.length());
+                        User reactionUser = User();
+                        reactionUser.setUsername(usernameString);
+                        reactionUser.setPassword(passwordString);
+                        extractPost.addReactionUsers(reactionUser);
+                    }
+                }
+
+                //cout << extractPost.getPTitle() << endl;
+                //add post to topic dictionary
+
+                topicDictionary.search(topicResult)->addPost(extractPost);
+                postCounter++;
+
+            }
+            else {
+
+                string delimiter = "\\";
+                vector<string> replyDetails;
+                size_t prev = 0;
+                size_t next = 0;
+
+                //removing '[Post]' from the string
+                string toRemove = "[Reply]";
+
+                // find the position of the string to remove
+                size_t pos = contentLine.find(toRemove);
+                if (pos != std::string::npos) {
+                    // erase the string from the original string
+                    contentLine.erase(pos, toRemove.length());
+                }
+
+
+                // split the string with the delimiter "\\"
+                while ((next = contentLine.find(delimiter, prev)) != string::npos) {
+                    replyDetails.push_back(contentLine.substr(prev, next - prev));
+                    prev = next + delimiter.size();
+                }
+                replyDetails.push_back(contentLine.substr(prev));
+
+                Reply extractReply = Reply();
+
+                string replyTitle = replyDetails[0];
+                extractReply.setRTitle(replyTitle);
+
+                string replyDescription = replyDetails[1];
+                extractReply.setRContent(replyDescription);
+
+                string replyDateTime = replyDetails[2];
+                extractReply.setRDateTime(replyDateTime);
+
+                User replyUser = User();
+                string postUsername = replyDetails[3];
+                string postPassword = replyDetails[4];
+                replyUser.setUsername(postUsername);
+                replyUser.setPassword(postPassword);
+                extractReply.setRUser(replyUser);
+
+                //cout << extractReply.getRTitle() << endl;
+
+                topicDictionary.search(topicResult)->getPostList()->get(postCounter)->addReply(extractReply);
+
+            }
+
+        }
+
+
     }
 
     //getting the users and storing into a user list
@@ -1207,9 +1412,12 @@ void saveReplyAddition(Reply r, Post *p, string topicName) {
         }
     }
     // Insert the new string after the target line
+
+    int num_of_line = p->getRStack()->getSize() + 1;
+
     string new_string = "[Reply]" + r.getRTitle() + "\\" + r.getRContent() + "\\" + r.getRDateTime() + "\\" + r.getRUser().getUsername() + "\\" + r.getRUser().getPassword();
     if (targetIndex != -1) {
-        lines.insert(lines.begin() + targetIndex + 1, new_string);
+        lines.insert(lines.begin() + targetIndex + num_of_line, new_string);
     }
     ofstream outputFile(filename);
     if (outputFile.is_open()) {
